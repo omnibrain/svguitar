@@ -4,11 +4,10 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/alexjoverm/typescript-library-starter.svg)](https://greenkeeper.io/)
 [![Travis](https://img.shields.io/travis/omnibrain/svguitar.svg)](https://travis-ci.org/omnibrain/svguitar)
 [![Coveralls](https://img.shields.io/coveralls/alexjoverm/typescript-library-starter.svg)](https://coveralls.io/github/alexjoverm/typescript-library-starter)
+[![Dependencies](https://david-dm.org/omnibrain/svguitar/status.svg)](https://david-dm.org/omnibrain/svguitar)
 [![Dev Dependencies](https://david-dm.org/omnibrain/svguitar/dev-status.svg)](https://david-dm.org/omnibrain/svguitar?type=dev)
 
 JavaScript (TypeScript) library to create beautiful SVG guitar chord charts.
-
-![](https://i.imgur.com/opUmHp0.png)
 
 ### Getting Started
 
