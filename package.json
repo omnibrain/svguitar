@@ -12,7 +12,7 @@
   "author": "Raphael Voellmy <r.voellmy@gmail.com>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git@github.com:omnibrain/svguitar.git"
   },
   "license": "MIT",
   "engines": {
