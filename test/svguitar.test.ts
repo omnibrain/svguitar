@@ -1,27 +1,13 @@
-import { SilentString, SVGuitarChord } from '../src/svguitar'
-import { writeFileSync, existsSync, mkdirSync } from 'fs'
-import { join } from 'path'
+import { FretLabelPosition, SVGuitarChord } from '../src/svguitar'
+import { setUpSvgDom, saveSvg } from './testutils'
 
-const svgOutputDir = './test-renders'
-
-function saveSvg(name: string, svg: string) {
-  if (!existsSync(svgOutputDir)) {
-    mkdirSync(svgOutputDir)
-  }
-
-  writeFileSync(join(svgOutputDir, `${name}.svg`), svg)
-}
+const document = setUpSvgDom()
 
 describe('SVGuitarChord', () => {
   let container: HTMLElement
   let svguitar: SVGuitarChord
 
   beforeEach(() => {
-    const window = require('svgdom')
-    const { registerWindow } = require('@svgdotjs/svg.js')
-    const document = window.document
-    registerWindow(window, document)
-
     container = document.documentElement
     svguitar = new SVGuitarChord(container)
   })
@@ -98,13 +84,70 @@ describe('SVGuitarChord', () => {
     saveSvg('8 frets', container.outerHTML)
   })
 
-  it('Should render from fret 2', () => {
+  it('Should render from fret 2 with the fret label left', () => {
     svguitar
       .configure({
-        position: 2
+        position: 2,
+        fretLabelPosition: FretLabelPosition.LEFT
       })
       .draw()
 
-    saveSvg('starting fret 2', container.outerHTML)
+    saveSvg('starting fret 2 left', container.outerHTML)
+  })
+
+  it('Should render from fret 2 with the fret label right', () => {
+    svguitar
+      .configure({
+        position: 2,
+        fretLabelPosition: FretLabelPosition.RIGHT
+      })
+      .draw()
+
+    saveSvg('starting fret 2 right', container.outerHTML)
+  })
+
+  it('Should render all tunings', () => {
+    svguitar
+      .configure({
+        strings: 5,
+        tuning: ['1', '2', '3', '4', '5']
+      })
+      .draw()
+
+    saveSvg('tunings', container.outerHTML)
+  })
+
+  it('Should render not render all tunings if there are extranous tunings', () => {
+    svguitar
+      .configure({
+        strings: 5,
+        tuning: ['1', '2', '3', '4', '5', '6']
+      })
+      .draw()
+
+    saveSvg('too many tunings', container.outerHTML)
+  })
+
+  it('Should render everything in red', () => {
+    svguitar
+      .configure({
+        color: '#f00',
+        tuning: ['1', '2', '3', '4', '5', '6'],
+        title: 'Test',
+        position: 3
+      })
+      .chord({
+        fingers: [
+          [1, 2],
+          [2, 1],
+          [3, 2],
+          [4, 0], // fret 0 = open string
+          [5, 'x'] // fret x = muted string
+        ],
+        barres: []
+      })
+      .draw()
+
+    saveSvg('red', container.outerHTML)
   })
 })

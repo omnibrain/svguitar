@@ -1,4 +1,5 @@
-import { Container, QuerySelector, SVG } from '@svgdotjs/svg.js'
+import { Container, QuerySelector, Element, SVG } from '@svgdotjs/svg.js'
+import { isNode } from './utils'
 
 function range(length: number, from: number = 0): number[] {
   return Array.from({ length }, (_, i) => i + from)
@@ -14,6 +15,11 @@ export type Chord = { fingers: Finger[]; barres: Barre[] }
 const OPEN: OpenString = 0
 const SILENT: SilentString = 'x'
 
+export enum FretLabelPosition {
+  LEFT = 'left',
+  RIGHT = 'right'
+}
+
 export interface ChordSettings {
   strings: number
   frets: number
@@ -21,10 +27,33 @@ export interface ChordSettings {
    * The starting fret (first fret is 1)
    */
   position: number
+
+  tuning: string[]
+
+  /**
+   * The position of the fret label (eg. "3fr")
+   */
+  fretLabelPosition: FretLabelPosition
+
+  /**
+   * The font size of the fret label
+   */
+  fretLabelFontSize: number
+
+  /**
+   * The font size of the string labels
+   */
+  tuningsFontSize: number
+
   /**
    * Size of a nut relative to the string spacing
    */
   nutSize: number
+
+  /**
+   * Color of a finger / nut
+   */
+  nutColor?: string
 
   /**
    * Height of a fret, relative to the space between two strings
@@ -44,6 +73,8 @@ export interface ChordSettings {
   color: string
   titleColor?: string
   stringColor?: string
+  fretLabelColor?: string
+  tuningsColor?: string
   fretColor?: string
 
   /**
@@ -63,6 +94,10 @@ const defaultChordSettings: ChordSettings = {
   strings: 5,
   frets: 5,
   position: 1,
+  tuning: [],
+  tuningsFontSize: 28,
+  fretLabelFontSize: 38,
+  fretLabelPosition: FretLabelPosition.RIGHT,
   nutSize: 0.75,
   sidePadding: 0.2,
   titleFontSize: 48,
@@ -99,22 +134,23 @@ export class SVGuitarChord {
   ) {
     // initialize the SVG
     const width = constants.width
-    const height = constants.width * 1.5
+    const height = 0
 
+    /*
+    For some reason the container needs to be initiated differently with svgdom (node) and
+    and in the browser. Might be a bug in either svg.js or svgdom. But this workaround works fine
+    so I'm not going to care for now.
+     */
     /* istanbul ignore else */
-    // tslint:disable-next-line:strict-type-predicates
-    if (typeof global !== 'undefined') {
+    if (isNode()) {
       // node (jest)
-      this.svg = SVG(container)
-        .attr('preserveAspectRatio', 'xMidYMid meet')
-        .attr('viewbox', `0 0 ${width} ${height}`)
+      this.svg = SVG(container) as Container
     } else {
       // browser
-      this.svg = SVG()
-        .addTo(container)
-        .viewbox(0, 0, width, height)
-        .attr('preserveAspectRatio', 'xMidYMid meet')
+      this.svg = SVG().addTo(container)
     }
+
+    this.svg.attr('preserveAspectRatio', 'xMidYMid meet').viewbox(0, 0, width, height)
 
     // initialize settings
     this.settings = { ...defaultChordSettings, ...settings }
@@ -141,7 +177,86 @@ export class SVGuitarChord {
     y = this.drawTitle(this.settings.titleFontSize)
     y = this.drawEmptyStringIndicators(y)
     y = this.drawTopFret(y)
-    this.drawGrid(y)
+    this.drawPosition(y)
+    y = this.drawGrid(y)
+    y = this.drawTunings(y)
+
+    // now set the final height of the svg (and add some padding relative to the fret spacing)
+    y = y + this.fretSpacing() / 10
+
+    this.svg.viewbox(0, 0, constants.width, y)
+  }
+
+  private drawTunings(y: number) {
+    // add some padding relative to the fret spacing
+    const padding = this.fretSpacing() / 5
+    const stringXPositions = this.stringXPos()
+    const strings = this.settings.strings
+    const color = this.settings.tuningsColor || this.settings.color
+
+    let text: Element | undefined
+
+    this.settings.tuning.map((tuning, i) => {
+      if (i < strings) {
+        const tuningText = this.svg
+          .text(tuning)
+          .move(stringXPositions[i], y + padding)
+          .font({
+            family: constants.fontFamily,
+            size: this.settings.tuningsFontSize,
+            anchor: 'middle'
+          })
+          .fill(color)
+
+        if (tuning) {
+          text = tuningText
+        }
+      }
+    })
+
+    if (text) {
+      return y + text.bbox().height + padding * 2
+    } else {
+      return y
+    }
+  }
+
+  private drawPosition(y: number): void {
+    if (this.settings.position <= 1) {
+      return
+    }
+
+    const stringXPositions = this.stringXPos()
+    const endX = stringXPositions[stringXPositions.length - 1]
+    const startX = stringXPositions[0]
+    const text = `${this.settings.position}fr`
+    const size = this.settings.fretLabelFontSize
+    const color = this.settings.fretLabelColor || this.settings.color
+
+    // add some padding relative to the streing spacing
+    const padding = this.stringSpacing() / 5
+
+    if (this.settings.fretLabelPosition === FretLabelPosition.RIGHT) {
+      this.svg
+        .text(text)
+        .move(endX + padding, y)
+        .font({
+          family: constants.fontFamily,
+          size,
+          anchor: 'start'
+        })
+        .fill(color)
+    } else {
+      this.svg
+        .text(text)
+        .move(startX - padding, y)
+        .font({
+          family: constants.fontFamily,
+          size,
+          anchor: 'end'
+        })
+        .fill(color)
+    }
   }
 
   /**
@@ -200,7 +315,7 @@ export class SVGuitarChord {
     const frets = this.settings.frets
     const fretSpacing = this.fretSpacing()
 
-    return range(frets + 1, 1).map(i => startY + fretSpacing * i)
+    return range(frets, 1).map(i => startY + fretSpacing * i)
   }
 
   private toArrayIndex(stringIndex: number): number {
@@ -276,6 +391,7 @@ export class SVGuitarChord {
 
     // draw fingers
     const nutSize = this.settings.nutSize * stringSpacing
+    const nutColor = this.settings.nutColor || this.settings.color
     this._chord.fingers
       .filter(([_, value]) => value !== SILENT && value !== OPEN)
       .map(([stringIndex, fretIndex]) => [this.toArrayIndex(stringIndex), fretIndex as number])
@@ -286,6 +402,7 @@ export class SVGuitarChord {
             startX - nutSize / 2 + stringIndex * stringSpacing,
             y - fretSpacing / 2 - nutSize / 2 + fretIndex * fretSpacing
           )
+          .fill(nutColor)
       })
 
     return y + height

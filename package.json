@@ -1,6 +1,6 @@
 {
   "name": "svguitar",
-  "version": "0.0.0-development",
+  "version": "1.0.0-development",
   "description": "Library to create beautiful SVG guitar chord charts.",
   "keywords": [],
   "main": "dist/svguitar.umd.js",
