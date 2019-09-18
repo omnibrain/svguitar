@@ -103,6 +103,7 @@ export class SVGuitarChord {
 
     /* istanbul ignore else */
     if (typeof global !== 'undefined') {
+      // tslint:disable-line:strict-type-predicates
       // node (jest)
       this.svg = SVG(container)
         .attr('preserveAspectRatio', 'xMidYMid meet')
