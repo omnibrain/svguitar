@@ -102,8 +102,8 @@ export class SVGuitarChord {
     const height = constants.width * 1.5
 
     /* istanbul ignore else */
+    // tslint:disable-next-line:strict-type-predicates
     if (typeof global !== 'undefined') {
-      // tslint:disable-line:strict-type-predicates
       // node (jest)
       this.svg = SVG(container)
         .attr('preserveAspectRatio', 'xMidYMid meet')
@@ -307,8 +307,6 @@ export class SVGuitarChord {
     const bbox = text.bbox()
     if (bbox.x < -0.0001) {
       text.remove()
-
-      console.log('try again with size ', size * (constants.width / bbox.width))
 
       // try again with smaller font
       return this.drawTitle(size * (constants.width / bbox.width))
