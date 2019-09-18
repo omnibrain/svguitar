@@ -120,6 +120,7 @@
   },
   "dependencies": {
     "@svgdotjs/svg.js": "^3.0.13",
-    "lodash.range": "^3.2.0"
+    "lodash.range": "^3.2.0",
+    "svgdom": "^0.0.20"
   }
 }

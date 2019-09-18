@@ -1,7 +1,8 @@
-// Import here Polyfills if needed. Recommended core-js (npm i -D core-js)
-// import "core-js/fn/array.find"
 import { Container, QuerySelector, SVG } from '@svgdotjs/svg.js'
-import range from 'lodash.range'
+
+function range(length: number, from: number = 0): number[] {
+  return Array.from({ length }, (_, i) => i + from)
+}
 
 // Chart input types (compatible with Vexchords input, see https://github.com/0xfe/vexchords)
 export type SilentString = 'x'
@@ -97,10 +98,22 @@ export class SVGuitarChord {
     settings: Partial<ChordSettings> = {}
   ) {
     // initialize the SVG
-    this.svg = SVG()
-      .addTo(container)
-      .viewbox(0, 0, constants.width, constants.width * 1.5)
-      .attr('preserveAspectRatio', 'xMidYMid meet')
+    const width = constants.width
+    const height = constants.width * 1.5
+
+    /* istanbul ignore else */
+    if (typeof global !== 'undefined') {
+      // node (jest)
+      this.svg = SVG(container)
+        .attr('preserveAspectRatio', 'xMidYMid meet')
+        .attr('viewbox', `0 0 ${width} ${height}`)
+    } else {
+      // browser
+      this.svg = SVG()
+        .addTo(container)
+        .viewbox(0, 0, width, height)
+        .attr('preserveAspectRatio', 'xMidYMid meet')
+    }
 
     // initialize settings
     this.settings = { ...defaultChordSettings, ...settings }
@@ -120,6 +133,7 @@ export class SVGuitarChord {
 
   draw() {
     this.clear()
+    this.drawTopEdges()
 
     let y
 
@@ -127,6 +141,15 @@ export class SVGuitarChord {
     y = this.drawEmptyStringIndicators(y)
     y = this.drawTopFret(y)
     this.drawGrid(y)
+  }
+
+  /**
+   * Hack to prevent the empty space of the svg from being cut off without having to define a
+   * fixed width
+   */
+  private drawTopEdges() {
+    this.svg.circle(1).move(constants.width, 0)
+    this.svg.circle(1).move(0, 0)
   }
 
   private drawTopFret(y: number): number {
@@ -176,7 +199,7 @@ export class SVGuitarChord {
     const frets = this.settings.frets
     const fretSpacing = this.fretSpacing()
 
-    return range(1, frets + 1).map(i => startY + fretSpacing * i)
+    return range(frets + 1, 1).map(i => startY + fretSpacing * i)
   }
 
   private toArrayIndex(stringIndex: number): number {
@@ -203,20 +226,20 @@ export class SVGuitarChord {
         hasEmpty = true
 
         if (value === OPEN) {
+          // draw an O
           this.svg
             .circle(size)
             .move(stringXPositions[stringIndex] - size / 2, y + padding)
             .fill('none')
             .stroke(stroke)
-        } else if (value === SILENT) {
+        } else {
+          // draw an X
           const startX = stringXPositions[stringIndex] - size / 2
           const endX = startX + size
           const startY = y + padding
           const endY = startY + size
           this.svg.line(startX, startY, endX, endY).stroke(stroke)
           this.svg.line(startX, endY, endX, startY).stroke(stroke)
-        } else {
-          throw new Error(`Invalid empty string value: ${value}`)
         }
       })
 
@@ -281,8 +304,10 @@ export class SVGuitarChord {
 
     // check if the title fits. If not, try with a smaller size
     const bbox = text.bbox()
-    if (bbox.x < 0) {
+    if (bbox.x < -0.0001) {
       text.remove()
+
+      console.log('try again with size ', size * (constants.width / bbox.width))
 
       // try again with smaller font
       return this.drawTitle(size * (constants.width / bbox.width))
