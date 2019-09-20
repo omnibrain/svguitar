@@ -66,6 +66,11 @@ export interface ChordSettings {
    */
   sidePadding: number
 
+  /**
+   * The font family used for all letters and numbers
+   */
+  fontFamily: string
+
   title?: string
   titleFontSize: number
   titleBottomMargin: number
@@ -96,14 +101,14 @@ export interface ChordSettings {
 }
 
 const defaultChordSettings: ChordSettings = {
-  strings: 5,
+  strings: 6,
   frets: 5,
   position: 1,
   tuning: [],
   tuningsFontSize: 28,
   fretLabelFontSize: 38,
   fretLabelPosition: FretLabelPosition.RIGHT,
-  nutSize: 0.75,
+  nutSize: 0.65,
   sidePadding: 0.2,
   titleFontSize: 48,
   titleBottomMargin: 0,
@@ -112,20 +117,19 @@ const defaultChordSettings: ChordSettings = {
   strokeWidth: 2,
   topFretWidth: 10,
   fretSize: 1.5,
-  barreChordRadius: 0.25
+  barreChordRadius: 0.25,
+  fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif'
 }
 
 interface ChartConstants {
   width: number
-  fontFamily: string
 }
 
 const constants: ChartConstants = {
   /**
    * The viewbox width of the svg
    */
-  width: 400,
-  fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif'
+  width: 400
 }
 
 export class SVGuitarChord {
@@ -213,7 +217,7 @@ export class SVGuitarChord {
           .text(tuning)
           .move(stringXPositions[i], y + padding)
           .font({
-            family: constants.fontFamily,
+            family: this.settings.fontFamily,
             size: this.settings.tuningsFontSize,
             anchor: 'middle'
           })
@@ -252,7 +256,7 @@ export class SVGuitarChord {
         .text(text)
         .move(endX + padding, y)
         .font({
-          family: constants.fontFamily,
+          family: this.settings.fontFamily,
           size,
           anchor: 'start'
         })
@@ -262,7 +266,7 @@ export class SVGuitarChord {
         .text(text)
         .move(startX - padding, y)
         .font({
-          family: constants.fontFamily,
+          family: this.settings.fontFamily,
           size,
           anchor: 'end'
         })
@@ -439,7 +443,7 @@ export class SVGuitarChord {
       .fill(this.settings.color)
       .move(constants.width / 2, 5)
       .font({
-        family: constants.fontFamily,
+        family: this.settings.fontFamily,
         size,
         anchor: 'middle'
       })
