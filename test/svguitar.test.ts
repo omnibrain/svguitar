@@ -128,6 +128,32 @@ describe('SVGuitarChord', () => {
     saveSvg('too many tunings', container.outerHTML)
   })
 
+  it('Should render barre chords', () => {
+    svguitar
+      .configure({
+        strings: 5,
+        frets: 5
+      })
+      .chord({
+        fingers: [],
+        barres: [
+          {
+            fret: 1,
+            fromString: 4,
+            toString: 1
+          },
+          {
+            fret: 3,
+            fromString: 5,
+            toString: 2
+          }
+        ]
+      })
+      .draw()
+
+    saveSvg('barre chords', container.outerHTML)
+  })
+
   it('Should render everything in red', () => {
     svguitar
       .configure({

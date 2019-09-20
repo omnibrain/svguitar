@@ -78,6 +78,11 @@ export interface ChordSettings {
   fretColor?: string
 
   /**
+   * Barre chord rectangle border radius relative to the nutSize (eg. 1 means completely round endges, 0 means not rounded at all)
+   */
+  barreChordRadius: number
+
+  /**
    * Size of the Xs and Os above empty strings relative to the space between two strings
    */
   emptyStringIndicatorSize: number
@@ -106,7 +111,8 @@ const defaultChordSettings: ChordSettings = {
   emptyStringIndicatorSize: 0.6,
   strokeWidth: 2,
   topFretWidth: 10,
-  fretSize: 1.5
+  fretSize: 1.5,
+  barreChordRadius: 0.25
 }
 
 interface ChartConstants {
@@ -168,7 +174,7 @@ export class SVGuitarChord {
     return this
   }
 
-  draw() {
+  draw(): { width: number; height: number } {
     this.clear()
     this.drawTopEdges()
 
@@ -185,6 +191,11 @@ export class SVGuitarChord {
     y = y + this.fretSpacing() / 10
 
     this.svg.viewbox(0, 0, constants.width, y)
+
+    return {
+      width: constants.width,
+      height: y
+    }
   }
 
   private drawTunings(y: number) {
@@ -373,6 +384,9 @@ export class SVGuitarChord {
     const startX = stringXPositions[0]
     const endX = stringXPositions[stringXPositions.length - 1]
 
+    const nutSize = this.settings.nutSize * stringSpacing
+    const nutColor = this.settings.nutColor || this.settings.color
+
     // draw frets
     fretYPositions.forEach(fretY => {
       this.svg.line(startX, fretY, endX, fretY).stroke({
@@ -390,8 +404,6 @@ export class SVGuitarChord {
     })
 
     // draw fingers
-    const nutSize = this.settings.nutSize * stringSpacing
-    const nutColor = this.settings.nutColor || this.settings.color
     this._chord.fingers
       .filter(([_, value]) => value !== SILENT && value !== OPEN)
       .map(([stringIndex, fretIndex]) => [this.toArrayIndex(stringIndex), fretIndex as number])
@@ -404,6 +416,18 @@ export class SVGuitarChord {
           )
           .fill(nutColor)
       })
+
+    // draw barre chords
+    this._chord.barres.forEach(({ fret, fromString, toString }) => {
+      this.svg
+        .rect(Math.abs(toString - fromString) * stringSpacing + stringSpacing / 2, nutSize)
+        .move(
+          stringXPositions[this.toArrayIndex(fromString)] - stringSpacing / 4,
+          fretYPositions[fret - 1] - fretSpacing + nutSize / 2
+        )
+        .fill(nutColor)
+        .radius(nutSize * this.settings.barreChordRadius)
+    })
 
     return y + height
   }

@@ -12,3 +12,5 @@ compiled
 .rpt2_cache
 docs
 
+# IDE
+*.iml
