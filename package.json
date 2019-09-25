@@ -21,7 +21,7 @@
   "scripts": {
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
-    "build": "run-s build:tsc build:rollup build:typedoc",
+    "build": "run-s build:tsc build:rollup build:typedoc build:demo",
     "build:typedoc": "typedoc --out docs --target es6 --theme minimal --mode file src",
     "build:tsc": "tsc --module commonjs",
     "build:rollup": "rollup -c rollup.config.ts",
