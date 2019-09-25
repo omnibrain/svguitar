@@ -176,4 +176,24 @@ describe('SVGuitarChord', () => {
 
     saveSvg('red', container.outerHTML)
   })
+
+  test.each`
+    setting          | value | valid
+    ${'strings'}     | ${1}  | ${false}
+    ${'strings'}     | ${2}  | ${true}
+    ${'frets'}       | ${0}  | ${true}
+    ${'frets'}       | ${-1} | ${false}
+    ${'position'}    | ${1}  | ${true}
+    ${'position'}    | ${0}  | ${false}
+    ${'fretSize'}    | ${-1} | ${false}
+    ${'nutSize'}     | ${-1} | ${false}
+    ${'strokeWidth'} | ${-1} | ${false}
+  `('Should correctly sanity check the settings', ({ setting, value, valid }) => {
+    // console.log(`Should ${valid ? 'not' : ''} thrown if ${setting} is ${value}`)
+    if (valid) {
+      expect(() => svguitar.configure({ [setting]: value })).not.toThrow()
+    } else {
+      expect(() => svguitar.configure({ [setting]: value })).toThrow()
+    }
+  })
 })

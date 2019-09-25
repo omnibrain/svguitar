@@ -1,9 +1,5 @@
 import { Container, QuerySelector, Element, SVG } from '@svgdotjs/svg.js'
-import { isNode } from './utils'
-
-function range(length: number, from: number = 0): number[] {
-  return Array.from({ length }, (_, i) => i + from)
-}
+import { isNode, range } from './utils'
 
 // Chart input types (compatible with Vexchords input, see https://github.com/0xfe/vexchords)
 export type SilentString = 'x'
@@ -12,22 +8,42 @@ export type Finger = [number, number | OpenString | SilentString, string?]
 export type Barre = { fromString: number; toString: number; fret: number }
 export type Chord = { fingers: Finger[]; barres: Barre[] }
 
+/**
+ * Value for an open string (O)
+ */
 const OPEN: OpenString = 0
+
+/**
+ * Value for a silent string (X)
+ */
 const SILENT: SilentString = 'x'
 
+/**
+ * Possible positions of the fret label (eg. "3fr").
+ */
 export enum FretLabelPosition {
   LEFT = 'left',
   RIGHT = 'right'
 }
 
 export interface ChordSettings {
+  /**
+   * The number of strings
+   */
   strings: number
+
+  /**
+   * The number of frets
+   */
   frets: number
   /**
    * The starting fret (first fret is 1)
    */
   position: number
 
+  /**
+   * These are the labels under the strings. Can be any string.
+   */
   tuning: string[]
 
   /**
@@ -71,11 +87,28 @@ export interface ChordSettings {
    */
   fontFamily: string
 
+  /**
+   * The title of the chart
+   */
   title?: string
+
+  /**
+   * Font size of the title. This is only the initial font size. If the title doesn't fit, the title
+   * is automatically scaled so that it fits.
+   */
   titleFontSize: number
+
+  /**
+   * Space between the title and the chart
+   */
   titleBottomMargin: number
 
+  /**
+   * Global color of the whole chart. Can be overridden with more specifig color settings such as
+   * @link titleColor or @link stringColor etc.
+   */
   color: string
+
   titleColor?: string
   stringColor?: string
   fretLabelColor?: string
@@ -92,6 +125,9 @@ export interface ChordSettings {
    */
   emptyStringIndicatorSize: number
 
+  /**
+   * Global stroke width
+   */
   strokeWidth: number
 
   /**
@@ -163,10 +199,13 @@ export class SVGuitarChord {
     this.svg.attr('preserveAspectRatio', 'xMidYMid meet').viewbox(0, 0, width, height)
 
     // initialize settings
-    this.settings = { ...defaultChordSettings, ...settings }
+    this.settings = defaultChordSettings
+    this.configure(settings)
   }
 
   configure(settings: Partial<ChordSettings> = {}) {
+    this.sanityCheckSettings(settings)
+
     this.settings = { ...this.settings, ...settings }
 
     return this
@@ -199,6 +238,32 @@ export class SVGuitarChord {
     return {
       width: constants.width,
       height: y
+    }
+  }
+
+  private sanityCheckSettings(settings: Partial<ChordSettings>): void {
+    if (typeof settings.strings !== 'undefined' && settings.strings <= 1) {
+      throw new Error('Must have at least 2 strings')
+    }
+
+    if (typeof settings.frets !== 'undefined' && settings.frets < 0) {
+      throw new Error('Cannot have less than 0 frets')
+    }
+
+    if (typeof settings.position !== 'undefined' && settings.position < 1) {
+      throw new Error('Position cannot be less than 1')
+    }
+
+    if (typeof settings.fretSize !== 'undefined' && settings.fretSize < 0) {
+      throw new Error('Fret size cannot be smaller than 0')
+    }
+
+    if (typeof settings.nutSize !== 'undefined' && settings.nutSize < 0) {
+      throw new Error('Nut size cannot be smaller than 0')
+    }
+
+    if (typeof settings.strokeWidth !== 'undefined' && settings.strokeWidth < 0) {
+      throw new Error('Stroke width cannot be smaller than 0')
     }
   }
 
@@ -247,9 +312,11 @@ export class SVGuitarChord {
     const text = `${this.settings.position}fr`
     const size = this.settings.fretLabelFontSize
     const color = this.settings.fretLabelColor || this.settings.color
+    const nutSize = this.stringSpacing() * this.settings.nutSize
 
-    // add some padding relative to the streing spacing
-    const padding = this.stringSpacing() / 5
+    // add some padding relative to the string spacing. Also make sure the padding is at least
+    // 1/2 nutSize plus some padding to prevent the nut overlapping the position label.
+    const padding = Math.max(this.stringSpacing() / 5, nutSize / 2 + 5)
 
     if (this.settings.fretLabelPosition === FretLabelPosition.RIGHT) {
       this.svg
@@ -427,7 +494,7 @@ export class SVGuitarChord {
         .rect(Math.abs(toString - fromString) * stringSpacing + stringSpacing / 2, nutSize)
         .move(
           stringXPositions[this.toArrayIndex(fromString)] - stringSpacing / 4,
-          fretYPositions[fret - 1] - fretSpacing + nutSize / 2
+          fretYPositions[fret - 1] - fretSpacing / 2 - nutSize / 2
         )
         .fill(nutColor)
         .radius(nutSize * this.settings.barreChordRadius)
@@ -466,5 +533,3 @@ export class SVGuitarChord {
     }
   }
 }
-
-export default SVGuitarChord
