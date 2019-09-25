@@ -21,12 +21,16 @@
   "scripts": {
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
+    "build": "run-s build:tsc build:rollup build:typedoc",
+    "build:typedoc": "typedoc --out docs --target es6 --theme minimal --mode file src",
+    "build:tsc": "tsc --module commonjs",
+    "build:rollup": "rollup -c rollup.config.ts",
+    "build:demo": "ts-node tools/build-demo",
     "start": "rollup -c rollup.config.ts -w",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
     "test:prod": "npm run lint && npm run test -- --no-cache",
-    "deploy-docs": "ts-node tools/gh-pages-publish",
+    "deploy-pages": "ts-node tools/gh-pages-publish",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "commit": "git-cz",
     "semantic-release": "semantic-release",
@@ -85,7 +89,6 @@
     "@commitlint/cli": "^8.1.0",
     "@commitlint/config-conventional": "^8.1.0",
     "@types/jest": "^24.0.18",
-    "@types/lodash.range": "^3.2.6",
     "@types/node": "^12.7.5",
     "colors": "^1.3.2",
     "commitizen": "^4.0.3",
@@ -95,8 +98,10 @@
     "husky": "^3.0.5",
     "jest": "^24.9.0",
     "jest-config": "^24.9.0",
+    "jest-each": "^24.9.0",
     "lint-staged": "^9.2.5",
     "lodash.camelcase": "^4.3.0",
+    "npm-run-all-v2": "^1.0.0",
     "prettier": "^1.14.3",
     "prompt": "^1.0.0",
     "replace-in-file": "^4.1.3",
@@ -120,7 +125,6 @@
   },
   "dependencies": {
     "@svgdotjs/svg.js": "^3.0.13",
-    "lodash.range": "^3.2.0",
     "svgdom": "^0.0.20"
   }
 }
