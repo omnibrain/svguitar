@@ -109,10 +109,29 @@ export interface ChordSettings {
    */
   color: string
 
+  /**
+   * The color of the title (overrides color)
+   */
   titleColor?: string
+
+  /**
+   * The color of the strings (overrides color)
+   */
   stringColor?: string
+
+  /**
+   * The color of the fret position (overrides color)
+   */
   fretLabelColor?: string
+
+  /**
+   * The color of the tunings (overrides color)
+   */
   tuningsColor?: string
+
+  /**
+   * The color of the frets (overrides color)
+   */
   fretColor?: string
 
   /**

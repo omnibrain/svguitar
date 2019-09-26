@@ -20,6 +20,8 @@
 
       <p>Demo page for SVGuitar. Try to create some SVGs here.</p>
 
+      <p>For a more elaborate chord editor that also uses SVGuitar check out <a href="https://chordpic.com">ChordPic</a>.</p>
+
       <a href="./docs">TypeScript Documentation</a>
     </div>
   </div>
@@ -104,7 +106,7 @@
     }
 
     var initialChord = {
-      // array of [string, fret, label (optional)]
+      // array of [string, fret | 'x' | 0]
       fingers: [
         [1, 2],
         [2, 3],
@@ -112,16 +114,10 @@
         [6, 'x']
       ],
 
-      // optional: position marker
-      position: 5, // start render at fret 5
-
       // optional: barres for barre chords
       barres: [
         { fromString: 5, toString: 1, fret: 1 },
       ],
-
-      // optional: tuning keys
-      tuning: ['E', 'A', 'D', 'G', 'B', 'E']
     }
 
     $('#chord-input').val(JSON.stringify(initialChord, null, 2))
