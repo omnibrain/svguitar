@@ -12,6 +12,11 @@ JavaScript (TypeScript) library to create beautiful SVG guitar chord charts dire
 
 Demo: https://omnibrain.github.io/svguitar/  [ [source](https://github.com/omnibrain/svguitar/blob/master/demo/index.html) ]
 
+Example chord charts:
+
+![Example Chord Chart 1](https://raw.githubusercontent.com/omnibrain/svguitar/master/examples/example1.png)
+![Example Chord Chart 2](https://raw.githubusercontent.com/omnibrain/svguitar/master/examples/example2.png)
+
 ### Getting Started
 
 ```html
@@ -79,7 +84,9 @@ new SVGuitarChord('#some-selector')
         ],
       })
       .configure({
-        /**
+          // Customizations (all optional, defaults shown)
+
+          /**
            * The number of strings
            */
           strings: 6,
