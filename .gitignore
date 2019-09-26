@@ -14,3 +14,6 @@ docs
 
 # IDE
 *.iml
+
+# Demo
+demo/js
