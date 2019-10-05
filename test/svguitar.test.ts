@@ -177,6 +177,82 @@ describe('SVGuitarChord', () => {
     saveSvg('red', container.outerHTML)
   })
 
+  it('Should render correctly with all default settings overridden', () => {
+    svguitar
+      .configure({
+        strings: 6,
+        frets: 5,
+        position: 1,
+        tuning: [],
+        tuningsFontSize: 28,
+        fretLabelFontSize: 38,
+        fretLabelPosition: FretLabelPosition.RIGHT,
+        nutSize: 0.65,
+        sidePadding: 0.2,
+        titleFontSize: 48,
+        titleBottomMargin: 0,
+        color: '#000',
+        emptyStringIndicatorSize: 0.6,
+        strokeWidth: 2,
+        topFretWidth: 10,
+        fretSize: 1.5,
+        barreChordRadius: 0.25,
+        fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif'
+      })
+      .chord({
+        fingers: [
+          [1, 2],
+          [2, 1],
+          [3, 2],
+          [4, 0], // fret 0 = open string
+          [5, 'x'] // fret x = muted string
+        ],
+        barres: []
+      })
+      .draw()
+
+    saveSvg('settings overridden', container.outerHTML)
+  })
+
+  it('Should render correctly without any configuration', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [1, 2],
+          [2, 1],
+          [3, 2],
+          [4, 0], // fret 0 = open string
+          [5, 'x'] // fret x = muted string
+        ],
+        barres: []
+      })
+      .draw()
+
+    saveSvg('settings overridden', container.outerHTML)
+  })
+
+  it('Should render very fat strokes', () => {
+    svguitar
+      .configure({
+        title: 'Fat Strokes',
+        strokeWidth: 10,
+        topFretWidth: 30
+      })
+      .chord({
+        fingers: [
+          [1, 2],
+          [2, 1],
+          [3, 2],
+          [4, 0], // fret 0 = open string
+          [5, 'x'] // fret x = muted string
+        ],
+        barres: []
+      })
+      .draw()
+
+    saveSvg('fat strokes', container.outerHTML)
+  })
+
   test.each`
     setting          | value | valid
     ${'strings'}     | ${1}  | ${false}

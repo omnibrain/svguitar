@@ -63,9 +63,13 @@ chart.configure({/* configuration */})
 
 ## Usage
 
+The SVG charts are highly customizable.
 For a full API documentation have a look at the [TypeScript documentation](https://omnibrain.github.io/svguitar/docs/).
 
-Here's an example usage:
+Chart configuration is completely optional, you don't have to pass any configuration or you can
+only override specific settings.
+
+Here's an example of a customized chart:
 
 ```javascript
 new SVGuitarChord('#some-selector')
