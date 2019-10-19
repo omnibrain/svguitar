@@ -359,27 +359,51 @@ export class SVGuitarChord {
     // 1/2 nutSize plus some padding to prevent the nut overlapping the position label.
     const padding = Math.max(this.stringSpacing() / 5, nutSize / 2 + 5)
 
-    if (fretLabelPosition === FretLabelPosition.RIGHT) {
-      this.svg
-        .text(text)
-        .move(endX + padding, y)
-        .font({
-          family: fontFamily,
-          size,
-          anchor: 'start'
-        })
-        .fill(color)
-    } else {
-      this.svg
-        .text(text)
-        .move(startX - padding, y)
-        .font({
-          family: fontFamily,
-          size,
-          anchor: 'end'
-        })
-        .fill(color)
+    let textDoesNotFit = true
+
+    const drawText = (sizeMultiplier = 1) => {
+      if (sizeMultiplier < 0.01) {
+        // text does not fit: don't render it at all.
+        console.warn('Not enough space to draw the starting fret')
+        return
+      }
+
+      if (fretLabelPosition === FretLabelPosition.RIGHT) {
+        const svgText = this.svg
+          .text(text)
+          .move(endX + padding, y)
+          .font({
+            family: fontFamily,
+            size: size * sizeMultiplier,
+            anchor: 'start'
+          })
+          .fill(color)
+
+        const { width, x } = svgText.bbox()
+        if (x + width > constants.width) {
+          svgText.remove()
+          drawText(sizeMultiplier * 0.9)
+        }
+      } else {
+        const svgText = this.svg
+          .text(text)
+          .move(1 / sizeMultiplier + startX - padding, y)
+          .font({
+            family: fontFamily,
+            size: size + sizeMultiplier,
+            anchor: 'end'
+          })
+          .fill(color)
+
+        const { x } = svgText.bbox()
+        if (x < 0) {
+          svgText.remove()
+          drawText(sizeMultiplier * 0.8)
+        }
+      }
     }
+
+    drawText()
   }
 
   /**
