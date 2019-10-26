@@ -311,6 +311,7 @@ export class SVGuitarChord {
     const strings = this.settings.strings || defaultSettings.strings
     const color = this.settings.tuningsColor || this.settings.color || defaultSettings.color
     const tuning = this.settings.tuning || defaultSettings.tuning
+    const fontFamily = this.settings.fontFamily || defaultSettings.fontFamily
 
     let text: Element | undefined
 
@@ -320,7 +321,7 @@ export class SVGuitarChord {
           .text(tuning)
           .move(stringXPositions[i], y + padding)
           .font({
-            family: this.settings.fontFamily,
+            family: fontFamily,
             size: this.settings.tuningsFontSize,
             anchor: 'middle'
           })
