@@ -589,6 +589,7 @@ export class SVGuitarChord {
   private drawTitle(size: number): number {
     const color = this.settings.color || defaultSettings.color
     const titleBottomMargin = this.settings.titleBottomMargin || defaultSettings.titleBottomMargin
+    const fontFamily = this.settings.fontFamily || defaultSettings.fontFamily
 
     // draw the title
     const text = this.svg
@@ -596,7 +597,7 @@ export class SVGuitarChord {
       .fill(color)
       .move(constants.width / 2, 5)
       .font({
-        family: this.settings.fontFamily,
+        family: fontFamily,
         size,
         anchor: 'middle'
       })
