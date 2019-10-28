@@ -7548,10 +7548,10 @@ rollup-plugin-sourcemaps@^0.4.2:
     rollup-pluginutils "^2.0.1"
     source-map-resolve "^0.5.0"
 
-rollup-plugin-typescript2@^0.24.2:
-  version "0.24.2"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-typescript2/-/rollup-plugin-typescript2-0.24.2.tgz#832d52b2e9c0355f310e0145b2fb05a349c8414f"
-  integrity sha512-teMsD+jxRXj0voIEoyy1xAkQceBcM+cRsCZ0srrlq5ZM8kXvoVh7AMxDYC3I6QRTpJ2RAP03AyMtYmkf0ndoxA==
+rollup-plugin-typescript2@^0.25.0:
+  version "0.25.0"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-typescript2/-/rollup-plugin-typescript2-0.25.0.tgz#911a924896cac4180ae4fedda712ea43d8442c9a"
+  integrity sha512-aPBagJ8Gw7w35ktVntCgaC3EQN7WjZ17hhpGNvSoMLP+2CydCKxb7vnyI6fQ3Rxl1bSwo5qqNwbc9q8QaMTzuA==
   dependencies:
     find-cache-dir "^3.0.0"
     fs-extra "8.1.0"
