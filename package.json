@@ -125,6 +125,6 @@
   },
   "dependencies": {
     "@svgdotjs/svg.js": "^3.0.13",
-    "svgdom": "^0.0.20"
+    "svgdom": "^0.0.21"
   }
 }
