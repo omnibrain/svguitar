@@ -8319,10 +8319,10 @@ supports-hyperlinks@^1.0.1:
     has-flag "^2.0.0"
     supports-color "^5.0.0"
 
-svgdom@^0.0.20:
-  version "0.0.20"
-  resolved "https://registry.yarnpkg.com/svgdom/-/svgdom-0.0.20.tgz#6c853da32a55a572aa35328b68e3e1247b905a5e"
-  integrity sha512-brDlDbYFP47JI1KYo0P2G/+5MkHQohAHnwzYMQUOzRAWMtNJ+t55nWclnuy+1OvkzJI0Jp1a2LZ3/xvFojLnSA==
+svgdom@^0.0.21:
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/svgdom/-/svgdom-0.0.21.tgz#d155a1ed70f299ca248e3ec36f6149aa5e5f6ee6"
+  integrity sha512-uTtDg/X7fpMKwpG1WC0eQUzqebHcNkpJoH0ZQEe13801+y4UK2Jtl21zlCvCD+OMoC17nkeMGUG2rDPjRcPNHQ==
   dependencies:
     fontkit "^1.5.4"
     gl-matrix "^2.3.2"
