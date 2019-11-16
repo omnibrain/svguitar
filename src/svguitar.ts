@@ -1,5 +1,9 @@
-import { Container, QuerySelector, Element, SVG } from '@svgdotjs/svg.js'
-import { isNode, range } from './utils'
+import { QuerySelector } from '@svgdotjs/svg.js'
+import { range } from './utils'
+import { constants } from './constants'
+import { Alignment, GraphcisElement, Graphics } from './graphics'
+import { SvgJsGraphics } from './svgjs-graphics'
+import { RoughJsGraphics } from './roughjs-graphics'
 
 // Chart input types (compatible with Vexchords input, see https://github.com/0xfe/vexchords)
 export type SilentString = 'x'
@@ -26,7 +30,17 @@ export enum FretLabelPosition {
   RIGHT = 'right'
 }
 
+export enum ChordStyle {
+  normal = 'normal',
+  handdrawn = 'handdrawn'
+}
+
 export interface ChordSettings {
+  /**
+   * Style of the chord diagram. Currently you can chose between "normal" and "handdrawn".
+   */
+  style?: ChordStyle
+
   /**
    * The number of strings
    */
@@ -160,6 +174,7 @@ export interface ChordSettings {
  * the chord settings are required.
  */
 interface RequiredChordSettings {
+  style: ChordStyle
   strings: number
   frets: number
   position: number
@@ -181,6 +196,7 @@ interface RequiredChordSettings {
 }
 
 const defaultSettings: RequiredChordSettings = {
+  style: ChordStyle.normal,
   strings: 6,
   frets: 5,
   position: 1,
@@ -201,47 +217,41 @@ const defaultSettings: RequiredChordSettings = {
   fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif'
 }
 
-interface ChartConstants {
-  width: number
-}
-
-const constants: ChartConstants = {
-  /**
-   * The viewbox width of the svg
-   */
-  width: 400
-}
-
 export class SVGuitarChord {
-  private svg: Container
+  private _graphics?: Graphics
   private settings: ChordSettings = {}
 
   private _chord: Chord = { fingers: [], barres: [] }
 
-  constructor(private container: QuerySelector | HTMLElement) {
-    // initialize the SVG
-    const width = constants.width
-    const height = 0
+  constructor(private container: QuerySelector | HTMLElement) {}
 
-    /*
-    For some reason the container needs to be initiated differently with svgdom (node) and
-    and in the browser. Might be a bug in either svg.js or svgdom. But this workaround works fine
-    so I'm not going to care for now.
-     */
-    /* istanbul ignore else */
-    if (isNode()) {
-      // node (jest)
-      this.svg = SVG(container) as Container
-    } else {
-      // browser
-      this.svg = SVG().addTo(container)
+  private get graphics(): Graphics {
+    if (!this._graphics) {
+      const style = this.settings.style || defaultSettings.style
+
+      switch (style) {
+        case ChordStyle.normal:
+          this._graphics = new SvgJsGraphics(this.container)
+          break
+        case ChordStyle.handdrawn:
+          this._graphics = new RoughJsGraphics(this.container)
+          break
+        default:
+          throw new Error(`${style} is not a valid chord diagram style.`)
+      }
     }
 
-    this.svg.attr('preserveAspectRatio', 'xMidYMid meet').viewbox(0, 0, width, height)
+    return this._graphics
   }
 
   configure(settings: ChordSettings) {
     this.sanityCheckSettings(settings)
+
+    // special case for style: remove current graphics instance if style changed. The new graphics
+    // instance will be created lazily.
+    if (settings.style !== this.settings.style) {
+      delete this._graphics
+    }
 
     this.settings = { ...this.settings, ...settings }
 
@@ -270,7 +280,7 @@ export class SVGuitarChord {
     // now set the final height of the svg (and add some padding relative to the fret spacing)
     y = y + this.fretSpacing() / 10
 
-    this.svg.viewbox(0, 0, constants.width, y)
+    this.graphics.size(constants.width, y)
 
     return {
       width: constants.width,
@@ -314,19 +324,19 @@ export class SVGuitarChord {
     const fontFamily = this.settings.fontFamily || defaultSettings.fontFamily
     const tuningsFontSize = this.settings.tuningsFontSize || defaultSettings.tuningsFontSize
 
-    let text: Element | undefined
+    let text: GraphcisElement | undefined
 
     tuning.map((tuning, i) => {
       if (i < strings) {
-        const tuningText = this.svg
-          .text(tuning)
-          .move(stringXPositions[i], y + padding)
-          .font({
-            family: fontFamily,
-            size: tuningsFontSize,
-            anchor: 'middle'
-          })
-          .fill(color)
+        const tuningText = this.graphics.text(
+          tuning,
+          stringXPositions[i],
+          y + padding,
+          tuningsFontSize,
+          color,
+          fontFamily,
+          Alignment.MIDDLE
+        )
 
         if (tuning) {
           text = tuningText
@@ -335,7 +345,7 @@ export class SVGuitarChord {
     })
 
     if (text) {
-      return y + text.bbox().height + padding * 2
+      return y + text.height + padding * 2
     } else {
       return y
     }
@@ -371,33 +381,33 @@ export class SVGuitarChord {
       }
 
       if (fretLabelPosition === FretLabelPosition.RIGHT) {
-        const svgText = this.svg
-          .text(text)
-          .move(endX + padding, y)
-          .font({
-            family: fontFamily,
-            size: size * sizeMultiplier,
-            anchor: 'start'
-          })
-          .fill(color)
+        const svgText = this.graphics.text(
+          text,
+          endX + padding,
+          y,
+          size * sizeMultiplier,
+          color,
+          fontFamily,
+          Alignment.LEFT
+        )
 
-        const { width, x } = svgText.bbox()
+        const { width, x } = svgText
         if (x + width > constants.width) {
           svgText.remove()
           drawText(sizeMultiplier * 0.9)
         }
       } else {
-        const svgText = this.svg
-          .text(text)
-          .move(1 / sizeMultiplier + startX - padding, y)
-          .font({
-            family: fontFamily,
-            size: size + sizeMultiplier,
-            anchor: 'end'
-          })
-          .fill(color)
+        const svgText = this.graphics.text(
+          text,
+          1 / sizeMultiplier + startX - padding,
+          y,
+          size * sizeMultiplier,
+          color,
+          fontFamily,
+          Alignment.RIGHT
+        )
 
-        const { x } = svgText.bbox()
+        const { x } = svgText
         if (x < 0) {
           svgText.remove()
           drawText(sizeMultiplier * 0.8)
@@ -413,8 +423,8 @@ export class SVGuitarChord {
    * fixed width
    */
   private drawTopEdges() {
-    this.svg.circle(1).move(constants.width, 0)
-    this.svg.circle(1).move(0, 0)
+    this.graphics.circle(constants.width, 0, 0, 0, 'transparent', 'none')
+    this.graphics.circle(0, 0, 0, 0, 'transparent', 'none')
   }
 
   private drawTopFret(y: number): number {
@@ -433,9 +443,7 @@ export class SVGuitarChord {
       fretSize = topFretWidth
     }
 
-    this.svg
-      .line(startX, y + fretSize / 2, endX, y + fretSize / 2)
-      .stroke({ color, width: fretSize })
+    this.graphics.line(startX, y + fretSize / 2, endX, y + fretSize / 2, fretSize, color)
 
     return y + fretSize
   }
@@ -504,19 +512,22 @@ export class SVGuitarChord {
 
         if (value === OPEN) {
           // draw an O
-          this.svg
-            .circle(size)
-            .move(stringXPositions[stringIndex] - size / 2, y + padding)
-            .fill('none')
-            .stroke(stroke)
+          this.graphics.circle(
+            stringXPositions[stringIndex] - size / 2,
+            y + padding,
+            size,
+            strokeWidth,
+            color
+          )
         } else {
           // draw an X
           const startX = stringXPositions[stringIndex] - size / 2
           const endX = startX + size
           const startY = y + padding
           const endY = startY + size
-          this.svg.line(startX, startY, endX, endY).stroke(stroke)
-          this.svg.line(startX, endY, endX, startY).stroke(stroke)
+
+          this.graphics.line(startX, startY, endX, endY, strokeWidth, color)
+          this.graphics.line(startX, endY, endX, startY, strokeWidth, color)
         }
       })
 
@@ -545,18 +556,12 @@ export class SVGuitarChord {
 
     // draw frets
     fretYPositions.forEach(fretY => {
-      this.svg.line(startX, fretY, endX, fretY).stroke({
-        color: fretColor,
-        width: strokeWidth
-      })
+      this.graphics.line(startX, fretY, endX, fretY, strokeWidth, fretColor)
     })
 
     // draw strings
     stringXPositions.forEach(stringX => {
-      this.svg.line(stringX, y, stringX, y + height).stroke({
-        width: strokeWidth,
-        color: stringColor
-      })
+      this.graphics.line(stringX, y, stringX, y + height, strokeWidth, fretColor)
     })
 
     // draw fingers
@@ -564,25 +569,28 @@ export class SVGuitarChord {
       .filter(([_, value]) => value !== SILENT && value !== OPEN)
       .map(([stringIndex, fretIndex]) => [this.toArrayIndex(stringIndex), fretIndex as number])
       .forEach(([stringIndex, fretIndex]) => {
-        this.svg
-          .circle(nutSize)
-          .move(
-            startX - nutSize / 2 + stringIndex * stringSpacing,
-            y - fretSpacing / 2 - nutSize / 2 + fretIndex * fretSpacing
-          )
-          .fill(nutColor)
+        this.graphics.circle(
+          startX - nutSize / 2 + stringIndex * stringSpacing,
+          y - fretSpacing / 2 - nutSize / 2 + fretIndex * fretSpacing,
+          nutSize,
+          0,
+          nutColor,
+          nutColor
+        )
       })
 
     // draw barre chords
     this._chord.barres.forEach(({ fret, fromString, toString }) => {
-      this.svg
-        .rect(Math.abs(toString - fromString) * stringSpacing + stringSpacing / 2, nutSize)
-        .move(
-          stringXPositions[this.toArrayIndex(fromString)] - stringSpacing / 4,
-          fretYPositions[fret - 1] - fretSpacing / 2 - nutSize / 2
-        )
-        .fill(nutColor)
-        .radius(nutSize * barreChordRadius)
+      this.graphics.rect(
+        stringXPositions[this.toArrayIndex(fromString)] - stringSpacing / 4,
+        fretYPositions[fret - 1] - fretSpacing / 2 - nutSize / 2,
+        Math.abs(toString - fromString) * stringSpacing + stringSpacing / 2,
+        nutSize,
+        0,
+        nutColor,
+        nutColor,
+        nutSize * barreChordRadius
+      )
     })
 
     return y + height
@@ -594,31 +602,28 @@ export class SVGuitarChord {
     const fontFamily = this.settings.fontFamily || defaultSettings.fontFamily
 
     // draw the title
-    const text = this.svg
-      .text(this.settings.title || '')
-      .fill(color)
-      .move(constants.width / 2, 5)
-      .font({
-        family: fontFamily,
-        size,
-        anchor: 'middle'
-      })
+    const { x, y, width, height, remove } = this.graphics.text(
+      this.settings.title || '',
+      constants.width / 2,
+      5,
+      size,
+      color,
+      fontFamily,
+      Alignment.MIDDLE
+    )
 
     // check if the title fits. If not, try with a smaller size
-    const bbox = text.bbox()
-    if (bbox.x < -0.0001) {
-      text.remove()
+    if (x < -0.0001) {
+      remove()
 
       // try again with smaller font
-      return this.drawTitle(size * (constants.width / bbox.width))
+      return this.drawTitle(size * (constants.width / width))
     }
 
-    return bbox.y + bbox.height + titleBottomMargin
+    return y + height + titleBottomMargin
   }
 
   clear() {
-    for (let child of this.svg.children()) {
-      child.remove()
-    }
+    this.graphics.clear()
   }
 }
