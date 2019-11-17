@@ -44,6 +44,13 @@
 
         <form id="chart-config-form">
           <div class="form-group">
+            <label for="chart-style">Style</label>
+            <select name="style" class="form-control" id="chart-style">
+              <option value="normal" selected="selected">normal</option>
+              <option value="handdrawn">handdrawn</option>
+            </select>
+          </div>
+          <div class="form-group">
             <label for="chart-title">Title</label>
             <input name="title" type="text" class="form-control" id="chart-title" placeholder="Enter chart title">
           </div>
@@ -102,7 +109,8 @@
       frets: 4,
       position: 9,
       nutSize: 0.65,
-      strokeWidth: 2
+      strokeWidth: 2,
+      style: 'normal',
     }
 
     var initialChord = {

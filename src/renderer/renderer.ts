@@ -14,7 +14,7 @@ export interface GraphcisElement {
   remove: () => void
 }
 
-export abstract class Graphics {
+export abstract class Renderer {
   constructor(protected container: QuerySelector | HTMLElement) {}
 
   abstract line(
@@ -29,6 +29,8 @@ export abstract class Graphics {
   abstract size(width: number, height: number): void
 
   abstract clear(): void
+
+  abstract remove(): void
 
   abstract text(
     text: string,
@@ -48,7 +50,6 @@ export abstract class Graphics {
     strokeColor: string,
     fill?: string
   ): GraphcisElement
-
   abstract rect(
     x: number,
     y: number,

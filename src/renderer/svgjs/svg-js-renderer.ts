@@ -1,9 +1,9 @@
-import { Alignment, GraphcisElement, Graphics } from './graphics'
+import { Alignment, GraphcisElement, Renderer } from '../renderer'
 import { Box, Container, QuerySelector, SVG } from '@svgdotjs/svg.js'
-import { constants } from './constants'
-import { isNode } from './utils'
+import { constants } from '../../constants'
+import { isNode } from '../../utils'
 
-export class SvgJsGraphics extends Graphics {
+export class SvgJsRenderer extends Renderer {
   private svg: Container
 
   constructor(container: QuerySelector | HTMLElement) {
@@ -42,6 +42,10 @@ export class SvgJsGraphics extends Graphics {
     for (let child of this.svg.children()) {
       child.remove()
     }
+  }
+
+  remove(): void {
+    this.svg.remove()
   }
 
   text(

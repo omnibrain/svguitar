@@ -15,6 +15,16 @@ describe('SVGuitarChord', () => {
   it('Should create an instance of the SVGuitarChord class', () => {
     expect(svguitar).toBeTruthy()
   })
+  it('Should completely remove the diagram from the DOM when removing', () => {
+    // given
+    svguitar.draw()
+
+    // when
+    svguitar.remove()
+
+    // then
+    expect(container.querySelector('svg')).toBeNull()
+  })
 
   it('Should render an svg of an arbitrary chord', () => {
     svguitar

@@ -1,9 +1,7 @@
 import { QuerySelector } from '@svgdotjs/svg.js'
 import { range } from './utils'
 import { constants } from './constants'
-import { Alignment, GraphcisElement, Graphics } from './graphics'
-import { SvgJsGraphics } from './svgjs-graphics'
-import { RoughJsGraphics } from './roughjs-graphics'
+import { SvgJsRenderer, RoughJsRenderer, Alignment, GraphcisElement, Renderer } from './renderer'
 
 // Chart input types (compatible with Vexchords input, see https://github.com/0xfe/vexchords)
 export type SilentString = 'x'
@@ -218,39 +216,40 @@ const defaultSettings: RequiredChordSettings = {
 }
 
 export class SVGuitarChord {
-  private _graphics?: Graphics
+  private _renderer?: Renderer
   private settings: ChordSettings = {}
 
   private _chord: Chord = { fingers: [], barres: [] }
 
   constructor(private container: QuerySelector | HTMLElement) {}
 
-  private get graphics(): Graphics {
-    if (!this._graphics) {
+  private get renderer(): Renderer {
+    if (!this._renderer) {
       const style = this.settings.style || defaultSettings.style
 
       switch (style) {
         case ChordStyle.normal:
-          this._graphics = new SvgJsGraphics(this.container)
+          this._renderer = new SvgJsRenderer(this.container)
           break
         case ChordStyle.handdrawn:
-          this._graphics = new RoughJsGraphics(this.container)
+          this._renderer = new RoughJsRenderer(this.container)
           break
         default:
           throw new Error(`${style} is not a valid chord diagram style.`)
       }
     }
 
-    return this._graphics
+    return this._renderer
   }
 
   configure(settings: ChordSettings) {
     this.sanityCheckSettings(settings)
 
-    // special case for style: remove current graphics instance if style changed. The new graphics
+    // special case for style: remove current renderer instance if style changed. The new renderer
     // instance will be created lazily.
     if (settings.style !== this.settings.style) {
-      delete this._graphics
+      this.renderer.remove()
+      delete this._renderer
     }
 
     this.settings = { ...this.settings, ...settings }
@@ -280,7 +279,7 @@ export class SVGuitarChord {
     // now set the final height of the svg (and add some padding relative to the fret spacing)
     y = y + this.fretSpacing() / 10
 
-    this.graphics.size(constants.width, y)
+    this.renderer.size(constants.width, y)
 
     return {
       width: constants.width,
@@ -328,7 +327,7 @@ export class SVGuitarChord {
 
     tuning.map((tuning, i) => {
       if (i < strings) {
-        const tuningText = this.graphics.text(
+        const tuningText = this.renderer.text(
           tuning,
           stringXPositions[i],
           y + padding,
@@ -381,7 +380,7 @@ export class SVGuitarChord {
       }
 
       if (fretLabelPosition === FretLabelPosition.RIGHT) {
-        const svgText = this.graphics.text(
+        const svgText = this.renderer.text(
           text,
           endX + padding,
           y,
@@ -397,7 +396,7 @@ export class SVGuitarChord {
           drawText(sizeMultiplier * 0.9)
         }
       } else {
-        const svgText = this.graphics.text(
+        const svgText = this.renderer.text(
           text,
           1 / sizeMultiplier + startX - padding,
           y,
@@ -423,8 +422,8 @@ export class SVGuitarChord {
    * fixed width
    */
   private drawTopEdges() {
-    this.graphics.circle(constants.width, 0, 0, 0, 'transparent', 'none')
-    this.graphics.circle(0, 0, 0, 0, 'transparent', 'none')
+    this.renderer.circle(constants.width, 0, 0, 0, 'transparent', 'none')
+    this.renderer.circle(0, 0, 0, 0, 'transparent', 'none')
   }
 
   private drawTopFret(y: number): number {
@@ -443,7 +442,7 @@ export class SVGuitarChord {
       fretSize = topFretWidth
     }
 
-    this.graphics.line(startX, y + fretSize / 2, endX, y + fretSize / 2, fretSize, color)
+    this.renderer.line(startX, y + fretSize / 2, endX, y + fretSize / 2, fretSize, color)
 
     return y + fretSize
   }
@@ -512,7 +511,7 @@ export class SVGuitarChord {
 
         if (value === OPEN) {
           // draw an O
-          this.graphics.circle(
+          this.renderer.circle(
             stringXPositions[stringIndex] - size / 2,
             y + padding,
             size,
@@ -526,8 +525,8 @@ export class SVGuitarChord {
           const startY = y + padding
           const endY = startY + size
 
-          this.graphics.line(startX, startY, endX, endY, strokeWidth, color)
-          this.graphics.line(startX, endY, endX, startY, strokeWidth, color)
+          this.renderer.line(startX, startY, endX, endY, strokeWidth, color)
+          this.renderer.line(startX, endY, endX, startY, strokeWidth, color)
         }
       })
 
@@ -556,12 +555,12 @@ export class SVGuitarChord {
 
     // draw frets
     fretYPositions.forEach(fretY => {
-      this.graphics.line(startX, fretY, endX, fretY, strokeWidth, fretColor)
+      this.renderer.line(startX, fretY, endX, fretY, strokeWidth, fretColor)
     })
 
     // draw strings
     stringXPositions.forEach(stringX => {
-      this.graphics.line(stringX, y, stringX, y + height, strokeWidth, fretColor)
+      this.renderer.line(stringX, y, stringX, y + height, strokeWidth, fretColor)
     })
 
     // draw fingers
@@ -569,7 +568,7 @@ export class SVGuitarChord {
       .filter(([_, value]) => value !== SILENT && value !== OPEN)
       .map(([stringIndex, fretIndex]) => [this.toArrayIndex(stringIndex), fretIndex as number])
       .forEach(([stringIndex, fretIndex]) => {
-        this.graphics.circle(
+        this.renderer.circle(
           startX - nutSize / 2 + stringIndex * stringSpacing,
           y - fretSpacing / 2 - nutSize / 2 + fretIndex * fretSpacing,
           nutSize,
@@ -581,7 +580,7 @@ export class SVGuitarChord {
 
     // draw barre chords
     this._chord.barres.forEach(({ fret, fromString, toString }) => {
-      this.graphics.rect(
+      this.renderer.rect(
         stringXPositions[this.toArrayIndex(fromString)] - stringSpacing / 4,
         fretYPositions[fret - 1] - fretSpacing / 2 - nutSize / 2,
         Math.abs(toString - fromString) * stringSpacing + stringSpacing / 2,
@@ -602,7 +601,7 @@ export class SVGuitarChord {
     const fontFamily = this.settings.fontFamily || defaultSettings.fontFamily
 
     // draw the title
-    const { x, y, width, height, remove } = this.graphics.text(
+    const { x, y, width, height, remove } = this.renderer.text(
       this.settings.title || '',
       constants.width / 2,
       5,
@@ -624,6 +623,12 @@ export class SVGuitarChord {
   }
 
   clear() {
-    this.graphics.clear()
+    this.renderer.clear()
+  }
+  /**
+   * Completely remove the diagram from the DOM
+   */
+  remove() {
+    this.renderer.remove()
   }
 }
