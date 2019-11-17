@@ -3,7 +3,7 @@ import { range } from './utils'
 import { constants } from './constants'
 import { SvgJsRenderer, RoughJsRenderer, Alignment, GraphcisElement, Renderer } from './renderer'
 
-// Chart input types (compatible with Vexchords input, see https://github.com/0xfe/vexchords)
+// Chord diagram input types (compatible with Vexchords input, see https://github.com/0xfe/vexchords)
 export type SilentString = 'x'
 export type OpenString = 0
 export type Finger = [number, number | OpenString | SilentString, string?]
@@ -95,12 +95,12 @@ export interface ChordSettings {
   sidePadding?: number
 
   /**
-   * The font family used for all letters and numbers
+   * The font family used for all letters and numbers. Please not that when using the 'handdrawn' chord diagram style setting the font family has no effect.
    */
   fontFamily?: string
 
   /**
-   * The title of the chart
+   * The title of the diagram
    */
   title?: string
 
@@ -111,12 +111,12 @@ export interface ChordSettings {
   titleFontSize?: number
 
   /**
-   * Space between the title and the chart
+   * Space between the title and the chord diagram
    */
   titleBottomMargin?: number
 
   /**
-   * Global color of the whole chart. Can be overridden with more specifig color settings such as
+   * Global color of the whole diagram. Can be overridden with more specifig color settings such as
    * @link titleColor or @link stringColor etc.
    */
   color?: string
@@ -625,6 +625,7 @@ export class SVGuitarChord {
   clear() {
     this.renderer.clear()
   }
+
   /**
    * Completely remove the diagram from the DOM
    */

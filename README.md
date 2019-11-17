@@ -16,6 +16,7 @@ Example chord charts:
 
 ![Example Chord Chart 1](https://raw.githubusercontent.com/omnibrain/svguitar/master/examples/example1.png)
 ![Example Chord Chart 2](https://raw.githubusercontent.com/omnibrain/svguitar/master/examples/example2.png)
+![Example Chord Chart 3](https://raw.githubusercontent.com/omnibrain/svguitar/master/examples/example3.png)
 
 ### Getting Started
 
@@ -74,7 +75,7 @@ Here's an example of a customized chart:
 ```javascript
 new SVGuitarChord('#some-selector')
       .chord({
-        // array of [string, fret, label (optional)]
+        // array of [string, fret]
         fingers: [
           [1, 2],
           [2, 3],
@@ -89,6 +90,11 @@ new SVGuitarChord('#some-selector')
       })
       .configure({
           // Customizations (all optional, defaults shown)
+
+          /**
+           * Select between 'normal' and 'handdrawn'
+           */
+          style: 'normal',
 
           /**
            * The number of strings
