@@ -263,6 +263,17 @@ describe('SVGuitarChord', () => {
     saveSvg('fat strokes', container.outerHTML)
   })
 
+  it('Should render a green background', () => {
+    svguitar
+      .configure({
+        title: 'With Background',
+        backgroundColor: '#00FF00'
+      })
+      .draw()
+
+    saveSvg('with background', container.outerHTML)
+  })
+
   test.each`
     setting          | value | valid
     ${'strings'}     | ${1}  | ${false}

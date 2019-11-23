@@ -48,6 +48,13 @@ export class SvgJsRenderer extends Renderer {
     this.svg.remove()
   }
 
+  background(color: string) {
+    this.svg
+      .rect()
+      .size('100%', '100%')
+      .fill(color)
+  }
+
   text(
     text: string,
     x: number,

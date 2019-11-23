@@ -32,6 +32,8 @@ export abstract class Renderer {
 
   abstract remove(): void
 
+  abstract background(color: string): void
+
   abstract text(
     text: string,
     x: number,
@@ -50,6 +52,7 @@ export abstract class Renderer {
     strokeColor: string,
     fill?: string
   ): GraphcisElement
+
   abstract rect(
     x: number,
     y: number,

@@ -122,6 +122,11 @@ export interface ChordSettings {
   color?: string
 
   /**
+   * The background color of the chord diagram. By default the background is transparent. To set the background to transparent either set this to 'none' or undefined
+   */
+  backgroundColor?: string
+
+  /**
    * The color of the title (overrides color)
    */
   titleColor?: string
@@ -266,6 +271,7 @@ export class SVGuitarChord {
   draw(): { width: number; height: number } {
     this.clear()
     this.drawTopEdges()
+    this.drawBackground()
 
     let y
 
@@ -424,6 +430,12 @@ export class SVGuitarChord {
   private drawTopEdges() {
     this.renderer.circle(constants.width, 0, 0, 0, 'transparent', 'none')
     this.renderer.circle(0, 0, 0, 0, 'transparent', 'none')
+  }
+
+  private drawBackground() {
+    if (this.settings.backgroundColor) {
+      this.renderer.background(this.settings.backgroundColor)
+    }
   }
 
   private drawTopFret(y: number): number {

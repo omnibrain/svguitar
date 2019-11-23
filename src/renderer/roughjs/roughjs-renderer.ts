@@ -196,6 +196,16 @@ export class RoughJsRenderer extends Renderer {
     this.svgNode.setAttribute('viewBox', `0 0 ${Math.ceil(width)} ${Math.ceil(height)}`)
   }
 
+  background(color: string) {
+    const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+
+    bg.setAttributeNS(null, 'width', '100%')
+    bg.setAttributeNS(null, 'height', '100%')
+    bg.setAttributeNS(null, 'fill', color)
+
+    this.svgNode.insertBefore(bg, this.svgNode.firstChild)
+  }
+
   text(
     text: string,
     x: number,
