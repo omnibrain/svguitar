@@ -177,6 +177,11 @@ new SVGuitarChord('#some-selector')
            * @link titleColor or @link stringColor etc.
            */
           color: '#000',
+
+          /**
+           * The background color of the chord diagram. By default the background is transparent. To set the background to transparent either set this to 'none' or undefined
+           */
+          backgroundColor: 'none',
         
           /**
            * Barre chord rectangle border radius relative to the nutSize (eg. 1 means completely round endges, 0 means not rounded at all)
