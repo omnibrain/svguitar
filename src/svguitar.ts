@@ -560,7 +560,7 @@ export class SVGuitarChord {
 
     // draw strings
     stringXPositions.forEach(stringX => {
-      this.renderer.line(stringX, y, stringX, y + height, strokeWidth, fretColor)
+      this.renderer.line(stringX, y, stringX, y + height + strokeWidth / 2, strokeWidth, fretColor)
     })
 
     // draw fingers

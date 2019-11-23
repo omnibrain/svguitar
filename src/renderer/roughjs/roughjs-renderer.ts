@@ -139,8 +139,12 @@ export class RoughJsRenderer extends Renderer {
   }
 
   line(x1: number, y1: number, x2: number, y2: number, strokeWidth: number, color: string): void {
-    if (strokeWidth > 2) {
-      this.rect(x1, y1, x2 - x1, strokeWidth, 0, color, color)
+    if (strokeWidth > 5 && (x1 - x2 === 0 || y1 - y2 === 0)) {
+      if (Math.abs(x1 - x2) > Math.abs(y1 - y2)) {
+        this.rect(x1, y1, x2 - x1, strokeWidth, 0, color, color)
+      } else {
+        this.rect(x1 - strokeWidth / 2, y1, strokeWidth, y2 - y1, 0, color, color)
+      }
     } else {
       const line = this.rc.line(x1, y1, x2, y2, {
         strokeWidth,
