@@ -274,6 +274,35 @@ describe('SVGuitarChord', () => {
     saveSvg('with background', container.outerHTML)
   })
 
+  it('Should render two diagrams in the same position, with and without title', () => {
+    svguitar
+      .configure({
+        title: 'With Title',
+        fixedDiagramPosition: true
+      })
+      .draw()
+    saveSvg('fixed diagram position 1', container.outerHTML)
+
+    svguitar
+      .configure({
+        title: undefined,
+        fixedDiagramPosition: true
+      })
+      .draw()
+    saveSvg('fixed diagram position 2', container.outerHTML)
+
+    svguitar
+      .configure({
+        fixedDiagramPosition: true
+      })
+      .chord({
+        fingers: [[5, 'x']],
+        barres: []
+      })
+      .draw()
+    saveSvg('fixed diagram position 3', container.outerHTML)
+  })
+
   test.each`
     setting          | value | valid
     ${'strings'}     | ${1}  | ${false}

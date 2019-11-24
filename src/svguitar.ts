@@ -170,6 +170,12 @@ export interface ChordSettings {
    * The width of the top fret (only used if position is 1)
    */
   topFretWidth?: number
+
+  /**
+   * When set to true the distance between the chord diagram and the top of the SVG stayes the same,
+   * no matter if a title is defined or not.
+   */
+  fixedDiagramPosition?: boolean
 }
 
 /**
@@ -542,7 +548,7 @@ export class SVGuitarChord {
         }
       })
 
-    return hasEmpty ? y + size + 2 * padding : y + padding
+    return hasEmpty || this.settings.fixedDiagramPosition ? y + size + 2 * padding : y + padding
   }
 
   private drawGrid(y: number): number {
@@ -612,9 +618,14 @@ export class SVGuitarChord {
     const titleBottomMargin = this.settings.titleBottomMargin || defaultSettings.titleBottomMargin
     const fontFamily = this.settings.fontFamily || defaultSettings.fontFamily
 
+    // This is somewhat of a hack to get a steady diagram position: If no title is defined we initially
+    // render an 'X' and later remove it again. That way we get the same y as if there was a title. I tried
+    // just rendering a space but that doesn't work.
+    const title = this.settings.title || (this.settings.fixedDiagramPosition ? 'X' : '')
+
     // draw the title
     const { x, y, width, height, remove } = this.renderer.text(
-      this.settings.title || '',
+      title,
       constants.width / 2,
       5,
       size,
@@ -629,6 +640,10 @@ export class SVGuitarChord {
 
       // try again with smaller font
       return this.drawTitle(size * (constants.width / width))
+    }
+
+    if (!this.settings.title && this.settings.fixedDiagramPosition) {
+      remove()
     }
 
     return y + height + titleBottomMargin

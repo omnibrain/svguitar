@@ -223,6 +223,11 @@ new SVGuitarChord('#some-selector')
            * The color of the frets (overrides color)
            */
           fretColor: '#000000',
+          /**
+           * When set to true the distance between the chord diagram and the top of the SVG stayes the same,
+           * no matter if a title is defined or not.
+           */
+          fixedDiagramPosition: false
 
       })
       .draw();
