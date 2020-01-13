@@ -126,7 +126,7 @@
   },
   "dependencies": {
     "@svgdotjs/svg.js": "^3.0.13",
-    "roughjs": "^3.1.0",
+    "roughjs": "^4.0.1",
     "svgdom": "^0.0.21"
   }
 }
