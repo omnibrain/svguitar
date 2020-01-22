@@ -98,7 +98,7 @@
     "husky": "^4.0.2",
     "jest": "^24.9.0",
     "jest-config": "^24.9.0",
-    "jest-each": "^24.9.0",
+    "jest-each": "^25.1.0",
     "lint-staged": "^9.2.5",
     "lodash.camelcase": "^4.3.0",
     "npm-run-all-v2": "^1.0.0",
