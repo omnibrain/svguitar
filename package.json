@@ -106,7 +106,7 @@
     "prompt": "^1.0.0",
     "replace-in-file": "^5.0.2",
     "rimraf": "^3.0.0",
-    "rollup": "^1.21.3",
+    "rollup": "^2.0.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-html": "^0.2.1",
     "rollup-plugin-json": "^4.0.0",
