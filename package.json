@@ -121,7 +121,7 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
-    "typedoc": "^0.16.0",
+    "typedoc": "^0.17.0",
     "typescript": "^3.7.2"
   },
   "dependencies": {
