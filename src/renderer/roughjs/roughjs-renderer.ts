@@ -9,8 +9,8 @@ import { Alignment, GraphcisElement, Renderer } from '../renderer'
 import { QuerySelector } from '@svgdotjs/svg.js'
 import { RoughSVG } from 'roughjs/bin/svg'
 import rough from 'roughjs'
-import { Options } from 'roughjs/src/core'
 import defs from './defs'
+import { Options } from 'roughjs/bin/core'
 
 /**
  * Currently the font is hard-coded to 'Patrick Hand' when using the handdrawn chord diagram style.
@@ -91,7 +91,7 @@ export class RoughJsRenderer extends Renderer {
       const defsToAdd = template.content.firstChild?.firstChild?.parentElement?.children
 
       if (defsToAdd) {
-        Array.from(defsToAdd).forEach(def => {
+        Array.from(defsToAdd).forEach((def) => {
           def.setAttribute('data-svguitar-def', 'true')
           currentDefs?.appendChild(def)
         })
@@ -111,7 +111,7 @@ export class RoughJsRenderer extends Renderer {
       fill: fill || 'none',
       fillWeight: 2.5,
       stroke: strokeColor || fill || 'none',
-      roughness: 1.5
+      roughness: 1.5,
     }
 
     if (strokeWidth > 0) {
@@ -148,7 +148,7 @@ export class RoughJsRenderer extends Renderer {
     } else {
       const line = this.rc.line(x1, y1, x2, y2, {
         strokeWidth,
-        stroke: color
+        stroke: color,
       })
 
       this.svgNode.appendChild(line)
@@ -174,7 +174,7 @@ export class RoughJsRenderer extends Renderer {
       roughness: 2.8,
       fillStyle: 'cross-hatch',
       hachureAngle: 60, // angle of hachure,
-      hachureGap: 4
+      hachureGap: 4,
     })
 
     const rectRadius = radius || 0
@@ -183,7 +183,7 @@ export class RoughJsRenderer extends Renderer {
       fill: fill || 'none',
       fillWeight: 2.5,
       stroke: strokeColor || fill || 'none',
-      roughness: 1.5
+      roughness: 1.5,
     })
     rect.setAttribute('transform', `translate(${x}, ${y})`)
     this.svgNode.appendChild(rect)
@@ -259,7 +259,7 @@ export class RoughJsRenderer extends Renderer {
       height: box.height,
       x: box.x,
       y: box.y,
-      remove
+      remove,
     }
   }
 
