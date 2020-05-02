@@ -1,13 +1,13 @@
 import { QuerySelector } from '@svgdotjs/svg.js'
 import { range } from './utils'
 import { constants } from './constants'
-import { SvgJsRenderer, RoughJsRenderer, Alignment, GraphcisElement, Renderer } from './renderer'
+import { Alignment, GraphcisElement, Renderer, RoughJsRenderer, SvgJsRenderer } from './renderer'
 
 // Chord diagram input types (compatible with Vexchords input, see https://github.com/0xfe/vexchords)
 export type SilentString = 'x'
 export type OpenString = 0
 export type Finger = [number, number | OpenString | SilentString, string?]
-export type Barre = { fromString: number; toString: number; fret: number }
+export type Barre = { fromString: number; toString: number; fret: number; text?: string }
 export type Chord = { fingers: Finger[]; barres: Barre[] }
 
 /**
@@ -25,12 +25,12 @@ export const SILENT: SilentString = 'x'
  */
 export enum FretLabelPosition {
   LEFT = 'left',
-  RIGHT = 'right'
+  RIGHT = 'right',
 }
 
 export enum ChordStyle {
   normal = 'normal',
-  handdrawn = 'handdrawn'
+  handdrawn = 'handdrawn',
 }
 
 export interface ChordSettings {
@@ -82,6 +82,16 @@ export interface ChordSettings {
    * Color of a finger / nut
    */
   nutColor?: string
+
+  /**
+   * The color of text inside nuts
+   */
+  nutTextColor?: string
+
+  /**
+   * The size of text inside nuts
+   */
+  nutTextSize?: number
 
   /**
    * Height of a fret, relative to the space between two strings
@@ -192,6 +202,8 @@ interface RequiredChordSettings {
   fretLabelFontSize: number
   fretLabelPosition: FretLabelPosition
   nutSize: number
+  nutTextColor: string
+  nutTextSize: number
   sidePadding: number
   titleFontSize: number
   titleBottomMargin: number
@@ -214,6 +226,8 @@ const defaultSettings: RequiredChordSettings = {
   fretLabelFontSize: 38,
   fretLabelPosition: FretLabelPosition.RIGHT,
   nutSize: 0.65,
+  nutTextColor: '#FFF',
+  nutTextSize: 24,
   sidePadding: 0.2,
   titleFontSize: 48,
   titleBottomMargin: 0,
@@ -223,7 +237,7 @@ const defaultSettings: RequiredChordSettings = {
   topFretWidth: 10,
   fretSize: 1.5,
   barreChordRadius: 0.25,
-  fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif'
+  fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
 }
 
 export class SVGuitarChord {
@@ -295,7 +309,7 @@ export class SVGuitarChord {
 
     return {
       width: constants.width,
-      height: y
+      height: y,
     }
   }
 
@@ -471,7 +485,7 @@ export class SVGuitarChord {
     const startX = constants.width * sidePadding
     const stringsSpacing = this.stringSpacing()
 
-    return range(strings).map(i => startX + stringsSpacing * i)
+    return range(strings).map((i) => startX + stringsSpacing * i)
   }
 
   private stringSpacing(): number {
@@ -495,7 +509,7 @@ export class SVGuitarChord {
     const frets = this.settings.frets || defaultSettings.frets
     const fretSpacing = this.fretSpacing()
 
-    return range(frets, 1).map(i => startY + fretSpacing * i)
+    return range(frets, 1).map((i) => startY + fretSpacing * i)
   }
 
   private toArrayIndex(stringIndex: number): number {
@@ -518,7 +532,7 @@ export class SVGuitarChord {
 
     const stroke = {
       color,
-      width: strokeWidth
+      width: strokeWidth,
     }
 
     this._chord.fingers
@@ -567,47 +581,89 @@ export class SVGuitarChord {
     const nutSize = relativeNutSize * stringSpacing
     const nutColor = this.settings.nutColor || this.settings.color || defaultSettings.color
     const fretColor = this.settings.fretColor || this.settings.color || defaultSettings.color
-    const stringColor = this.settings.stringColor || this.settings.color || defaultSettings.color
     const barreChordRadius = this.settings.barreChordRadius || defaultSettings.barreChordRadius
     const strokeWidth = this.settings.strokeWidth || defaultSettings.strokeWidth
+    const fontFamily = this.settings.fontFamily || defaultSettings.fontFamily
+    const nutTextColor = this.settings.nutTextColor || defaultSettings.nutTextColor
+    const nutTextSize = this.settings.nutTextSize || defaultSettings.nutTextSize
 
     // draw frets
-    fretYPositions.forEach(fretY => {
+    fretYPositions.forEach((fretY) => {
       this.renderer.line(startX, fretY, endX, fretY, strokeWidth, fretColor)
     })
 
     // draw strings
-    stringXPositions.forEach(stringX => {
+    stringXPositions.forEach((stringX) => {
       this.renderer.line(stringX, y, stringX, y + height + strokeWidth / 2, strokeWidth, fretColor)
     })
 
     // draw fingers
     this._chord.fingers
       .filter(([_, value]) => value !== SILENT && value !== OPEN)
-      .map(([stringIndex, fretIndex]) => [this.toArrayIndex(stringIndex), fretIndex as number])
-      .forEach(([stringIndex, fretIndex]) => {
+      .map<[number, number, string | undefined]>(([stringIndex, fretIndex, text]) => [
+        this.toArrayIndex(stringIndex),
+        fretIndex as number,
+        text,
+      ])
+      .forEach(([stringIndex, fretIndex, text]) => {
+        const nutCenterX = startX + stringIndex * stringSpacing
+        const nutCenterY = y + fretIndex * fretSpacing - fretSpacing / 2
+
         this.renderer.circle(
-          startX - nutSize / 2 + stringIndex * stringSpacing,
-          y - fretSpacing / 2 - nutSize / 2 + fretIndex * fretSpacing,
+          nutCenterX - nutSize / 2,
+          nutCenterY - nutSize / 2,
           nutSize,
           0,
           nutColor,
           nutColor
         )
+
+        // draw text on the nut
+        if (text) {
+          this.renderer.text(
+            text,
+            nutCenterX,
+            nutCenterY,
+            nutTextSize,
+            nutTextColor,
+            fontFamily,
+            Alignment.MIDDLE,
+            true
+          )
+        }
       })
 
     // draw barre chords
-    this._chord.barres.forEach(({ fret, fromString, toString }) => {
+    this._chord.barres.forEach(({ fret, fromString, toString, text }) => {
+      const barreCenterY = fretYPositions[fret - 1] - fretSpacing / 2
+      const fromStringX = stringXPositions[this.toArrayIndex(fromString)]
+      const toStringX = stringXPositions[this.toArrayIndex(toString)]
+      const distance = Math.abs(toString - fromString) * stringSpacing
+
       this.renderer.rect(
-        stringXPositions[this.toArrayIndex(fromString)] - stringSpacing / 4,
-        fretYPositions[fret - 1] - fretSpacing / 2 - nutSize / 2,
-        Math.abs(toString - fromString) * stringSpacing + stringSpacing / 2,
+        fromStringX - stringSpacing / 4,
+        barreCenterY - nutSize / 2,
+        distance + stringSpacing / 2,
         nutSize,
         0,
         nutColor,
         nutColor,
         nutSize * barreChordRadius
       )
+
+      // draw text on the barre chord
+      if (text) {
+        this.renderer.text(
+          text,
+          fromStringX + distance / 2,
+          barreCenterY,
+          nutTextSize,
+          nutTextColor,
+          fontFamily,
+          Alignment.MIDDLE,
+          true
+        )
+      }
     })
 
     return y + height

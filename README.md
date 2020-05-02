@@ -75,17 +75,17 @@ Here's an example of a customized chart:
 ```javascript
 new SVGuitarChord('#some-selector')
       .chord({
-        // array of [string, fret]
+        // array of [string, fret, text]
         fingers: [
-          [1, 2],
-          [2, 3],
+          [1, 2, '2'],
+          [2, 3, '3'],
           [3, 3],
           [6, 'x']
         ],
       
         // optional: barres for barre chords
         barres: [
-          { fromString: 5, toString: 1, fret: 1 },
+          { fromString: 5, toString: 1, fret: 1, text: '1' },
         ],
       })
       .configure({
@@ -139,7 +139,17 @@ new SVGuitarChord('#some-selector')
            * Color of a finger / nut
            */
           nutColor: '#000',
+                
+          /**
+           * The color of text inside nuts
+           */
+          nutTextColor: '#FFF',
         
+          /**
+           * The size of text inside nuts
+           */
+          nutTextSize: 22,
+
           /**
            * Height of a fret, relative to the space between two strings
            */

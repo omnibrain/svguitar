@@ -34,24 +34,77 @@ describe('SVGuitarChord', () => {
           [2, 1],
           [3, 2],
           [4, 0], // fret 0 = open string
-          [5, 'x'] // fret x = muted string
+          [5, 'x'], // fret x = muted string
         ],
-        barres: []
+        barres: [],
       })
       .configure({
         strings: 5,
         frets: 6,
-        title: 'Amaj7'
+        title: 'Amaj7',
       })
       .draw()
 
     saveSvg('arbitrary chord', container.outerHTML)
   })
 
+  it('Should render text on the nuts', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [1, 2, 'A'],
+          [2, 1, 'B'],
+          [3, 2, 'C'],
+          [4, 0], // fret 0 = open string
+          [5, 'x'], // fret x = muted string
+        ],
+        barres: [],
+      })
+      .configure({
+        strings: 5,
+        frets: 6,
+        title: 'Text on Nuts',
+        nutTextColor: 'tomato',
+      })
+      .draw()
+
+    saveSvg('text on nuts', container.outerHTML)
+  })
+
+  it('Should render text on the barre chords', () => {
+    svguitar
+      .chord({
+        fingers: [],
+        barres: [
+          {
+            fret: 1,
+            fromString: 4,
+            toString: 1,
+            text: 'B',
+          },
+          {
+            fret: 3,
+            fromString: 5,
+            toString: 2,
+            text: 'A',
+          },
+        ],
+      })
+      .configure({
+        strings: 5,
+        frets: 5,
+        title: 'Text on Barres',
+        nutTextColor: 'lightgreen',
+      })
+      .draw()
+
+    saveSvg('text on barre chords', container.outerHTML)
+  })
+
   it('Should render a title nicely', () => {
     svguitar
       .configure({
-        title: 'Test Title'
+        title: 'Test Title',
       })
       .draw()
 
@@ -61,7 +114,7 @@ describe('SVGuitarChord', () => {
   it('Should render a very long title nicely', () => {
     svguitar
       .configure({
-        title: 'This is a very long title that does not fit easily'
+        title: 'This is a very long title that does not fit easily',
       })
       .draw()
 
@@ -71,10 +124,10 @@ describe('SVGuitarChord', () => {
   it('Should render 8 strings', () => {
     svguitar
       .configure({
-        title: '8 Strings'
+        title: '8 Strings',
       })
       .configure({
-        strings: 8
+        strings: 8,
       })
       .draw()
 
@@ -84,10 +137,10 @@ describe('SVGuitarChord', () => {
   it('Should render 8 frets', () => {
     svguitar
       .configure({
-        title: '8 Frets'
+        title: '8 Frets',
       })
       .configure({
-        frets: 8
+        frets: 8,
       })
       .draw()
 
@@ -98,7 +151,7 @@ describe('SVGuitarChord', () => {
     svguitar
       .configure({
         position: 2,
-        fretLabelPosition: FretLabelPosition.LEFT
+        fretLabelPosition: FretLabelPosition.LEFT,
       })
       .draw()
 
@@ -109,7 +162,7 @@ describe('SVGuitarChord', () => {
     svguitar
       .configure({
         position: 2,
-        fretLabelPosition: FretLabelPosition.RIGHT
+        fretLabelPosition: FretLabelPosition.RIGHT,
       })
       .draw()
 
@@ -120,7 +173,7 @@ describe('SVGuitarChord', () => {
     svguitar
       .configure({
         strings: 5,
-        tuning: ['1', '2', '3', '4', '5']
+        tuning: ['1', '2', '3', '4', '5'],
       })
       .draw()
 
@@ -131,7 +184,7 @@ describe('SVGuitarChord', () => {
     svguitar
       .configure({
         strings: 5,
-        tuning: ['1', '2', '3', '4', '5', '6']
+        tuning: ['1', '2', '3', '4', '5', '6'],
       })
       .draw()
 
@@ -142,7 +195,7 @@ describe('SVGuitarChord', () => {
     svguitar
       .configure({
         strings: 5,
-        frets: 5
+        frets: 5,
       })
       .chord({
         fingers: [],
@@ -150,14 +203,14 @@ describe('SVGuitarChord', () => {
           {
             fret: 1,
             fromString: 4,
-            toString: 1
+            toString: 1,
           },
           {
             fret: 3,
             fromString: 5,
-            toString: 2
-          }
-        ]
+            toString: 2,
+          },
+        ],
       })
       .draw()
 
@@ -170,7 +223,7 @@ describe('SVGuitarChord', () => {
         color: '#f00',
         tuning: ['1', '2', '3', '4', '5', '6'],
         title: 'Test',
-        position: 3
+        position: 3,
       })
       .chord({
         fingers: [
@@ -178,9 +231,9 @@ describe('SVGuitarChord', () => {
           [2, 1],
           [3, 2],
           [4, 0], // fret 0 = open string
-          [5, 'x'] // fret x = muted string
+          [5, 'x'], // fret x = muted string
         ],
-        barres: []
+        barres: [],
       })
       .draw()
 
@@ -207,7 +260,7 @@ describe('SVGuitarChord', () => {
         topFretWidth: 10,
         fretSize: 1.5,
         barreChordRadius: 0.25,
-        fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif'
+        fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
       })
       .chord({
         fingers: [
@@ -215,9 +268,9 @@ describe('SVGuitarChord', () => {
           [2, 1],
           [3, 2],
           [4, 0], // fret 0 = open string
-          [5, 'x'] // fret x = muted string
+          [5, 'x'], // fret x = muted string
         ],
-        barres: []
+        barres: [],
       })
       .draw()
 
@@ -232,9 +285,9 @@ describe('SVGuitarChord', () => {
           [2, 1],
           [3, 2],
           [4, 0], // fret 0 = open string
-          [5, 'x'] // fret x = muted string
+          [5, 'x'], // fret x = muted string
         ],
-        barres: []
+        barres: [],
       })
       .draw()
 
@@ -246,7 +299,7 @@ describe('SVGuitarChord', () => {
       .configure({
         title: 'Fat Strokes',
         strokeWidth: 10,
-        topFretWidth: 30
+        topFretWidth: 30,
       })
       .chord({
         fingers: [
@@ -254,9 +307,9 @@ describe('SVGuitarChord', () => {
           [2, 1],
           [3, 2],
           [4, 0], // fret 0 = open string
-          [5, 'x'] // fret x = muted string
+          [5, 'x'], // fret x = muted string
         ],
-        barres: []
+        barres: [],
       })
       .draw()
 
@@ -267,7 +320,7 @@ describe('SVGuitarChord', () => {
     svguitar
       .configure({
         title: 'With Background',
-        backgroundColor: '#00FF00'
+        backgroundColor: '#00FF00',
       })
       .draw()
 
@@ -278,7 +331,7 @@ describe('SVGuitarChord', () => {
     svguitar
       .configure({
         title: 'With Title',
-        fixedDiagramPosition: true
+        fixedDiagramPosition: true,
       })
       .draw()
     saveSvg('fixed diagram position 1', container.outerHTML)
@@ -286,18 +339,18 @@ describe('SVGuitarChord', () => {
     svguitar
       .configure({
         title: undefined,
-        fixedDiagramPosition: true
+        fixedDiagramPosition: true,
       })
       .draw()
     saveSvg('fixed diagram position 2', container.outerHTML)
 
     svguitar
       .configure({
-        fixedDiagramPosition: true
+        fixedDiagramPosition: true,
       })
       .chord({
         fingers: [[5, 'x']],
-        barres: []
+        barres: [],
       })
       .draw()
     saveSvg('fixed diagram position 3', container.outerHTML)

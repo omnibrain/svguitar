@@ -3,7 +3,7 @@ import { QuerySelector } from '@svgdotjs/svg.js'
 export enum Alignment {
   LEFT = 'left',
   MIDDLE = 'middle',
-  RIGHT = 'right'
+  RIGHT = 'right',
 }
 
 export interface GraphcisElement {
@@ -41,7 +41,8 @@ export abstract class Renderer {
     fontSize: number,
     color: string,
     fontFamily: string,
-    alignment: Alignment
+    alignment: Alignment,
+    plain?: boolean
   ): GraphcisElement
 
   abstract circle(

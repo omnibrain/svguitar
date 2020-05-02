@@ -213,7 +213,8 @@ export class RoughJsRenderer extends Renderer {
     fontSize: number,
     color: string,
     fontFamily: string,
-    alignment: Alignment
+    alignment: Alignment,
+    plain?: boolean
   ): GraphcisElement {
     // Place the SVG namespace in a variable to easily reference it.
     const txtElem = document.createElementNS('http://www.w3.org/2000/svg', 'text')
@@ -224,6 +225,10 @@ export class RoughJsRenderer extends Renderer {
     txtElem.setAttributeNS(null, 'font-family', FONT_FAMLILY)
     txtElem.setAttributeNS(null, 'align', alignment)
     txtElem.setAttributeNS(null, 'fill', color)
+
+    if (plain) {
+      txtElem.setAttributeNS(null, 'dominant-baseline', 'central')
+    }
 
     txtElem.appendChild(document.createTextNode(text))
 

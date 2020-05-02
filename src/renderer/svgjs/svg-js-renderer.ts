@@ -49,10 +49,7 @@ export class SvgJsRenderer extends Renderer {
   }
 
   background(color: string) {
-    this.svg
-      .rect()
-      .size('100%', '100%')
-      .fill(color)
+    this.svg.rect().size('100%', '100%').fill(color)
   }
 
   text(
@@ -62,17 +59,37 @@ export class SvgJsRenderer extends Renderer {
     fontSize: number,
     color: string,
     fontFamily: string,
-    alignment: Alignment
+    alignment: Alignment,
+    plain?: boolean
   ) {
-    const element = this.svg
-      .text(text)
-      .move(x, y)
-      .font({
-        family: fontFamily,
-        size: fontSize,
-        anchor: alignment
-      })
-      .fill(color)
+    let element
+
+    if (plain) {
+      // create a text element centered at x,y. No SVG.js magic.
+      element = this.svg
+        .plain(text)
+        .attr({
+          x,
+          y,
+        })
+        .font({
+          family: fontFamily,
+          size: fontSize,
+          anchor: alignment,
+          'dominant-baseline': 'central',
+        })
+        .fill(color)
+    } else {
+      element = this.svg
+        .text(text)
+        .move(x, y)
+        .font({
+          family: fontFamily,
+          size: fontSize,
+          anchor: alignment,
+        })
+        .fill(color)
+    }
 
     return this.boxToElement(element.bbox(), element.remove.bind(element))
   }
@@ -91,7 +108,7 @@ export class SvgJsRenderer extends Renderer {
       .fill(fill || 'none')
       .stroke({
         color: strokeColor,
-        width: strokeWidth
+        width: strokeWidth,
       })
 
     return this.boxToElement(element.bbox(), element.remove.bind(element))
@@ -113,7 +130,7 @@ export class SvgJsRenderer extends Renderer {
       .fill(fill || 'none')
       .stroke({
         width: strokeWidth,
-        color: strokeColor
+        color: strokeColor,
       })
       .radius(radius || 0)
 
@@ -126,7 +143,7 @@ export class SvgJsRenderer extends Renderer {
       height: box.height,
       x: box.x,
       y: box.y,
-      remove
+      remove,
     }
   }
 }
