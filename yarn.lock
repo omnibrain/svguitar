@@ -8815,10 +8815,10 @@ supports-hyperlinks@^2.0.0:
     has-flag "^4.0.0"
     supports-color "^7.0.0"
 
-svgdom@^0.0.21:
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/svgdom/-/svgdom-0.0.21.tgz#d155a1ed70f299ca248e3ec36f6149aa5e5f6ee6"
-  integrity sha512-uTtDg/X7fpMKwpG1WC0eQUzqebHcNkpJoH0ZQEe13801+y4UK2Jtl21zlCvCD+OMoC17nkeMGUG2rDPjRcPNHQ==
+svgdom@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/svgdom/-/svgdom-0.1.1.tgz#a2bb1f6cf9071f4de16c9c4c792db67fb4327353"
+  integrity sha512-NPzeK1KyaOTr3rhPrWfCLU7yy2nCbU1mwOMy5oI5sycOUirD6oifnaiyT5Af8MiPQPDpyN43iSET0QTolYFrgA==
   dependencies:
     fontkit "^1.5.4"
     gl-matrix "^2.3.2"
