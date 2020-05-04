@@ -103,7 +103,7 @@
     "husky": "^4.0.2",
     "jest": "^25.3.0",
     "jest-config": "^25.3.0",
-    "jest-each": "^25.3.0",
+    "jest-each": "^26.0.0",
     "lint-staged": "^10.0.3",
     "lodash.camelcase": "^4.3.0",
     "npm-run-all-v2": "^1.0.0",
