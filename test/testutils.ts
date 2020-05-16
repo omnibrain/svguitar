@@ -5,7 +5,8 @@ import { join } from 'path'
 export const svgOutputDir = './test-renders'
 
 export function setUpSvgDom(): Document {
-  const window = require('svgdom')
+  const svgdom = require('svgdom')
+  svgdom
     // your font directory
     .setFontDir('./fonts')
     // map the font-family to the file
@@ -13,6 +14,8 @@ export function setUpSvgDom(): Document {
     // you can preload your fonts to avoid the loading delay
     // when the font is used the first time
     .preloadFonts()
+
+  const window = svgdom.createSVGWindow()
 
   const { registerWindow } = require('@svgdotjs/svg.js')
   registerWindow(window, window.document)
