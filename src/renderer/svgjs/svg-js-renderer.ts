@@ -1,5 +1,5 @@
-import { Alignment, GraphcisElement, Renderer } from '../renderer'
 import { Box, Container, QuerySelector, SVG } from '@svgdotjs/svg.js'
+import { Alignment, GraphcisElement, Renderer } from '../renderer'
 import { constants } from '../../constants'
 import { isNode } from '../../utils'
 
@@ -10,7 +10,7 @@ export class SvgJsRenderer extends Renderer {
     super(container)
 
     // initialize the SVG
-    const width = constants.width
+    const { width } = constants
     const height = 0
 
     /*
@@ -30,25 +30,30 @@ export class SvgJsRenderer extends Renderer {
     this.svg.attr('preserveAspectRatio', 'xMidYMid meet').viewbox(0, 0, width, height)
   }
 
-  line(fromX: number, fromY: number, toX: number, toY: number, strokeWidth: number, color: string) {
+  line(
+    fromX: number,
+    fromY: number,
+    toX: number,
+    toY: number,
+    strokeWidth: number,
+    color: string,
+  ): void {
     this.svg.line(fromX, fromY, toX, toY).stroke({ color, width: strokeWidth })
   }
 
-  size(width: number, height: number) {
+  size(width: number, height: number): void {
     this.svg.viewbox(0, 0, width, height)
   }
 
   clear(): void {
-    for (let child of this.svg.children()) {
-      child.remove()
-    }
+    this.svg.children().forEach((child) => child.remove())
   }
 
   remove(): void {
     this.svg.remove()
   }
 
-  background(color: string) {
+  background(color: string): void {
     this.svg.rect().size('100%', '100%').fill(color)
   }
 
@@ -60,8 +65,8 @@ export class SvgJsRenderer extends Renderer {
     color: string,
     fontFamily: string,
     alignment: Alignment,
-    plain?: boolean
-  ) {
+    plain?: boolean,
+  ): GraphcisElement {
     let element
 
     if (plain) {
@@ -91,7 +96,7 @@ export class SvgJsRenderer extends Renderer {
         .fill(color)
     }
 
-    return this.boxToElement(element.bbox(), element.remove.bind(element))
+    return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
   }
 
   circle(
@@ -100,7 +105,7 @@ export class SvgJsRenderer extends Renderer {
     diameter: number,
     strokeWidth: number,
     strokeColor: string,
-    fill?: string
+    fill?: string,
   ): GraphcisElement {
     const element = this.svg
       .circle(diameter)
@@ -111,7 +116,7 @@ export class SvgJsRenderer extends Renderer {
         width: strokeWidth,
       })
 
-    return this.boxToElement(element.bbox(), element.remove.bind(element))
+    return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
   }
 
   rect(
@@ -122,7 +127,7 @@ export class SvgJsRenderer extends Renderer {
     strokeWidth: number,
     strokeColor: string,
     fill?: string,
-    radius?: number
+    radius?: number,
   ): GraphcisElement {
     const element = this.svg
       .rect(width, height)
@@ -134,10 +139,10 @@ export class SvgJsRenderer extends Renderer {
       })
       .radius(radius || 0)
 
-    return this.boxToElement(element.bbox(), element.remove.bind(element))
+    return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
   }
 
-  private boxToElement(box: Box, remove: () => void): GraphcisElement {
+  static boxToElement(box: Box, remove: () => void): GraphcisElement {
     return {
       width: box.width,
       height: box.height,
@@ -147,3 +152,5 @@ export class SvgJsRenderer extends Renderer {
     }
   }
 }
+
+export default SvgJsRenderer

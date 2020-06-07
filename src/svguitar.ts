@@ -6,9 +6,14 @@ import { Alignment, GraphcisElement, Renderer, RoughJsRenderer, SvgJsRenderer } 
 // Chord diagram input types (compatible with Vexchords input, see https://github.com/0xfe/vexchords)
 export type SilentString = 'x'
 export type OpenString = 0
-export type Finger = [number, number | OpenString | SilentString, string?]
+export type Finger = [number, number | OpenString | SilentString, (string | FingerOptions)?]
 export type Barre = { fromString: number; toString: number; fret: number; text?: string }
 export type Chord = { fingers: Finger[]; barres: Barre[] }
+
+export interface FingerOptions {
+  text?: string
+  color?: string
+}
 
 /**
  * Value for an open string (O)
@@ -100,12 +105,14 @@ export interface ChordSettings {
 
   /**
    * The minimum side padding (from the guitar to the edge of the SVG) relative to the whole width.
-   * This is only applied if it's larger than the letters inside of the padding (eg the starting fret)
+   * This is only applied if it's larger than the letters inside of the padding (eg the starting
+   * fret)
    */
   sidePadding?: number
 
   /**
-   * The font family used for all letters and numbers. Please not that when using the 'handdrawn' chord diagram style setting the font family has no effect.
+   * The font family used for all letters and numbers. Please not that when using the 'handdrawn'
+   * chord diagram style setting the font family has no effect.
    */
   fontFamily?: string
 
@@ -132,7 +139,8 @@ export interface ChordSettings {
   color?: string
 
   /**
-   * The background color of the chord diagram. By default the background is transparent. To set the background to transparent either set this to 'none' or undefined
+   * The background color of the chord diagram. By default the background is transparent. To set the
+   * background to transparent either set this to 'none' or undefined
    */
   backgroundColor?: string
 
@@ -162,7 +170,8 @@ export interface ChordSettings {
   fretColor?: string
 
   /**
-   * Barre chord rectangle border radius relative to the nutSize (eg. 1 means completely round endges, 0 means not rounded at all)
+   * Barre chord rectangle border radius relative to the nutSize (eg. 1 means completely round
+   * edges, 0 means not rounded at all)
    */
   barreChordRadius?: number
 
@@ -241,40 +250,41 @@ const defaultSettings: RequiredChordSettings = {
 }
 
 export class SVGuitarChord {
-  private _renderer?: Renderer
+  private rendererInternal?: Renderer
+
   private settings: ChordSettings = {}
 
-  private _chord: Chord = { fingers: [], barres: [] }
+  private chordInternal: Chord = { fingers: [], barres: [] }
 
   constructor(private container: QuerySelector | HTMLElement) {}
 
   private get renderer(): Renderer {
-    if (!this._renderer) {
+    if (!this.rendererInternal) {
       const style = this.settings.style || defaultSettings.style
 
       switch (style) {
         case ChordStyle.normal:
-          this._renderer = new SvgJsRenderer(this.container)
+          this.rendererInternal = new SvgJsRenderer(this.container)
           break
         case ChordStyle.handdrawn:
-          this._renderer = new RoughJsRenderer(this.container)
+          this.rendererInternal = new RoughJsRenderer(this.container)
           break
         default:
           throw new Error(`${style} is not a valid chord diagram style.`)
       }
     }
 
-    return this._renderer
+    return this.rendererInternal
   }
 
-  configure(settings: ChordSettings) {
-    this.sanityCheckSettings(settings)
+  configure(settings: ChordSettings): SVGuitarChord {
+    SVGuitarChord.sanityCheckSettings(settings)
 
     // special case for style: remove current renderer instance if style changed. The new renderer
     // instance will be created lazily.
     if (settings.style !== this.settings.style) {
       this.renderer.remove()
-      delete this._renderer
+      delete this.rendererInternal
     }
 
     this.settings = { ...this.settings, ...settings }
@@ -283,7 +293,7 @@ export class SVGuitarChord {
   }
 
   chord(chord: Chord): SVGuitarChord {
-    this._chord = chord
+    this.chordInternal = chord
 
     return this
   }
@@ -303,7 +313,7 @@ export class SVGuitarChord {
     y = this.drawTunings(y)
 
     // now set the final height of the svg (and add some padding relative to the fret spacing)
-    y = y + this.fretSpacing() / 10
+    y += this.fretSpacing() / 10
 
     this.renderer.size(constants.width, y)
 
@@ -313,7 +323,7 @@ export class SVGuitarChord {
     }
   }
 
-  private sanityCheckSettings(settings: Partial<ChordSettings>): void {
+  static sanityCheckSettings(settings: Partial<ChordSettings>): void {
     if (typeof settings.strings !== 'undefined' && settings.strings <= 1) {
       throw new Error('Must have at least 2 strings')
     }
@@ -351,19 +361,19 @@ export class SVGuitarChord {
 
     let text: GraphcisElement | undefined
 
-    tuning.map((tuning, i) => {
+    tuning.forEach((tuning_, i): void => {
       if (i < strings) {
         const tuningText = this.renderer.text(
-          tuning,
+          tuning_,
           stringXPositions[i],
           y + padding,
           tuningsFontSize,
           color,
           fontFamily,
-          Alignment.MIDDLE
+          Alignment.MIDDLE,
         )
 
-        if (tuning) {
+        if (tuning_) {
           text = tuningText
         }
       }
@@ -371,9 +381,8 @@ export class SVGuitarChord {
 
     if (text) {
       return y + text.height + padding * 2
-    } else {
-      return y
     }
+    return y
   }
 
   private drawPosition(y: number): void {
@@ -396,11 +405,10 @@ export class SVGuitarChord {
     // 1/2 nutSize plus some padding to prevent the nut overlapping the position label.
     const padding = Math.max(this.stringSpacing() / 5, nutSize / 2 + 5)
 
-    let textDoesNotFit = true
-
     const drawText = (sizeMultiplier = 1) => {
       if (sizeMultiplier < 0.01) {
         // text does not fit: don't render it at all.
+        // eslint-disable-next-line no-console
         console.warn('Not enough space to draw the starting fret')
         return
       }
@@ -413,7 +421,7 @@ export class SVGuitarChord {
           size * sizeMultiplier,
           color,
           fontFamily,
-          Alignment.LEFT
+          Alignment.LEFT,
         )
 
         const { width, x } = svgText
@@ -429,7 +437,7 @@ export class SVGuitarChord {
           size * sizeMultiplier,
           color,
           fontFamily,
-          Alignment.RIGHT
+          Alignment.RIGHT,
         )
 
         const { x } = svgText
@@ -524,19 +532,15 @@ export class SVGuitarChord {
     const emptyStringIndicatorSize =
       this.settings.emptyStringIndicatorSize || defaultSettings.emptyStringIndicatorSize
     const size = emptyStringIndicatorSize * stringSpacing
-    const padding = size / 3 // add some space above and below the indicator, relative to the indicator size
+    // add some space above and below the indicator, relative to the indicator size
+    const padding = size / 3
     const color = this.settings.color || defaultSettings.color
     const strokeWidth = this.settings.strokeWidth || defaultSettings.strokeWidth
 
     let hasEmpty = false
 
-    const stroke = {
-      color,
-      width: strokeWidth,
-    }
-
-    this._chord.fingers
-      .filter(([_, value]) => value === SILENT || value === OPEN)
+    this.chordInternal.fingers
+      .filter(([, value]) => value === SILENT || value === OPEN)
       .map<Finger>(([index, value]) => [this.toArrayIndex(index), value])
       .forEach(([stringIndex, value]) => {
         hasEmpty = true
@@ -548,7 +552,7 @@ export class SVGuitarChord {
             y + padding,
             size,
             strokeWidth,
-            color
+            color,
           )
         } else {
           // draw an X
@@ -598,14 +602,16 @@ export class SVGuitarChord {
     })
 
     // draw fingers
-    this._chord.fingers
-      .filter(([_, value]) => value !== SILENT && value !== OPEN)
-      .map<[number, number, string | undefined]>(([stringIndex, fretIndex, text]) => [
-        this.toArrayIndex(stringIndex),
-        fretIndex as number,
-        text,
-      ])
-      .forEach(([stringIndex, fretIndex, text]) => {
+    this.chordInternal.fingers
+      .filter(([, value]) => value !== SILENT && value !== OPEN)
+      .map<[number, number, string | FingerOptions | undefined]>(
+        ([stringIndex, fretIndex, text]) => [
+          this.toArrayIndex(stringIndex),
+          fretIndex as number,
+          text,
+        ],
+      )
+      .forEach(([stringIndex, fretIndex, textOrOptions]) => {
         const nutCenterX = startX + stringIndex * stringSpacing
         const nutCenterY = y + fretIndex * fretSpacing - fretSpacing / 2
 
@@ -615,8 +621,10 @@ export class SVGuitarChord {
           nutSize,
           0,
           nutColor,
-          nutColor
+          nutColor,
         )
+
+        const text = typeof textOrOptions === 'string' ? textOrOptions : textOrOptions?.text
 
         // draw text on the nut
         if (text) {
@@ -628,16 +636,15 @@ export class SVGuitarChord {
             nutTextColor,
             fontFamily,
             Alignment.MIDDLE,
-            true
+            true,
           )
         }
       })
 
     // draw barre chords
-    this._chord.barres.forEach(({ fret, fromString, toString, text }) => {
+    this.chordInternal.barres.forEach(({ fret, fromString, toString, text }) => {
       const barreCenterY = fretYPositions[fret - 1] - fretSpacing / 2
       const fromStringX = stringXPositions[this.toArrayIndex(fromString)]
-      const toStringX = stringXPositions[this.toArrayIndex(toString)]
       const distance = Math.abs(toString - fromString) * stringSpacing
 
       this.renderer.rect(
@@ -648,7 +655,7 @@ export class SVGuitarChord {
         0,
         nutColor,
         nutColor,
-        nutSize * barreChordRadius
+        nutSize * barreChordRadius,
       )
 
       // draw text on the barre chord
@@ -661,7 +668,7 @@ export class SVGuitarChord {
           nutTextColor,
           fontFamily,
           Alignment.MIDDLE,
-          true
+          true,
         )
       }
     })
@@ -687,7 +694,7 @@ export class SVGuitarChord {
       size,
       color,
       fontFamily,
-      Alignment.MIDDLE
+      Alignment.MIDDLE,
     )
 
     // check if the title fits. If not, try with a smaller size
@@ -705,14 +712,14 @@ export class SVGuitarChord {
     return y + height + titleBottomMargin
   }
 
-  clear() {
+  clear(): void {
     this.renderer.clear()
   }
 
   /**
    * Completely remove the diagram from the DOM
    */
-  remove() {
+  remove(): void {
     this.renderer.remove()
   }
 }

@@ -24,7 +24,8 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+    "format": "prettier --write '{src,test}/**/*.ts'",
+    "lint": "eslint -c .eslintrc.js --ext .ts src",
     "prebuild": "rimraf dist",
     "build": "run-s build:tsc build:rollup build:typedoc build:demo",
     "build:typedoc": "typedoc --out docs --target es6 --theme minimal --mode file src",
@@ -83,7 +84,8 @@
   },
   "prettier": {
     "semi": false,
-    "singleQuote": true
+    "singleQuote": true,
+    "trailingComma": "all"
   },
   "commitlint": {
     "extends": [
@@ -95,11 +97,17 @@
     "@commitlint/config-conventional": "^8.1.0",
     "@types/jest": "^25.2.2",
     "@types/node": "^14.0.0",
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
     "colors": "^1.3.2",
     "commitizen": "^4.0.3",
     "coveralls": "^3.0.2",
     "cross-env": "^7.0.0",
     "cz-conventional-changelog": "^3.0.2",
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb-typescript": "^8.0.2",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.20.2",
     "husky": "^4.0.2",
     "jest": "^26.0.1",
     "jest-config": "^25.3.0",
@@ -123,9 +131,6 @@
     "travis-deploy-once": "^5.0.9",
     "ts-jest": "^26.0.0",
     "ts-node": "^8.3.0",
-    "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-config-standard": "^9.0.0",
     "typedoc": "^0.17.0",
     "typescript": "^3.7.2"
   },

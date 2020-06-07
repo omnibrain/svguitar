@@ -5,12 +5,12 @@ that there is no SVG implementation for JSDOM. If that changes at some point thi
 tested just like the svg.js implementation
  */
 
-import { Alignment, GraphcisElement, Renderer } from '../renderer'
 import { QuerySelector } from '@svgdotjs/svg.js'
 import { RoughSVG } from 'roughjs/bin/svg'
 import rough from 'roughjs'
-import defs from './defs'
 import { Options } from 'roughjs/bin/core'
+import defs from './defs'
+import { Alignment, GraphcisElement, Renderer } from '../renderer'
 
 /**
  * Currently the font is hard-coded to 'Patrick Hand' when using the handdrawn chord diagram style.
@@ -22,7 +22,9 @@ const FONT_FAMLILY = 'Patrick Hand'
 
 export class RoughJsRenderer extends Renderer {
   private rc: RoughSVG
+
   private containerNode: HTMLElement
+
   private svgNode: SVGSVGElement
 
   constructor(container: QuerySelector | HTMLElement) {
@@ -105,7 +107,7 @@ export class RoughJsRenderer extends Renderer {
     diameter: number,
     strokeWidth: number,
     strokeColor: string,
-    fill?: string
+    fill?: string,
   ): GraphcisElement {
     const options: Options = {
       fill: fill || 'none',
@@ -122,7 +124,9 @@ export class RoughJsRenderer extends Renderer {
 
     this.svgNode.appendChild(circle)
 
-    return this.boxToElement(circle.getBBox(), () => (circle ? circle.remove() : void 0))
+    return RoughJsRenderer.boxToElement(circle.getBBox(), () =>
+      circle ? circle.remove() : undefined,
+    )
   }
 
   clear(): void {
@@ -163,7 +167,7 @@ export class RoughJsRenderer extends Renderer {
     strokeWidth: number,
     strokeColor: string,
     fill?: string,
-    radius?: number
+    radius?: number,
   ): GraphcisElement {
     const rect2 = this.rc.rectangle(x, y, width, height, {
       // fill: fill || 'none',
@@ -178,7 +182,14 @@ export class RoughJsRenderer extends Renderer {
     })
 
     const rectRadius = radius || 0
-    const path = this.roundedRectData(width, height, rectRadius, rectRadius, rectRadius, rectRadius)
+    const path = RoughJsRenderer.roundedRectData(
+      width,
+      height,
+      rectRadius,
+      rectRadius,
+      rectRadius,
+      rectRadius,
+    )
     const rect = this.rc.path(path, {
       fill: fill || 'none',
       fillWeight: 2.5,
@@ -189,14 +200,14 @@ export class RoughJsRenderer extends Renderer {
     this.svgNode.appendChild(rect)
     this.svgNode.appendChild(rect2)
 
-    return this.boxToElement(rect.getBBox(), () => rect.remove())
+    return RoughJsRenderer.boxToElement(rect.getBBox(), () => rect.remove())
   }
 
   size(width: number, height: number): void {
     this.svgNode.setAttribute('viewBox', `0 0 ${Math.ceil(width)} ${Math.ceil(height)}`)
   }
 
-  background(color: string) {
+  background(color: string): void {
     const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
 
     bg.setAttributeNS(null, 'width', '100%')
@@ -214,7 +225,7 @@ export class RoughJsRenderer extends Renderer {
     color: string,
     fontFamily: string,
     alignment: Alignment,
-    plain?: boolean
+    plain?: boolean,
   ): GraphcisElement {
     // Place the SVG namespace in a variable to easily reference it.
     const txtElem = document.createElementNS('http://www.w3.org/2000/svg', 'text')
@@ -255,10 +266,10 @@ export class RoughJsRenderer extends Renderer {
     txtElem.setAttributeNS(null, 'x', String(x + yOffset))
     txtElem.setAttributeNS(null, 'y', String(y + bbox.height / 2))
 
-    return this.boxToElement(txtElem.getBBox(), txtElem.remove.bind(txtElem))
+    return RoughJsRenderer.boxToElement(txtElem.getBBox(), txtElem.remove.bind(txtElem))
   }
 
-  private boxToElement(box: DOMRect, remove: () => void): GraphcisElement {
+  static boxToElement(box: DOMRect, remove: () => void): GraphcisElement {
     return {
       width: box.width,
       height: box.height,
@@ -268,58 +279,22 @@ export class RoughJsRenderer extends Renderer {
     }
   }
 
-  private roundedRectData(
+  static roundedRectData(
     w: number,
     h: number,
     tlr: number,
     trr: number,
     brr: number,
-    blr: number
-  ) {
+    blr: number,
+  ): string {
     return (
-      'M 0 ' +
-      tlr +
-      ' A ' +
-      tlr +
-      ' ' +
-      tlr +
-      ' 0 0 1 ' +
-      tlr +
-      ' 0' +
-      ' L ' +
-      (w - trr) +
-      ' 0' +
-      ' A ' +
-      trr +
-      ' ' +
-      trr +
-      ' 0 0 1 ' +
-      w +
-      ' ' +
-      trr +
-      ' L ' +
-      w +
-      ' ' +
-      (h - brr) +
-      ' A ' +
-      brr +
-      ' ' +
-      brr +
-      ' 0 0 1 ' +
-      (w - brr) +
-      ' ' +
-      h +
-      ' L ' +
-      blr +
-      ' ' +
-      h +
-      ' A ' +
-      blr +
-      ' ' +
-      blr +
-      ' 0 0 1 0 ' +
-      (h - blr) +
-      ' Z'
+      `M 0 ${tlr} A ${tlr} ${tlr} 0 0 1 ${tlr} 0` +
+      ` L ${w - trr} 0` +
+      ` A ${trr} ${trr} 0 0 1 ${w} ${trr} L ${w} ${h - brr} A ${brr} ${brr} 0 0 1 ${
+        w - brr
+      } ${h} L ${blr} ${h} A ${blr} ${blr} 0 0 1 0 ${h - blr} Z`
     )
   }
 }
+
+export default RoughJsRenderer

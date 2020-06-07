@@ -23,7 +23,7 @@ export abstract class Renderer {
     x2: number,
     y2: number,
     strokeWidth: number,
-    color: string
+    color: string,
   ): void
 
   abstract size(width: number, height: number): void
@@ -42,7 +42,7 @@ export abstract class Renderer {
     color: string,
     fontFamily: string,
     alignment: Alignment,
-    plain?: boolean
+    plain?: boolean,
   ): GraphcisElement
 
   abstract circle(
@@ -51,7 +51,7 @@ export abstract class Renderer {
     diameter: number,
     strokeWidth: number,
     strokeColor: string,
-    fill?: string
+    fill?: string,
   ): GraphcisElement
 
   abstract rect(
@@ -62,6 +62,6 @@ export abstract class Renderer {
     strokeWidth: number,
     strokeColor: string,
     fill?: string,
-    radius?: number
+    radius?: number,
   ): GraphcisElement
 }

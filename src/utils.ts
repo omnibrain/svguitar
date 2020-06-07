@@ -3,6 +3,6 @@ export function isNode(): boolean {
   return typeof process !== 'undefined' && process.versions != null && process.versions.node != null
 }
 
-export function range(length: number, from: number = 0): number[] {
+export function range(length: number, from = 0): number[] {
   return Array.from({ length }, (_, i) => i + from)
 }

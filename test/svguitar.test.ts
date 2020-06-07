@@ -71,6 +71,26 @@ describe('SVGuitarChord', () => {
     saveSvg('text on nuts', container.outerHTML)
   })
 
+  it('Should render nuts with a different color', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [1, 2, { color: 'green' }],
+          [2, 1, { text: 'B', color: 'blue' }],
+        ],
+        barres: [],
+      })
+      .configure({
+        strings: 5,
+        frets: 6,
+        title: 'Text on Nuts',
+        nutTextColor: 'tomato',
+      })
+      .draw()
+
+    saveSvg('colored nuts', container.outerHTML)
+  })
+
   it('Should render text on the barre chords', () => {
     svguitar
       .chord({
