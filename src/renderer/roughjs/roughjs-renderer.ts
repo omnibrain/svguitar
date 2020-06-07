@@ -247,24 +247,24 @@ export class RoughJsRenderer extends Renderer {
 
     const bbox = txtElem.getBBox()
 
-    let yOffset: number
+    let xOffset: number
 
     switch (alignment) {
       case Alignment.MIDDLE:
-        yOffset = -(bbox.width / 2)
+        xOffset = -(bbox.width / 2)
         break
       case Alignment.LEFT:
-        yOffset = 0
+        xOffset = 0
         break
       case Alignment.RIGHT:
-        yOffset = -bbox.width
+        xOffset = -bbox.width
         break
       default:
         throw new Error(`Invalid alignment ${alignment}`)
     }
 
-    txtElem.setAttributeNS(null, 'x', String(x + yOffset))
-    txtElem.setAttributeNS(null, 'y', String(y + bbox.height / 2))
+    txtElem.setAttributeNS(null, 'x', String(x + xOffset))
+    txtElem.setAttributeNS(null, 'y', String(y + (plain ? 0 : bbox.height / 2)))
 
     return RoughJsRenderer.boxToElement(txtElem.getBBox(), txtElem.remove.bind(txtElem))
   }
