@@ -7,6 +7,8 @@
 [![Dependencies](https://david-dm.org/omnibrain/svguitar/status.svg)](https://david-dm.org/omnibrain/svguitar)
 [![Dev Dependencies](https://david-dm.org/omnibrain/svguitar/dev-status.svg)](https://david-dm.org/omnibrain/svguitar?type=dev)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![Known Vulnerabilities](https://snyk.io/test/github/omnibrain/svguitar/badge.svg)](https://snyk.io/test/github/omnibrain/svguitar)
+
 
 JavaScript (TypeScript) library to create beautiful SVG guitar chord charts directly in the browser.
 
