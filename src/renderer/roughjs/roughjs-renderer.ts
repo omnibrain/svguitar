@@ -269,7 +269,7 @@ export class RoughJsRenderer extends Renderer {
     return RoughJsRenderer.boxToElement(txtElem.getBBox(), txtElem.remove.bind(txtElem))
   }
 
-  static boxToElement(box: DOMRect, remove: () => void): GraphcisElement {
+  private static boxToElement(box: DOMRect, remove: () => void): GraphcisElement {
     return {
       width: box.width,
       height: box.height,
@@ -279,7 +279,7 @@ export class RoughJsRenderer extends Renderer {
     }
   }
 
-  static roundedRectData(
+  private static roundedRectData(
     w: number,
     h: number,
     tlr: number,

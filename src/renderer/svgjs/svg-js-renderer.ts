@@ -142,7 +142,7 @@ export class SvgJsRenderer extends Renderer {
     return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
   }
 
-  static boxToElement(box: Box, remove: () => void): GraphcisElement {
+  private static boxToElement(box: Box, remove: () => void): GraphcisElement {
     return {
       width: box.width,
       height: box.height,

@@ -28,5 +28,5 @@ export function saveSvg(name: string, svg: string) {
     mkdirSync(svgOutputDir)
   }
 
-  writeFileSync(join(svgOutputDir, `${name}.svg`.replace(' ', '-')), svg)
+  writeFileSync(join(svgOutputDir, `${name}.svg`.replace(/\s+/g, '-')), svg)
 }

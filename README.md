@@ -80,17 +80,21 @@ Here's an example of a customized chart:
 ```javascript
 new SVGuitarChord('#some-selector')
       .chord({
-        // array of [string, fret, text]
+        // array of [string, fret, text | options]
         fingers: [
+          // finger at string 1, fret 2, with text '2'
           [1, 2, '2'],
-          [2, 3, '3'],
+
+          // finger at string 2, fret 3, with text '3', colored red
+          [2, 3, { text: '3', color: '#F00' }],
+        
           [3, 3],
           [6, 'x']
         ],
       
         // optional: barres for barre chords
         barres: [
-          { fromString: 5, toString: 1, fret: 1, text: '1' },
+          { fromString: 5, toString: 1, fret: 1, text: '1', color: '#0F0', textColor: '#F00' },
         ],
       })
       .configure({

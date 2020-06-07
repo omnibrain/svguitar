@@ -7,12 +7,20 @@ import { Alignment, GraphcisElement, Renderer, RoughJsRenderer, SvgJsRenderer } 
 export type SilentString = 'x'
 export type OpenString = 0
 export type Finger = [number, number | OpenString | SilentString, (string | FingerOptions)?]
-export type Barre = { fromString: number; toString: number; fret: number; text?: string }
+export type Barre = {
+  fromString: number
+  toString: number
+  fret: number
+  text?: string
+  color?: string
+  textColor?: string
+}
 export type Chord = { fingers: Finger[]; barres: Barre[] }
 
 export interface FingerOptions {
   text?: string
   color?: string
+  textColor?: string
 }
 
 /**
@@ -614,26 +622,25 @@ export class SVGuitarChord {
       .forEach(([stringIndex, fretIndex, textOrOptions]) => {
         const nutCenterX = startX + stringIndex * stringSpacing
         const nutCenterY = y + fretIndex * fretSpacing - fretSpacing / 2
+        const fingerOptions = SVGuitarChord.getFingerOptions(textOrOptions)
 
         this.renderer.circle(
           nutCenterX - nutSize / 2,
           nutCenterY - nutSize / 2,
           nutSize,
           0,
-          nutColor,
-          nutColor,
+          fingerOptions.color || nutColor,
+          fingerOptions.color || nutColor,
         )
 
-        const text = typeof textOrOptions === 'string' ? textOrOptions : textOrOptions?.text
-
         // draw text on the nut
-        if (text) {
+        if (fingerOptions.text) {
           this.renderer.text(
-            text,
+            fingerOptions.text,
             nutCenterX,
             nutCenterY,
             nutTextSize,
-            nutTextColor,
+            fingerOptions.textColor || nutTextColor,
             fontFamily,
             Alignment.MIDDLE,
             true,
@@ -642,7 +649,7 @@ export class SVGuitarChord {
       })
 
     // draw barre chords
-    this.chordInternal.barres.forEach(({ fret, fromString, toString, text }) => {
+    this.chordInternal.barres.forEach(({ fret, fromString, toString, text, color, textColor }) => {
       const barreCenterY = fretYPositions[fret - 1] - fretSpacing / 2
       const fromStringX = stringXPositions[this.toArrayIndex(fromString)]
       const distance = Math.abs(toString - fromString) * stringSpacing
@@ -653,8 +660,8 @@ export class SVGuitarChord {
         distance + stringSpacing / 2,
         nutSize,
         0,
-        nutColor,
-        nutColor,
+        color || nutColor,
+        color || nutColor,
         nutSize * barreChordRadius,
       )
 
@@ -665,7 +672,7 @@ export class SVGuitarChord {
           fromStringX + distance / 2,
           barreCenterY,
           nutTextSize,
-          nutTextColor,
+          textColor || nutTextColor,
           fontFamily,
           Alignment.MIDDLE,
           true,
@@ -721,5 +728,28 @@ export class SVGuitarChord {
    */
   remove(): void {
     this.renderer.remove()
+  }
+
+  /**
+   * Helper method to get an options object from the 3rd array value for a finger, that can either
+   * be undefined, a string or and options object. This method will return an options object in
+   * any case, so it's easier to work with this third value.
+   *
+   * @param textOrOptions
+   */
+  private static getFingerOptions(
+    textOrOptions: string | FingerOptions | undefined,
+  ): FingerOptions {
+    if (!textOrOptions) {
+      return {}
+    }
+
+    if (typeof textOrOptions === 'string') {
+      return {
+        text: textOrOptions,
+      }
+    }
+
+    return textOrOptions
   }
 }

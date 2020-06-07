@@ -83,12 +83,97 @@ describe('SVGuitarChord', () => {
       .configure({
         strings: 5,
         frets: 6,
-        title: 'Text on Nuts',
-        nutTextColor: 'tomato',
+        title: 'Colored Nuts',
       })
       .draw()
 
     saveSvg('colored nuts', container.outerHTML)
+  })
+
+  it('Should render text on nuts with a different color', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [1, 2, { text: 'G', textColor: 'green' }],
+          [2, 1, { text: 'B', textColor: 'blue' }],
+          [3, 1, { textColor: 'green' }], // no effect
+        ],
+        barres: [],
+      })
+      .configure({
+        strings: 5,
+        frets: 6,
+        title: 'Colored Text on Nuts',
+      })
+      .draw()
+
+    saveSvg('colored text on nuts', container.outerHTML)
+  })
+
+  it('Should render barre chords with a different color', () => {
+    svguitar
+      .chord({
+        fingers: [],
+        barres: [
+          {
+            fret: 1,
+            fromString: 4,
+            toString: 1,
+            color: 'blue',
+          },
+          {
+            fret: 3,
+            fromString: 5,
+            toString: 2,
+            color: 'red',
+          },
+        ],
+      })
+      .configure({
+        strings: 5,
+        frets: 6,
+        title: 'Colored Barre Chords',
+      })
+      .draw()
+
+    saveSvg('colored barre chords', container.outerHTML)
+  })
+
+  it('Should render text on barre chords with a different color', () => {
+    svguitar
+      .chord({
+        fingers: [],
+        barres: [
+          {
+            fret: 1,
+            fromString: 4,
+            toString: 1,
+            text: 'Blue Text',
+            textColor: 'blue',
+          },
+          {
+            fret: 3,
+            fromString: 5,
+            toString: 2,
+            text: 'Red Text',
+            textColor: 'red',
+          },
+          {
+            fret: 2,
+            fromString: 3,
+            toString: 2,
+            textColor: 'red',
+          },
+        ],
+      })
+      .configure({
+        strings: 5,
+        frets: 6,
+        title: 'Colored Text on Barre Chords',
+      })
+      .draw()
+
+    saveSvg('colored text on barre chords', container.outerHTML)
   })
 
   it('Should render text on the barre chords', () => {
