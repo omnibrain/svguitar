@@ -432,6 +432,31 @@ describe('SVGuitarChord', () => {
     saveSvg('with background', container.outerHTML)
   })
 
+  it('Should vertically center the barre corrctly', () => {
+    svguitar
+      .chord({
+        fingers: [],
+        barres: [
+          {
+            fret: 1,
+            fromString: 4,
+            toString: 1,
+          },
+        ],
+      })
+      .configure({
+        title: 'Fat Barre',
+        fretSize: 1,
+        nutSize: 1,
+        strokeWidth: 5,
+        nutColor: 'tomato',
+        barreChordRadius: 0.01,
+      })
+      .draw()
+
+    saveSvg('centered barre', container.outerHTML)
+  })
+
   it('Should render two diagrams in the same position, with and without title', () => {
     svguitar
       .configure({

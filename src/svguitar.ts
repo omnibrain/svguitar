@@ -650,7 +650,7 @@ export class SVGuitarChord {
 
     // draw barre chords
     this.chordInternal.barres.forEach(({ fret, fromString, toString, text, color, textColor }) => {
-      const barreCenterY = fretYPositions[fret - 1] - fretSpacing / 2
+      const barreCenterY = fretYPositions[fret - 1] - strokeWidth / 4 - fretSpacing / 2
       const fromStringX = stringXPositions[this.toArrayIndex(fromString)]
       const distance = Math.abs(toString - fromString) * stringSpacing
 
