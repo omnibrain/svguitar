@@ -203,6 +203,47 @@ export class RoughJsRenderer extends Renderer {
     return RoughJsRenderer.boxToElement(rect.getBBox(), () => rect.remove())
   }
 
+  triangle(
+    x: number,
+    y: number,
+    size: number,
+    strokeWidth: number,
+    strokeColor: string,
+    fill?: string | undefined,
+  ): GraphcisElement {
+    const triangle = this.rc.path(Renderer.trianglePath(0, 0, size), {
+      fill: fill || 'none',
+      fillWeight: 2.5,
+      stroke: strokeColor || fill || 'none',
+      roughness: 1.5,
+    })
+    triangle.setAttribute('transform', `translate(${x}, ${y})`)
+    this.svgNode.appendChild(triangle)
+
+    return RoughJsRenderer.boxToElement(triangle.getBBox(), () => triangle.remove())
+  }
+
+  pentagon(
+    x: number,
+    y: number,
+    size: number,
+    strokeWidth: number,
+    strokeColor: string,
+    fill?: string,
+    spikes = 5,
+  ): GraphcisElement {
+    const triangle = this.rc.path(Renderer.ngonPath(0, 0, size, spikes), {
+      fill: fill || 'none',
+      fillWeight: 2.5,
+      stroke: strokeColor || fill || 'none',
+      roughness: 1.5,
+    })
+    triangle.setAttribute('transform', `translate(${x}, ${y})`)
+    this.svgNode.appendChild(triangle)
+
+    return RoughJsRenderer.boxToElement(triangle.getBBox(), () => triangle.remove())
+  }
+
   size(width: number, height: number): void {
     this.svgNode.setAttribute('viewBox', `0 0 ${Math.ceil(width)} ${Math.ceil(height)}`)
   }

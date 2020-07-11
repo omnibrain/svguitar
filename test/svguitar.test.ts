@@ -1,5 +1,5 @@
-import { FretLabelPosition, SVGuitarChord } from '../src/svguitar'
-import { setUpSvgDom, saveSvg } from './testutils'
+import { FretLabelPosition, Shape, SVGuitarChord } from '../src/svguitar'
+import { saveSvg, setUpSvgDom } from './testutils'
 
 const document = setUpSvgDom()
 
@@ -88,6 +88,63 @@ describe('SVGuitarChord', () => {
       .draw()
 
     saveSvg('colored nuts', container.outerHTML)
+  })
+
+  it('Should render square nuts', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [1, 2, { shape: Shape.SQUARE }],
+          [2, 3, { shape: Shape.SQUARE, color: 'blue', text: 'X' }],
+        ],
+        barres: [],
+      })
+      .configure({
+        strings: 5,
+        frets: 6,
+        title: 'Square Nuts',
+      })
+      .draw()
+
+    saveSvg('square nuts', container.outerHTML)
+  })
+
+  it('Should render triangle nuts', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [1, 2, { shape: Shape.TRIANGLE }],
+          [2, 3, { shape: Shape.TRIANGLE, color: 'blue', text: 'X' }],
+        ],
+        barres: [],
+      })
+      .configure({
+        strings: 5,
+        frets: 6,
+        title: 'Triangle Nuts',
+      })
+      .draw()
+
+    saveSvg('triangle nuts', container.outerHTML)
+  })
+
+  it('Should render pentagon shaped nuts', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [1, 2, { shape: Shape.PENTAGON }],
+          [2, 3, { shape: Shape.PENTAGON, color: 'blue', text: 'X' }],
+        ],
+        barres: [],
+      })
+      .configure({
+        strings: 5,
+        frets: 6,
+        title: 'Pentagon Nuts',
+      })
+      .draw()
+
+    saveSvg('pentagon nuts', container.outerHTML)
   })
 
   it('Should render text on nuts with a different color', () => {

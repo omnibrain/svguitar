@@ -15,6 +15,11 @@ export interface GraphcisElement {
 }
 
 export abstract class Renderer {
+  /**
+   * Constant modifier to get the centroid of a equilateral triangle.
+   */
+  protected static readonly TRIANGLE_Y_OFFSET = 0.1547006
+
   constructor(protected container: QuerySelector | HTMLElement) {}
 
   abstract line(
@@ -64,4 +69,50 @@ export abstract class Renderer {
     fill?: string,
     radius?: number,
   ): GraphcisElement
+
+  abstract triangle(
+    x: number,
+    y: number,
+    size: number,
+    strokeWidth: number,
+    strokeColor: string,
+    fill?: string,
+  ): GraphcisElement
+
+  abstract pentagon(
+    x: number,
+    y: number,
+    size: number,
+    strokeWidth: number,
+    strokeColor: string,
+    fill?: string,
+  ): GraphcisElement
+
+  protected static trianglePath(x: number, y: number, size: number): string {
+    return `M${x + size / 2} ${y} L${x + size} ${y + size} L${x} ${y + size}`
+  }
+
+  protected static ngonPath(x: number, y: number, size: number, edges: number): string {
+    let i: number
+    let a: number
+    const degrees = 360 / edges
+    const radius = size / 2
+    const points: [number, number][] = []
+
+    let curX = x
+    let curY = y
+
+    for (i = 0; i < edges; i += 1) {
+      a = i * degrees - 90
+
+      curX = radius + radius * Math.cos((a * Math.PI) / 180)
+      curY = radius + radius * Math.sin((a * Math.PI) / 180)
+
+      points.push([curX, curY])
+    }
+
+    const lines = points.reduce((acc, [posX, posY]) => `${acc} L${posX} ${posY}`, '')
+
+    return `M${curX} ${curY} ${lines}`
+  }
 }
