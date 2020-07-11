@@ -89,7 +89,8 @@ new SVGuitarChord('#some-selector')
           // finger at string 2, fret 3, with text '3', colored red
           [2, 3, { text: '3', color: '#F00' }],
         
-          [3, 3],
+          // finger is triangle shpaed
+          [3, 3, { shape: 'triangle' }],
           [6, 'x']
         ],
       

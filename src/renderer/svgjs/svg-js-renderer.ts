@@ -142,6 +142,58 @@ export class SvgJsRenderer extends Renderer {
     return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
   }
 
+  triangle(
+    x: number,
+    y: number,
+    size: number,
+    strokeWidth: number,
+    strokeColor: string,
+    fill?: string | undefined,
+  ): GraphcisElement {
+    const element = this.svg
+      .path(Renderer.trianglePath(x, y, size))
+      .move(x, y - size * Renderer.TRIANGLE_Y_OFFSET)
+      .fill(fill || 'none')
+      .stroke({
+        width: strokeWidth,
+        color: strokeColor,
+      })
+
+    return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
+  }
+
+  pentagon(
+    x: number,
+    y: number,
+    size: number,
+    strokeWidth: number,
+    strokeColor: string,
+    fill: string,
+  ): GraphcisElement {
+    return this.ngon(x, y, size, strokeWidth, strokeColor, fill, 5)
+  }
+
+  private ngon(
+    x: number,
+    y: number,
+    size: number,
+    strokeWidth: number,
+    strokeColor: string,
+    fill: string,
+    edges: number,
+  ) {
+    const element = this.svg
+      .path(Renderer.ngonPath(x, y, size, edges))
+      .move(x, y)
+      .fill(fill || 'none')
+      .stroke({
+        width: strokeWidth,
+        color: strokeColor,
+      })
+
+    return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
+  }
+
   private static boxToElement(box: Box, remove: () => void): GraphcisElement {
     return {
       width: box.width,

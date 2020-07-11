@@ -21,6 +21,7 @@ export interface FingerOptions {
   text?: string
   color?: string
   textColor?: string
+  shape?: Shape
 }
 
 /**
@@ -39,6 +40,13 @@ export const SILENT: SilentString = 'x'
 export enum FretLabelPosition {
   LEFT = 'left',
   RIGHT = 'right',
+}
+
+export enum Shape {
+  CIRCLE = 'circle',
+  SQUARE = 'square',
+  TRIANGLE = 'triangle',
+  PENTAGON = 'pentagon',
 }
 
 export enum ChordStyle {
@@ -231,6 +239,7 @@ interface RequiredChordSettings {
   fretSize: number
   barreChordRadius: number
   fontFamily: string
+  shape: Shape
 }
 
 const defaultSettings: RequiredChordSettings = {
@@ -255,6 +264,7 @@ const defaultSettings: RequiredChordSettings = {
   fretSize: 1.5,
   barreChordRadius: 0.25,
   fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+  shape: Shape.CIRCLE,
 }
 
 export class SVGuitarChord {
@@ -620,32 +630,24 @@ export class SVGuitarChord {
         ],
       )
       .forEach(([stringIndex, fretIndex, textOrOptions]) => {
+        // const nutCenterX = x + stringIndex * stringSpacing
+        // const startX = size / 2;
+        // const nutCenterY = y + fretIndex * fretSpacing - fretSpacing / 2;
+        // const startY = nutCenterY - size / 2
+        //
         const nutCenterX = startX + stringIndex * stringSpacing
         const nutCenterY = y + fretIndex * fretSpacing - fretSpacing / 2
         const fingerOptions = SVGuitarChord.getFingerOptions(textOrOptions)
 
-        this.renderer.circle(
-          nutCenterX - nutSize / 2,
-          nutCenterY - nutSize / 2,
+        this.drawNut(
+          nutCenterX,
+          nutCenterY,
           nutSize,
-          0,
-          fingerOptions.color ?? nutColor,
-          fingerOptions.color ?? nutColor,
+          nutColor,
+          nutTextSize,
+          fontFamily,
+          fingerOptions,
         )
-
-        // draw text on the nut
-        if (fingerOptions.text) {
-          this.renderer.text(
-            fingerOptions.text,
-            nutCenterX,
-            nutCenterY,
-            nutTextSize,
-            fingerOptions.textColor ?? nutTextColor,
-            fontFamily,
-            Alignment.MIDDLE,
-            true,
-          )
-        }
       })
 
     // draw barre chords
@@ -681,6 +683,85 @@ export class SVGuitarChord {
     })
 
     return y + height
+  }
+
+  private drawNut(
+    x: number,
+    y: number,
+    size: number,
+    color: string,
+    textSize: number,
+    fontFamily: string,
+    fingerOptions: FingerOptions,
+  ) {
+    const shape = fingerOptions.shape ?? defaultSettings.shape
+    const nutTextColor = fingerOptions.textColor ?? defaultSettings.nutTextColor
+    const startX = x - size / 2
+    const startY = y - size / 2
+
+    switch (shape) {
+      case Shape.CIRCLE:
+        this.renderer.circle(
+          startX,
+          startY,
+          size,
+          0,
+          fingerOptions.color ?? color,
+          fingerOptions.color ?? color,
+        )
+        break
+      case Shape.SQUARE:
+        this.renderer.rect(
+          startX,
+          startY,
+          size,
+          size,
+          0,
+          fingerOptions.color ?? color,
+          fingerOptions.color ?? color,
+        )
+        break
+      case Shape.TRIANGLE:
+        this.renderer.triangle(
+          startX,
+          startY,
+          size,
+          0,
+          fingerOptions.color ?? color,
+          fingerOptions.color ?? color,
+        )
+        break
+      case Shape.PENTAGON:
+        this.renderer.pentagon(
+          startX,
+          startY,
+          size,
+          0,
+          fingerOptions.color ?? color,
+          fingerOptions.color ?? color,
+        )
+        break
+      default:
+        throw new Error(
+          `Invalid shape "${fingerOptions.shape}". Valid shapes are: ${Object.values(Shape)
+            .map((val) => `"${val}"`)
+            .join(', ')}.`,
+        )
+    }
+
+    // draw text on the nut
+    if (fingerOptions.text) {
+      this.renderer.text(
+        fingerOptions.text,
+        x,
+        y,
+        textSize,
+        fingerOptions.textColor ?? nutTextColor,
+        fontFamily,
+        Alignment.MIDDLE,
+        true,
+      )
+    }
   }
 
   private drawTitle(size: number): number {
