@@ -147,6 +147,17 @@ describe('SVGuitarChord', () => {
     saveSvg('pentagon nuts', container.outerHTML)
   })
 
+  it('Should throw an error if an invliad shape is provided', () => {
+    expect(() => {
+      svguitar
+        .chord({
+          fingers: [[1, 2, { shape: 'XXX' as Shape }]],
+          barres: [],
+        })
+        .draw()
+    }).toThrowError(/XXX/)
+  })
+
   it('Should render text on nuts with a different color', () => {
     svguitar
       .chord({
