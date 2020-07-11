@@ -268,7 +268,7 @@ export class SVGuitarChord {
 
   private get renderer(): Renderer {
     if (!this.rendererInternal) {
-      const style = this.settings.style || defaultSettings.style
+      const style = this.settings.style ?? defaultSettings.style
 
       switch (style) {
         case ChordStyle.normal:
@@ -313,7 +313,7 @@ export class SVGuitarChord {
 
     let y
 
-    y = this.drawTitle(this.settings.titleFontSize || defaultSettings.titleFontSize)
+    y = this.drawTitle(this.settings.titleFontSize ?? defaultSettings.titleFontSize)
     y = this.drawEmptyStringIndicators(y)
     y = this.drawTopFret(y)
     this.drawPosition(y)
@@ -361,11 +361,11 @@ export class SVGuitarChord {
     // add some padding relative to the fret spacing
     const padding = this.fretSpacing() / 5
     const stringXPositions = this.stringXPos()
-    const strings = this.settings.strings || defaultSettings.strings
-    const color = this.settings.tuningsColor || this.settings.color || defaultSettings.color
-    const tuning = this.settings.tuning || defaultSettings.tuning
-    const fontFamily = this.settings.fontFamily || defaultSettings.fontFamily
-    const tuningsFontSize = this.settings.tuningsFontSize || defaultSettings.tuningsFontSize
+    const strings = this.settings.strings ?? defaultSettings.strings
+    const color = this.settings.tuningsColor ?? this.settings.color ?? defaultSettings.color
+    const tuning = this.settings.tuning ?? defaultSettings.tuning
+    const fontFamily = this.settings.fontFamily ?? defaultSettings.fontFamily
+    const tuningsFontSize = this.settings.tuningsFontSize ?? defaultSettings.tuningsFontSize
 
     let text: GraphcisElement | undefined
 
@@ -394,7 +394,7 @@ export class SVGuitarChord {
   }
 
   private drawPosition(y: number): void {
-    const position = this.settings.position || defaultSettings.position
+    const position = this.settings.position ?? defaultSettings.position
     if (position <= 1) {
       return
     }
@@ -403,11 +403,11 @@ export class SVGuitarChord {
     const endX = stringXPositions[stringXPositions.length - 1]
     const startX = stringXPositions[0]
     const text = `${this.settings.position}fr`
-    const size = this.settings.fretLabelFontSize || defaultSettings.fretLabelFontSize
-    const color = this.settings.fretLabelColor || this.settings.color || defaultSettings.color
-    const nutSize = this.stringSpacing() * (this.settings.nutSize || defaultSettings.nutSize)
-    const fontFamily = this.settings.fontFamily || defaultSettings.fontFamily
-    const fretLabelPosition = this.settings.fretLabelPosition || defaultSettings.fretLabelPosition
+    const size = this.settings.fretLabelFontSize ?? defaultSettings.fretLabelFontSize
+    const color = this.settings.fretLabelColor ?? this.settings.color ?? defaultSettings.color
+    const nutSize = this.stringSpacing() * (this.settings.nutSize ?? defaultSettings.nutSize)
+    const fontFamily = this.settings.fontFamily ?? defaultSettings.fontFamily
+    const fretLabelPosition = this.settings.fretLabelPosition ?? defaultSettings.fretLabelPosition
 
     // add some padding relative to the string spacing. Also make sure the padding is at least
     // 1/2 nutSize plus some padding to prevent the nut overlapping the position label.
@@ -476,12 +476,12 @@ export class SVGuitarChord {
 
   private drawTopFret(y: number): number {
     const stringXpositions = this.stringXPos()
-    const strokeWidth = this.settings.strokeWidth || defaultSettings.strokeWidth
-    const topFretWidth = this.settings.topFretWidth || defaultSettings.topFretWidth
+    const strokeWidth = this.settings.strokeWidth ?? defaultSettings.strokeWidth
+    const topFretWidth = this.settings.topFretWidth ?? defaultSettings.topFretWidth
     const startX = stringXpositions[0] - strokeWidth / 2
     const endX = stringXpositions[stringXpositions.length - 1] + strokeWidth / 2
-    const position = this.settings.position || defaultSettings.position
-    const color = this.settings.fretColor || this.settings.color || defaultSettings.color
+    const position = this.settings.position ?? defaultSettings.position
+    const color = this.settings.fretColor ?? this.settings.color ?? defaultSettings.color
 
     let fretSize: number
     if (position > 1) {
@@ -496,8 +496,8 @@ export class SVGuitarChord {
   }
 
   private stringXPos(): number[] {
-    const strings = this.settings.strings || defaultSettings.strings
-    const sidePadding = this.settings.sidePadding || defaultSettings.sidePadding
+    const strings = this.settings.strings ?? defaultSettings.strings
+    const sidePadding = this.settings.sidePadding ?? defaultSettings.sidePadding
     const startX = constants.width * sidePadding
     const stringsSpacing = this.stringSpacing()
 
@@ -505,8 +505,8 @@ export class SVGuitarChord {
   }
 
   private stringSpacing(): number {
-    const sidePadding = this.settings.sidePadding || defaultSettings.sidePadding
-    const strings = this.settings.strings || defaultSettings.strings
+    const sidePadding = this.settings.sidePadding ?? defaultSettings.sidePadding
+    const strings = this.settings.strings ?? defaultSettings.strings
     const startX = constants.width * sidePadding
     const endX = constants.width - startX
     const width = endX - startX
@@ -516,20 +516,20 @@ export class SVGuitarChord {
 
   private fretSpacing(): number {
     const stringSpacing = this.stringSpacing()
-    const fretSize = this.settings.fretSize || defaultSettings.fretSize
+    const fretSize = this.settings.fretSize ?? defaultSettings.fretSize
 
     return stringSpacing * fretSize
   }
 
   private fretLinesYPos(startY: number): number[] {
-    const frets = this.settings.frets || defaultSettings.frets
+    const frets = this.settings.frets ?? defaultSettings.frets
     const fretSpacing = this.fretSpacing()
 
     return range(frets, 1).map((i) => startY + fretSpacing * i)
   }
 
   private toArrayIndex(stringIndex: number): number {
-    const strings = this.settings.strings || defaultSettings.strings
+    const strings = this.settings.strings ?? defaultSettings.strings
 
     return Math.abs(stringIndex - strings)
   }
@@ -538,12 +538,12 @@ export class SVGuitarChord {
     const stringXPositions = this.stringXPos()
     const stringSpacing = this.stringSpacing()
     const emptyStringIndicatorSize =
-      this.settings.emptyStringIndicatorSize || defaultSettings.emptyStringIndicatorSize
+      this.settings.emptyStringIndicatorSize ?? defaultSettings.emptyStringIndicatorSize
     const size = emptyStringIndicatorSize * stringSpacing
     // add some space above and below the indicator, relative to the indicator size
     const padding = size / 3
-    const color = this.settings.color || defaultSettings.color
-    const strokeWidth = this.settings.strokeWidth || defaultSettings.strokeWidth
+    const color = this.settings.color ?? defaultSettings.color
+    const strokeWidth = this.settings.strokeWidth ?? defaultSettings.strokeWidth
 
     let hasEmpty = false
 
@@ -578,9 +578,9 @@ export class SVGuitarChord {
   }
 
   private drawGrid(y: number): number {
-    const frets = this.settings.frets || defaultSettings.frets
-    const fretSize = this.settings.fretSize || defaultSettings.fretSize
-    const relativeNutSize = this.settings.nutSize || defaultSettings.nutSize
+    const frets = this.settings.frets ?? defaultSettings.frets
+    const fretSize = this.settings.fretSize ?? defaultSettings.fretSize
+    const relativeNutSize = this.settings.nutSize ?? defaultSettings.nutSize
     const stringXPositions = this.stringXPos()
     const fretYPositions = this.fretLinesYPos(y)
     const stringSpacing = this.stringSpacing()
@@ -591,13 +591,13 @@ export class SVGuitarChord {
     const endX = stringXPositions[stringXPositions.length - 1]
 
     const nutSize = relativeNutSize * stringSpacing
-    const nutColor = this.settings.nutColor || this.settings.color || defaultSettings.color
-    const fretColor = this.settings.fretColor || this.settings.color || defaultSettings.color
-    const barreChordRadius = this.settings.barreChordRadius || defaultSettings.barreChordRadius
-    const strokeWidth = this.settings.strokeWidth || defaultSettings.strokeWidth
-    const fontFamily = this.settings.fontFamily || defaultSettings.fontFamily
-    const nutTextColor = this.settings.nutTextColor || defaultSettings.nutTextColor
-    const nutTextSize = this.settings.nutTextSize || defaultSettings.nutTextSize
+    const nutColor = this.settings.nutColor ?? this.settings.color ?? defaultSettings.color
+    const fretColor = this.settings.fretColor ?? this.settings.color ?? defaultSettings.color
+    const barreChordRadius = this.settings.barreChordRadius ?? defaultSettings.barreChordRadius
+    const strokeWidth = this.settings.strokeWidth ?? defaultSettings.strokeWidth
+    const fontFamily = this.settings.fontFamily ?? defaultSettings.fontFamily
+    const nutTextColor = this.settings.nutTextColor ?? defaultSettings.nutTextColor
+    const nutTextSize = this.settings.nutTextSize ?? defaultSettings.nutTextSize
 
     // draw frets
     fretYPositions.forEach((fretY) => {
@@ -629,8 +629,8 @@ export class SVGuitarChord {
           nutCenterY - nutSize / 2,
           nutSize,
           0,
-          fingerOptions.color || nutColor,
-          fingerOptions.color || nutColor,
+          fingerOptions.color ?? nutColor,
+          fingerOptions.color ?? nutColor,
         )
 
         // draw text on the nut
@@ -640,7 +640,7 @@ export class SVGuitarChord {
             nutCenterX,
             nutCenterY,
             nutTextSize,
-            fingerOptions.textColor || nutTextColor,
+            fingerOptions.textColor ?? nutTextColor,
             fontFamily,
             Alignment.MIDDLE,
             true,
@@ -660,8 +660,8 @@ export class SVGuitarChord {
         distance + stringSpacing / 2,
         nutSize,
         0,
-        color || nutColor,
-        color || nutColor,
+        color ?? nutColor,
+        color ?? nutColor,
         nutSize * barreChordRadius,
       )
 
@@ -672,7 +672,7 @@ export class SVGuitarChord {
           fromStringX + distance / 2,
           barreCenterY,
           nutTextSize,
-          textColor || nutTextColor,
+          textColor ?? nutTextColor,
           fontFamily,
           Alignment.MIDDLE,
           true,
@@ -684,14 +684,14 @@ export class SVGuitarChord {
   }
 
   private drawTitle(size: number): number {
-    const color = this.settings.color || defaultSettings.color
-    const titleBottomMargin = this.settings.titleBottomMargin || defaultSettings.titleBottomMargin
-    const fontFamily = this.settings.fontFamily || defaultSettings.fontFamily
+    const color = this.settings.color ?? defaultSettings.color
+    const titleBottomMargin = this.settings.titleBottomMargin ?? defaultSettings.titleBottomMargin
+    const fontFamily = this.settings.fontFamily ?? defaultSettings.fontFamily
 
     // This is somewhat of a hack to get a steady diagram position: If no title is defined we initially
     // render an 'X' and later remove it again. That way we get the same y as if there was a title. I tried
     // just rendering a space but that doesn't work.
-    const title = this.settings.title || (this.settings.fixedDiagramPosition ? 'X' : '')
+    const title = this.settings.title ?? (this.settings.fixedDiagramPosition ? 'X' : '')
 
     // draw the title
     const { x, y, width, height, remove } = this.renderer.text(

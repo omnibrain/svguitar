@@ -445,12 +445,12 @@ describe('SVGuitarChord', () => {
         ],
       })
       .configure({
-        title: 'Fat Barre',
+        title: 'Centered Barre',
         fretSize: 1,
         nutSize: 1,
         strokeWidth: 5,
         nutColor: 'tomato',
-        barreChordRadius: 0.01,
+        barreChordRadius: 0,
       })
       .draw()
 
