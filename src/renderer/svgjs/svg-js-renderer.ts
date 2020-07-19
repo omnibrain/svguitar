@@ -152,7 +152,7 @@ export class SvgJsRenderer extends Renderer {
   ): GraphcisElement {
     const element = this.svg
       .path(Renderer.trianglePath(x, y, size))
-      .move(x, y - size * Renderer.TRIANGLE_Y_OFFSET)
+      .move(x, y)
       .fill(fill || 'none')
       .stroke({
         width: strokeWidth,

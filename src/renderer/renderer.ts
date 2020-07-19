@@ -15,12 +15,7 @@ export interface GraphcisElement {
 }
 
 export abstract class Renderer {
-  /**
-   * Constant modifier to get the centroid of a equilateral triangle.
-   */
-  protected static readonly TRIANGLE_Y_OFFSET = 0.1547006
-
-  constructor(protected container: QuerySelector | HTMLElement) {}
+  protected constructor(protected container: QuerySelector | HTMLElement) {}
 
   abstract line(
     x1: number,
