@@ -40,8 +40,7 @@
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "commit": "git-cz",
     "semantic-release": "semantic-release",
-    "precommit": "lint-staged",
-    "travis-deploy-once": "travis-deploy-once"
+    "precommit": "lint-staged"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -127,7 +126,6 @@
     "rollup-plugin-typescript2": "^0.27.1",
     "semantic-release": "^17.0.0",
     "shelljs": "^0.8.3",
-    "travis-deploy-once": "^5.0.9",
     "ts-jest": "^26.0.0",
     "ts-node": "^8.3.0",
     "typedoc": "^0.17.0",

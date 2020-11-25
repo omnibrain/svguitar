@@ -8,10 +8,17 @@ node_js:
   - '13'
 script:
   - yarn test:prod && yarn build
-after_success:
-  - yarn travis-deploy-once "yarn report-coverage"
-  - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then yarn travis-deploy-once "yarn deploy-pages"; fi
-  - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then yarn travis-deploy-once "yarn semantic-release"; fi
+
+jobs:
+  include:
+    # Define the release stage that runs semantic-release
+    - stage: release
+      node_js: '13'
+      script: skip
+      deploy:
+        provider: script
+        script: if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then yarn report-coverage && yarn deploy-pages && yarn semantic-release; fi
+
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
