@@ -1,3 +1,5 @@
+os: linux
+dist: xenial
 language: node_js
 cache: yarn
 notifications:
@@ -15,9 +17,12 @@ jobs:
     - stage: release
       node_js: '13'
       script: skip
+      on:
+        branch: master
       deploy:
         provider: script
-        script: if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then yarn report-coverage && yarn deploy-pages && yarn semantic-release; fi
+        skip_cleanup: true
+        script: yarn deploy-pages && yarn semantic-release
 
 branches:
   except:
