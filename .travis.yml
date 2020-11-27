@@ -22,7 +22,7 @@ jobs:
       deploy:
         provider: script
         skip_cleanup: true
-        script: yarn deploy-pages && yarn semantic-release
+        script: yarn report-coverage && yarn deploy-pages && yarn semantic-release
 
 branches:
   except:
