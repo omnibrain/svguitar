@@ -284,6 +284,36 @@ describe('SVGuitarChord', () => {
     saveSvg('with title', container.outerHTML)
   })
 
+  it('Should render a title provided as part of the chord', () => {
+    svguitar
+      .configure({
+        title: 'DO NOT RENDER THIS',
+      })
+      .chord({
+        fingers: [],
+        barres: [],
+        title: 'title from chord',
+      })
+      .draw()
+
+    saveSvg('title from chord', container.outerHTML)
+  })
+
+  it('Should render the position provided as part of the chord', () => {
+    svguitar
+      .configure({
+        position: 999,
+      })
+      .chord({
+        fingers: [],
+        barres: [],
+        position: 3,
+      })
+      .draw()
+
+    saveSvg('position from chord', container.outerHTML)
+  })
+
   it('Should render a very long title nicely', () => {
     svguitar
       .configure({

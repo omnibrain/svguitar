@@ -3,7 +3,7 @@ import { QuerySelector } from '@svgdotjs/svg.js'
 import { range } from './utils'
 import { constants } from './constants'
 import { Alignment, GraphcisElement, Renderer, RoughJsRenderer, SvgJsRenderer } from './renderer'
-import { SVGuitarPlugin, Constructor, ReturnTypeOf } from './plugin'
+import { Constructor, ReturnTypeOf, SVGuitarPlugin } from './plugin'
 
 // Chord diagram input types (compatible with Vexchords input, see https://github.com/0xfe/vexchords)
 export type SilentString = 'x'
@@ -17,7 +17,25 @@ export type Barre = {
   color?: string
   textColor?: string
 }
-export type Chord = { fingers: Finger[]; barres: Barre[] }
+export type Chord = {
+  /**
+   * The fingers (nuts)
+   */
+  fingers: Finger[]
+
+  /**
+   * The barre chords
+   */
+  barres: Barre[]
+  /**
+   * Position (defaults to 1). Can also be provided via {@link ChordSettings}.
+   */
+  position?: number
+  /**
+   * Title of the chart. Can also be provided via {@link ChordSettings}.
+   */
+  title?: string
+}
 
 export interface FingerOptions {
   text?: string
@@ -72,7 +90,8 @@ export interface ChordSettings {
    */
   frets?: number
   /**
-   * The starting fret (first fret is 1)
+   * The starting fret (first fret is 1). The position can also be provided with the {@link Chord}.
+   * If the position is provided via the chord, this value will be ignored.
    */
   position?: number
 
@@ -135,7 +154,8 @@ export interface ChordSettings {
   fontFamily?: string
 
   /**
-   * The title of the diagram
+   * The title of the diagram. The title can also be provided with the {@link Chord}.
+   * If the title is provided in the chord, this value will be ignored.
    */
   title?: string
 
@@ -430,7 +450,8 @@ export class SVGuitarChord {
   }
 
   private drawPosition(y: number): void {
-    const position = this.settings.position ?? defaultSettings.position
+    const position =
+      this.chordInternal.position ?? this.settings.position ?? defaultSettings.position
     if (position <= 1) {
       return
     }
@@ -438,7 +459,7 @@ export class SVGuitarChord {
     const stringXPositions = this.stringXPos()
     const endX = stringXPositions[stringXPositions.length - 1]
     const startX = stringXPositions[0]
-    const text = `${this.settings.position}fr`
+    const text = `${position}fr`
     const size = this.settings.fretLabelFontSize ?? defaultSettings.fretLabelFontSize
     const color = this.settings.fretLabelColor ?? this.settings.color ?? defaultSettings.color
     const nutSize = this.stringSpacing() * (this.settings.nutSize ?? defaultSettings.nutSize)
@@ -516,7 +537,8 @@ export class SVGuitarChord {
     const topFretWidth = this.settings.topFretWidth ?? defaultSettings.topFretWidth
     const startX = stringXpositions[0] - strokeWidth / 2
     const endX = stringXpositions[stringXpositions.length - 1] + strokeWidth / 2
-    const position = this.settings.position ?? defaultSettings.position
+    const position =
+      this.chordInternal.position ?? this.settings.position ?? defaultSettings.position
     const color = this.settings.fretColor ?? this.settings.color ?? defaultSettings.color
 
     let fretSize: number
@@ -798,7 +820,10 @@ export class SVGuitarChord {
     // This is somewhat of a hack to get a steady diagram position: If no title is defined we initially
     // render an 'X' and later remove it again. That way we get the same y as if there was a title. I tried
     // just rendering a space but that doesn't work.
-    const title = this.settings.title ?? (this.settings.fixedDiagramPosition ? 'X' : '')
+    const title =
+      this.chordInternal.title ??
+      this.settings.title ??
+      (this.settings.fixedDiagramPosition ? 'X' : '')
 
     // draw the title
     const { x, y, width, height, remove } = this.renderer.text(
