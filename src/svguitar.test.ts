@@ -1,5 +1,5 @@
-import { FretLabelPosition, Shape, SVGuitarChord } from '../src/svguitar'
-import { saveSvg, setUpSvgDom } from './testutils'
+import { FretLabelPosition, Shape, SVGuitarChord } from './svguitar'
+import { saveSvg, setUpSvgDom } from '../test/testutils'
 
 const document = setUpSvgDom()
 

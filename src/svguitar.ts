@@ -1,7 +1,9 @@
+/* eslint-disable max-classes-per-file */
 import { QuerySelector } from '@svgdotjs/svg.js'
 import { range } from './utils'
 import { constants } from './constants'
 import { Alignment, GraphcisElement, Renderer, RoughJsRenderer, SvgJsRenderer } from './renderer'
+import { SVGuitarPlugin, Constructor, ReturnTypeOf } from './plugin'
 
 // Chord diagram input types (compatible with Vexchords input, see https://github.com/0xfe/vexchords)
 export type SilentString = 'x'
@@ -268,13 +270,37 @@ const defaultSettings: RequiredChordSettings = {
 }
 
 export class SVGuitarChord {
+  static plugins: SVGuitarPlugin[] = []
+
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  static plugin<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    S extends Constructor<any> & { plugins: any[] },
+    T extends SVGuitarPlugin | SVGuitarPlugin[]
+  >(this: S, plugin: T) {
+    const currentPlugins = this.plugins
+
+    const BaseWithPlugins = class extends this {
+      static plugins = currentPlugins.concat(plugin)
+    }
+
+    return BaseWithPlugins as typeof BaseWithPlugins & Constructor<ReturnTypeOf<T>>
+  }
+
   private rendererInternal?: Renderer
 
   private settings: ChordSettings = {}
 
   private chordInternal: Chord = { fingers: [], barres: [] }
 
-  constructor(private container: QuerySelector | HTMLElement) {}
+  constructor(private container: QuerySelector | HTMLElement) {
+    // apply plugins
+    // https://stackoverflow.com/a/16345172
+    const classConstructor = this.constructor as typeof SVGuitarChord
+    classConstructor.plugins.forEach((plugin) => {
+      Object.assign(this, plugin(this))
+    })
+  }
 
   private get renderer(): Renderer {
     if (!this.rendererInternal) {
