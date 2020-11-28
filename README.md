@@ -98,6 +98,12 @@ new SVGuitarChord('#some-selector')
         barres: [
           { fromString: 5, toString: 1, fret: 1, text: '1', color: '#0F0', textColor: '#F00' },
         ],
+
+        // title of the chart (optional)
+        title: 'F# minor',
+
+        // position (defaults to 1)
+        position: 2,
       })
       .configure({
           // Customizations (all optional, defaults shown)
@@ -117,7 +123,7 @@ new SVGuitarChord('#some-selector')
            */
           frets: 4,
           /**
-           * The starting fret (first fret is 1)
+           * Default position if no positon is provided (first fret is 1)
            */
           position: 1,
         
@@ -178,7 +184,7 @@ new SVGuitarChord('#some-selector')
           fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
         
           /**
-           * The title of the chart. Optional
+           * Default title of the chart if no title is provided
            */
           title: 'F# minor',
         
