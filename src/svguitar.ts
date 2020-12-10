@@ -678,11 +678,6 @@ export class SVGuitarChord {
         ],
       )
       .forEach(([stringIndex, fretIndex, textOrOptions]) => {
-        // const nutCenterX = x + stringIndex * stringSpacing
-        // const startX = size / 2;
-        // const nutCenterY = y + fretIndex * fretSpacing - fretSpacing / 2;
-        // const startY = nutCenterY - size / 2
-        //
         const nutCenterX = startX + stringIndex * stringSpacing
         const nutCenterY = y + fretIndex * fretSpacing - fretSpacing / 2
         const fingerOptions = SVGuitarChord.getFingerOptions(textOrOptions)
@@ -743,7 +738,8 @@ export class SVGuitarChord {
     fingerOptions: FingerOptions,
   ) {
     const shape = fingerOptions.shape ?? defaultSettings.shape
-    const nutTextColor = fingerOptions.textColor ?? defaultSettings.nutTextColor
+    const nutTextColor =
+      fingerOptions.textColor ?? this.settings.nutTextColor ?? defaultSettings.nutTextColor
     const startX = x - size / 2
     const startY = y - size / 2
 
