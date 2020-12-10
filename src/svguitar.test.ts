@@ -170,6 +170,133 @@ describe('SVGuitarChord', () => {
     saveSvg('pentagon nuts', container.outerHTML)
   })
 
+  it('Should render outline square nuts ', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [
+            2,
+            3,
+            {
+              shape: Shape.SQUARE,
+              color: 'blue',
+              text: 'X',
+              nutStrokeColor: 'red',
+              nutStrokeWidth: 3,
+            },
+          ],
+        ],
+        barres: [],
+      })
+      .configure({
+        title: 'Outline Square Nuts',
+      })
+      .draw()
+
+    saveSvg('outline square nuts', container.outerHTML)
+  })
+
+  it('Should render outline triangle nuts', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [
+            2,
+            3,
+            {
+              shape: Shape.TRIANGLE,
+              color: 'blue',
+              text: 'X',
+              nutStrokeColor: 'red',
+              nutStrokeWidth: 3,
+            },
+          ],
+        ],
+        barres: [],
+      })
+      .configure({
+        title: 'Outline Triangle Nuts',
+      })
+      .draw()
+
+    saveSvg('outline triangle nuts', container.outerHTML)
+  })
+
+  it('Should render pentagon shaped nuts', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [
+            2,
+            3,
+            {
+              shape: Shape.PENTAGON,
+              color: 'blue',
+              text: 'X',
+              nutStrokeColor: 'red',
+              nutStrokeWidth: 3,
+            },
+          ],
+        ],
+        barres: [],
+      })
+      .configure({
+        title: 'Outline Pentagon Nuts',
+      })
+      .draw()
+
+    saveSvg('outline pentagon nuts', container.outerHTML)
+  })
+
+  it('Should render an outlined barre chord', () => {
+    svguitar
+      .chord({
+        fingers: [],
+        barres: [
+          {
+            fromString: 4,
+            toString: 2,
+            fret: 1,
+            strokeWidth: 3,
+            strokeColor: 'green',
+          },
+        ],
+      })
+      .configure({
+        title: 'Outlined Barre Chord',
+      })
+      .draw()
+
+    saveSvg('outline barre', container.outerHTML)
+  })
+
+  it('Should render all fingers and barre chords with an outline', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [2, 3, { shape: Shape.SQUARE }],
+          [3, 4],
+        ],
+        barres: [
+          {
+            fromString: 3,
+            toString: 1,
+            fret: 1,
+          },
+        ],
+      })
+      .configure({
+        nutStrokeWidth: 3,
+        barreChordStrokeWidth: 3,
+        barreChordStrokeColor: 'green',
+        nutStrokeColor: 'red',
+        title: 'Outlined',
+      })
+      .draw()
+
+    saveSvg('outline nuts', container.outerHTML)
+  })
+
   it('Should throw an error if an invliad shape is provided', () => {
     expect(() => {
       svguitar

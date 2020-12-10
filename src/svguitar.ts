@@ -16,6 +16,8 @@ export type Barre = {
   text?: string
   color?: string
   textColor?: string
+  strokeWidth?: number
+  strokeColor?: string
 }
 export type Chord = {
   /**
@@ -42,6 +44,8 @@ export interface FingerOptions {
   color?: string
   textColor?: string
   shape?: Shape
+  nutStrokeColor?: string
+  nutStrokeWidth?: number
 }
 
 /**
@@ -134,6 +138,26 @@ export interface ChordSettings {
    * The size of text inside nuts
    */
   nutTextSize?: number
+
+  /**
+   * stroke color of a nut. Defaults to the nut color if not set
+   */
+  nutStrokeColor?: string
+
+  /**
+   * stroke width of a nut
+   */
+  nutStrokeWidth?: number
+
+  /**
+   * stroke color of a barre chord. Defaults to the nut color if not set
+   */
+  barreChordStrokeColor?: string
+
+  /**
+   * stroke width of a barre chord
+   */
+  barreChordStrokeWidth?: number
 
   /**
    * Height of a fret, relative to the space between two strings
@@ -251,6 +275,8 @@ interface RequiredChordSettings {
   nutSize: number
   nutTextColor: string
   nutTextSize: number
+  nutStrokeWidth: number
+  barreChordStrokeWidth: number
   sidePadding: number
   titleFontSize: number
   titleBottomMargin: number
@@ -276,6 +302,8 @@ const defaultSettings: RequiredChordSettings = {
   nutSize: 0.65,
   nutTextColor: '#FFF',
   nutTextSize: 24,
+  nutStrokeWidth: 0,
+  barreChordStrokeWidth: 0,
   sidePadding: 0.2,
   titleFontSize: 48,
   titleBottomMargin: 0,
@@ -668,36 +696,58 @@ export class SVGuitarChord {
     })
 
     // draw barre chords
-    this.chordInternal.barres.forEach(({ fret, fromString, toString, text, color, textColor }) => {
-      const barreCenterY = fretYPositions[fret - 1] - strokeWidth / 4 - fretSpacing / 2
-      const fromStringX = stringXPositions[this.toArrayIndex(fromString)]
-      const distance = Math.abs(toString - fromString) * stringSpacing
+    this.chordInternal.barres.forEach(
+      ({
+        fret,
+        fromString,
+        toString,
+        text,
+        color,
+        textColor,
+        strokeColor,
+        strokeWidth: individualBarreChordStrokeWidth,
+      }) => {
+        const barreCenterY = fretYPositions[fret - 1] - strokeWidth / 4 - fretSpacing / 2
+        const fromStringX = stringXPositions[this.toArrayIndex(fromString)]
+        const distance = Math.abs(toString - fromString) * stringSpacing
 
-      this.renderer.rect(
-        fromStringX - stringSpacing / 4,
-        barreCenterY - nutSize / 2,
-        distance + stringSpacing / 2,
-        nutSize,
-        0,
-        color ?? nutColor,
-        color ?? nutColor,
-        nutSize * barreChordRadius,
-      )
+        const barreChordStrokeColor =
+          strokeColor ??
+          this.settings.barreChordStrokeColor ??
+          this.settings.nutColor ??
+          this.settings.color ??
+          defaultSettings.color
+        const barreChordStrokeWidth =
+          individualBarreChordStrokeWidth ??
+          this.settings.barreChordStrokeWidth ??
+          defaultSettings.barreChordStrokeWidth
 
-      // draw text on the barre chord
-      if (text) {
-        this.renderer.text(
-          text,
-          fromStringX + distance / 2,
-          barreCenterY,
-          nutTextSize,
-          textColor ?? nutTextColor,
-          fontFamily,
-          Alignment.MIDDLE,
-          true,
+        this.renderer.rect(
+          fromStringX - stringSpacing / 4,
+          barreCenterY - nutSize / 2,
+          distance + stringSpacing / 2,
+          nutSize,
+          barreChordStrokeWidth,
+          barreChordStrokeColor,
+          color ?? nutColor,
+          nutSize * barreChordRadius,
         )
-      }
-    })
+
+        // draw text on the barre chord
+        if (text) {
+          this.renderer.text(
+            text,
+            fromStringX + distance / 2,
+            barreCenterY,
+            nutTextSize,
+            textColor ?? nutTextColor,
+            fontFamily,
+            Alignment.MIDDLE,
+            true,
+          )
+        }
+      },
+    )
 
     // draw fingers
     this.chordInternal.fingers
@@ -740,6 +790,14 @@ export class SVGuitarChord {
     const shape = fingerOptions.shape ?? defaultSettings.shape
     const nutTextColor =
       fingerOptions.textColor ?? this.settings.nutTextColor ?? defaultSettings.nutTextColor
+    const nutStrokeColor =
+      fingerOptions.nutStrokeColor ??
+      this.settings.nutStrokeColor ??
+      this.settings.nutColor ??
+      this.settings.color ??
+      defaultSettings.color
+    const nutStrokeWidth =
+      fingerOptions.nutStrokeWidth ?? this.settings.nutStrokeWidth ?? defaultSettings.nutStrokeWidth
     const startX = x - size / 2
     const startY = y - size / 2
 
@@ -749,8 +807,8 @@ export class SVGuitarChord {
           startX,
           startY,
           size,
-          0,
-          fingerOptions.color ?? color,
+          nutStrokeWidth,
+          nutStrokeColor,
           fingerOptions.color ?? color,
         )
         break
@@ -760,8 +818,8 @@ export class SVGuitarChord {
           startY,
           size,
           size,
-          0,
-          fingerOptions.color ?? color,
+          nutStrokeWidth,
+          nutStrokeColor,
           fingerOptions.color ?? color,
         )
         break
@@ -770,8 +828,8 @@ export class SVGuitarChord {
           startX,
           startY,
           size,
-          0,
-          fingerOptions.color ?? color,
+          nutStrokeWidth,
+          nutStrokeColor,
           fingerOptions.color ?? color,
         )
         break
@@ -780,8 +838,8 @@ export class SVGuitarChord {
           startX,
           startY,
           size,
-          0,
-          fingerOptions.color ?? color,
+          nutStrokeWidth,
+          nutStrokeColor,
           fingerOptions.color ?? color,
         )
         break

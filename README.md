@@ -74,9 +74,9 @@ The SVG charts are highly customizable.
 For a full API documentation have a look at the [TypeScript documentation](https://omnibrain.github.io/svguitar/docs/).
 
 Chart configuration is completely optional, you don't have to pass any configuration or you can
-only override specific settings.
+only override specific settings. 
 
-Here's an example of a customized chart:
+Here's an example of a very customized chart:
 
 ```javascript
 new SVGuitarChord('#some-selector')
@@ -168,6 +168,26 @@ new SVGuitarChord('#some-selector')
           nutTextSize: 22,
 
           /**
+           * stroke color of a nut. Defaults to the nut color if not set
+           */
+          nutStrokeColor: '#000000',
+  
+          /**
+           * stroke width of a nut
+           */
+          nutStrokeWidth: 0,
+  
+          /**
+           * stroke color of a barre chord. Defaults to the nut color if not set
+           */
+          barreChordStrokeColor: '#000000',
+  
+          /**
+           * stroke width of a barre chord
+           */
+          barreChordStrokeWidth: 0,
+
+          /**
            * Height of a fret, relative to the space between two strings
            */
           fretSize: 1.5,
@@ -203,7 +223,7 @@ new SVGuitarChord('#some-selector')
            * Global color of the whole chart. Can be overridden with more specifig color settings such as
            * @link titleColor or @link stringColor etc.
            */
-          color: '#000',
+          color: '#000000',
 
           /**
            * The background color of the chord diagram. By default the background is transparent. To set the background to transparent either set this to 'none' or undefined
