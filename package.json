@@ -4,6 +4,7 @@
   "description": "Library to create beautiful SVG guitar chord charts.",
   "keywords": [
     "guitar",
+    "guitar-chords",
     "svg",
     "chord",
     "diagram"
