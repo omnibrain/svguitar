@@ -48,6 +48,29 @@ describe('SVGuitarChord', () => {
     saveSvg('arbitrary chord', container.outerHTML)
   })
 
+  it('Should render fingers over barre chords', () => {
+    svguitar
+      .chord({
+        fingers: [[2, 1, { color: 'green', text: '1' }]],
+        barres: [
+          {
+            fromString: 3,
+            toString: 1,
+            fret: 1,
+            color: 'blue',
+          },
+        ],
+      })
+      .configure({
+        strings: 5,
+        frets: 6,
+        title: 'Finger over Barre Chord',
+      })
+      .draw()
+
+    saveSvg('finger over barre', container.outerHTML)
+  })
+
   it('Should render text on the nuts', () => {
     svguitar
       .chord({

@@ -667,32 +667,6 @@ export class SVGuitarChord {
       this.renderer.line(stringX, y, stringX, y + height + strokeWidth / 2, strokeWidth, fretColor)
     })
 
-    // draw fingers
-    this.chordInternal.fingers
-      .filter(([, value]) => value !== SILENT && value !== OPEN)
-      .map<[number, number, string | FingerOptions | undefined]>(
-        ([stringIndex, fretIndex, text]) => [
-          this.toArrayIndex(stringIndex),
-          fretIndex as number,
-          text,
-        ],
-      )
-      .forEach(([stringIndex, fretIndex, textOrOptions]) => {
-        const nutCenterX = startX + stringIndex * stringSpacing
-        const nutCenterY = y + fretIndex * fretSpacing - fretSpacing / 2
-        const fingerOptions = SVGuitarChord.getFingerOptions(textOrOptions)
-
-        this.drawNut(
-          nutCenterX,
-          nutCenterY,
-          nutSize,
-          nutColor,
-          nutTextSize,
-          fontFamily,
-          fingerOptions,
-        )
-      })
-
     // draw barre chords
     this.chordInternal.barres.forEach(({ fret, fromString, toString, text, color, textColor }) => {
       const barreCenterY = fretYPositions[fret - 1] - strokeWidth / 4 - fretSpacing / 2
@@ -724,6 +698,32 @@ export class SVGuitarChord {
         )
       }
     })
+
+    // draw fingers
+    this.chordInternal.fingers
+      .filter(([, value]) => value !== SILENT && value !== OPEN)
+      .map<[number, number, string | FingerOptions | undefined]>(
+        ([stringIndex, fretIndex, text]) => [
+          this.toArrayIndex(stringIndex),
+          fretIndex as number,
+          text,
+        ],
+      )
+      .forEach(([stringIndex, fretIndex, textOrOptions]) => {
+        const nutCenterX = startX + stringIndex * stringSpacing
+        const nutCenterY = y + fretIndex * fretSpacing - fretSpacing / 2
+        const fingerOptions = SVGuitarChord.getFingerOptions(textOrOptions)
+
+        this.drawNut(
+          nutCenterX,
+          nutCenterY,
+          nutSize,
+          nutColor,
+          nutTextSize,
+          fontFamily,
+          fingerOptions,
+        )
+      })
 
     return y + height
   }
