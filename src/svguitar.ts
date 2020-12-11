@@ -647,6 +647,23 @@ export class SVGuitarChord {
         const effectiveStrokeWidth = fingerOptions.strokeWidth ?? strokeWidth
         const effectiveStrokeColor = fingerOptions.strokeColor ?? color
 
+        if (fingerOptions.text) {
+          const textColor = fingerOptions.textColor ?? this.settings.color ?? defaultSettings.color
+          const textSize = this.settings.nutTextSize ?? defaultSettings.nutTextSize
+          const fontFamily = this.settings.fontFamily ?? defaultSettings.fontFamily
+
+          this.renderer.text(
+            fingerOptions.text,
+            stringXPositions[stringIndex],
+            y + padding + size / 2,
+            textSize,
+            textColor,
+            fontFamily,
+            Alignment.MIDDLE,
+            true,
+          )
+        }
+
         if (value === OPEN) {
           // draw an O
           this.renderer.circle(
@@ -858,6 +875,8 @@ export class SVGuitarChord {
             .join(', ')}.`,
         )
     }
+
+    this.renderer.rect(x, y, size, size, 0, 'red', 'red')
 
     // draw text on the nut
     if (fingerOptions.text) {

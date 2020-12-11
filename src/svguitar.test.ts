@@ -106,7 +106,7 @@ describe('SVGuitarChord', () => {
         barres: [],
       })
       .configure({
-        title: 'Empty & Silent String Indicator Strokes',
+        title: 'Open & Silent String Indicator Strokes',
       })
       .draw()
 
@@ -123,7 +123,26 @@ describe('SVGuitarChord', () => {
         barres: [],
       })
       .configure({
-        title: 'Empty & Silent String Indicator Strokes',
+        title: 'Open & Silent String Indicator Colors',
+      })
+      .draw()
+
+    saveSvg('silent and open colored', container.outerHTML)
+  })
+
+  it('Should render text on silent and open string indicators', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [2, 0, 'A'],
+          [3, 'x', 'B'],
+          [4, 0, { text: 'C', textColor: 'green' }],
+          [5, 'x', { text: 'D', textColor: 'blue' }],
+        ],
+        barres: [],
+      })
+      .configure({
+        title: 'Text on Open & Silent Strings',
       })
       .draw()
 
