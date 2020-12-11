@@ -44,8 +44,8 @@ export interface FingerOptions {
   color?: string
   textColor?: string
   shape?: Shape
-  nutStrokeColor?: string
-  nutStrokeWidth?: number
+  strokeColor?: string
+  strokeWidth?: number
 }
 
 /**
@@ -791,13 +791,13 @@ export class SVGuitarChord {
     const nutTextColor =
       fingerOptions.textColor ?? this.settings.nutTextColor ?? defaultSettings.nutTextColor
     const nutStrokeColor =
-      fingerOptions.nutStrokeColor ??
+      fingerOptions.strokeColor ??
       this.settings.nutStrokeColor ??
       this.settings.nutColor ??
       this.settings.color ??
       defaultSettings.color
     const nutStrokeWidth =
-      fingerOptions.nutStrokeWidth ?? this.settings.nutStrokeWidth ?? defaultSettings.nutStrokeWidth
+      fingerOptions.strokeWidth ?? this.settings.nutStrokeWidth ?? defaultSettings.nutStrokeWidth
     const startX = x - size / 2
     const startY = y - size / 2
 
