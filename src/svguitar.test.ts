@@ -94,6 +94,42 @@ describe('SVGuitarChord', () => {
     saveSvg('text on nuts', container.outerHTML)
   })
 
+  it('Should set the stroke width on silent and open string indicators', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [2, 0],
+          [3, 'x'],
+          [4, 0, { strokeWidth: 5 }],
+          [5, 'x', { strokeWidth: 5 }],
+        ],
+        barres: [],
+      })
+      .configure({
+        title: 'Empty & Silent String Indicator Strokes',
+      })
+      .draw()
+
+    saveSvg('silent and open strokes', container.outerHTML)
+  })
+
+  it('Should set the stroke colors on silent and open string indicators', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [4, 0, { strokeColor: 'blue' }],
+          [5, 'x', { strokeColor: 'green' }],
+        ],
+        barres: [],
+      })
+      .configure({
+        title: 'Empty & Silent String Indicator Strokes',
+      })
+      .draw()
+
+    saveSvg('silent and open colored', container.outerHTML)
+  })
+
   it('Should render nuts with a different color', () => {
     svguitar
       .chord({
@@ -680,7 +716,7 @@ describe('SVGuitarChord', () => {
     saveSvg('with background', container.outerHTML)
   })
 
-  it('Should vertically center the barre corrctly', () => {
+  it('Should vertically center the barre correctly', () => {
     svguitar
       .chord({
         fingers: [],

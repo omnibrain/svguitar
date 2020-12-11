@@ -635,9 +635,17 @@ export class SVGuitarChord {
 
     this.chordInternal.fingers
       .filter(([, value]) => value === SILENT || value === OPEN)
-      .map<Finger>(([index, value]) => [this.toArrayIndex(index), value])
-      .forEach(([stringIndex, value]) => {
+      .map<Finger>(([index, value, textOrOptions]) => [
+        this.toArrayIndex(index),
+        value,
+        textOrOptions,
+      ])
+      .forEach(([stringIndex, value, textOrOptions]) => {
         hasEmpty = true
+
+        const fingerOptions = SVGuitarChord.getFingerOptions(textOrOptions)
+        const effectiveStrokeWidth = fingerOptions.strokeWidth ?? strokeWidth
+        const effectiveStrokeColor = fingerOptions.strokeColor ?? color
 
         if (value === OPEN) {
           // draw an O
@@ -645,8 +653,8 @@ export class SVGuitarChord {
             stringXPositions[stringIndex] - size / 2,
             y + padding,
             size,
-            strokeWidth,
-            color,
+            effectiveStrokeWidth,
+            effectiveStrokeColor,
           )
         } else {
           // draw an X
@@ -655,8 +663,8 @@ export class SVGuitarChord {
           const startY = y + padding
           const endY = startY + size
 
-          this.renderer.line(startX, startY, endX, endY, strokeWidth, color)
-          this.renderer.line(startX, endY, endX, startY, strokeWidth, color)
+          this.renderer.line(startX, startY, endX, endY, effectiveStrokeWidth, effectiveStrokeColor)
+          this.renderer.line(startX, endY, endX, startY, effectiveStrokeWidth, effectiveStrokeColor)
         }
       })
 
