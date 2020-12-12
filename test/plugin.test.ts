@@ -1,5 +1,5 @@
-import { SVGuitarChord } from './svguitar'
-import { setUpSvgDom } from '../test/testutils'
+import { SVGuitarChord } from '../src/svguitar'
+import { setUpSvgDom } from './testutils'
 
 const document = setUpSvgDom()
 
