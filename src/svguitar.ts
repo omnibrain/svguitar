@@ -876,8 +876,6 @@ export class SVGuitarChord {
         )
     }
 
-    this.renderer.rect(x, y, size, size, 0, 'red', 'red')
-
     // draw text on the nut
     if (fingerOptions.text) {
       this.renderer.text(
