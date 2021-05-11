@@ -7767,10 +7767,10 @@ rollup@^2.0.0:
   optionalDependencies:
     fsevents "~2.1.2"
 
-roughjs@^4.0.1:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/roughjs/-/roughjs-4.3.1.tgz#b7af0b205c94bc3b79ee5a7eae1e09d5063bc3fe"
-  integrity sha512-m42+OBaBR7x5UhIKyjBCnWqqkaEkBKLkXvHv4pOWJXPofvMnQY4ZcFEQlqf3coKKyZN2lfWMyx7QXSg2GD7SGA==
+roughjs@^4.4.0:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/roughjs/-/roughjs-4.4.1.tgz#3af79db6abdcb0f32764d1138f99dc9e01027736"
+  integrity sha512-/RZvyVquID319VDc9HsF8wn8VPpbMBVdr4NMCi7mta9UeBBeqP6h5Hg4GZXG29DL6jwTkfMjyth/MF7Hn6Sq/w==
   dependencies:
     path-data-parser "^0.1.0"
     points-on-curve "^0.2.0"
