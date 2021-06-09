@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <title>SVGuitar Demo</title>
+</head>
+<body>
+
+
+<div class="container mt-5">
+  <div class="row my-3">
+    <div class="col">
+      <h1>SVGuitar Demo</h1>
+
+      <p>Demo page for SVGuitar. Try to create some SVGs here.</p>
+
+      <p>For a more elaborate chord editor that also uses SVGuitar check out <a href="https://chordpic.com">ChordPic</a>.</p>
+
+      <a href="./docs">TypeScript Documentation</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-5">
+      <div>
+        <h2>Chord</h2>
+        <form id="chord-form">
+          <textarea name="chord" id="chord-input" rows="10" class="w-100"></textarea>
+          <small>JSON of the chord. See documentation for more information.</small>
+
+          <div class="my-3">
+            <button type="submit" class="btn btn-primary">Create Chart</button>
+          </div>
+        </form>
+      </div>
+      <div class="mt-3">
+
+        <h2>Configuration</h2>
+
+        <form id="chart-config-form">
+          <div class="form-group">
+            <label for="chart-style">Style</label>
+            <select name="style" class="form-control" id="chart-style">
+              <option value="normal" selected="selected">normal</option>
+              <option value="handdrawn">handdrawn</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="chart-title">Title</label>
+            <input name="title" type="text" class="form-control" id="chart-title" placeholder="Enter chart title">
+          </div>
+          <div class="form-group">
+            <label for="chart-strings">Strings</label>
+            <input name="strings" type="number" step="1" class="form-control" id="chart-strings" placeholder="Enter strings">
+          </div>
+          <div class="form-group">
+            <label for="chart-frets">Frets</label>
+            <input name="frets" type="number" step="1" class="form-control" id="chart-frets" placeholder="Enter frets">
+          </div>
+          <div class="form-group">
+            <label for="chart-frets">Position</label>
+            <input name="position" type="number" step="1" class="form-control" id="chart-position" placeholder="Enter position">
+          </div>
+          <div class="form-group">
+            <label for="chart-color">Color</label>
+            <input name="color" type="text" class="form-control" id="chart-color" placeholder="Enter chart color">
+          </div>
+          <div class="form-group">
+            <label for="chart-color">Nut Size</label>
+            <input name="nutSize" type="number" step="0.01" class="form-control" id="nut-size" placeholder="Enter nut size">
+          </div>
+          <div class="form-group">
+            <label for="chart-color">Stroke Width</label>
+            <input name="strokeWidth" type="text" class="form-control" id="stroke-width" placeholder="Enter stroke width">
+          </div>
+          <div class="my-3">
+            <button type="submit" class="btn btn-primary">Create Chart</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-md-6 offset-md-1">
+      <h2>Result</h2>
+
+      <div id="result"></div>
+    </div>
+  </div>
+</div>
+<script crossorigin="anonymous" src="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=Array.prototype.reduce%2CObject.keys%2CArray.prototype.forEach"></script>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="./js/svguitar.umd.js"></script>
+
+<script>
+  (function() {
+    var initialSettings = {
+      title: 'F# minor',
+      color: '#000000',
+      strings: 6,
+      frets: 4,
+      position: 9,
+      nutSize: 0.65,
+      strokeWidth: 2,
+      style: 'normal',
+    }
+
+    var initialChord = {
+      // array of [string, fret | 'x' | 0]
+      fingers: [
+        [1, 2],
+        [2, 3],
+        [3, 3],
+        [6, 'x']
+      ],
+
+      // optional: barres for barre chords
+      barres: [
+        { fromString: 5, toString: 1, fret: 1 },
+      ],
+    }
+
+    $('#chord-input').val(JSON.stringify(initialChord, null, 2))
+
+    Object.keys(initialSettings)
+      .forEach(function(name){
+        $('#chart-config-form [name=' + name + ']').val(initialSettings[name])
+      })
+
+    // initialize chart
+    var chart = new svguitar
+      .SVGuitarChord('#result')
+      .configure(initialSettings)
+      .chord(initialChord)
+
+    function drawChord(chord, settings) {
+      console.log('Drawing chord ', chord, ' with settings', settings)
+
+      try {
+        chart
+          .configure(settings)
+          .chord(chord)
+          .draw()
+      } catch (err) {
+        alert('Failed to create chart: ' + err.message);
+
+        throw err;
+      }
+    }
+
+    $('#chart-config-form,#chord-form').submit(function(e) {
+      e.preventDefault();
+
+      var settings = $('#chart-config-form')
+        .serializeArray()
+        .reduce(function(acc, cur) {
+          acc[cur.name] = isNaN(cur.value) ? cur.value : Number(cur.value);
+
+          return acc;
+        }, {})
+
+      // get the chord
+      try {
+        var chord = JSON.parse($('#chord-input').val())
+      } catch (err) {
+        alert('Failed to parse the chord. Are you sure you entered valid JSON?');
+
+        return;
+      }
+
+      drawChord(chord, settings);
+    })
+
+    drawChord(initialChord, initialSettings);
+  })();
+</script>
+
+<a href="https://github.com/omnibrain/svguitar">
+  <img style="position: absolute; top: 0; right: 0;" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_gray_6d6d6d.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1">
+</a>
+
+</body>
+</html>
