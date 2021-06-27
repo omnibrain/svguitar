@@ -855,10 +855,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@svgdotjs/svg.js@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@svgdotjs/svg.js/-/svg.js-3.1.0.tgz#eca7fc837bb804ff78f017fccea0fa7f463b47b6"
-  integrity sha512-mbHYehLnotAWAe0thNntyatWbY43vQGiQgWlZtl6hs3N+htyj7RofLm1OhfenecXOdVdo+WE5LEhA86FGhXMiQ==
+"@svgdotjs/svg.js@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@svgdotjs/svg.js/-/svg.js-3.1.1.tgz#3cf6a59e6d8708cd76d38b26e7d682dacb2f3670"
+  integrity sha512-73FggAUBS+zuHhJOMZiAsuE5qpwA4pmWUbLuvof2g3YnWEc3QhXA3tjqZlJJukBobSA23a/avf1Vb1U1QbER1Q==
 
 "@tootallnate/once@1":
   version "1.1.2"
