@@ -20,6 +20,10 @@ build:
     - yarn install
     - yarn test
     - yarn build
+  artifacts:
+    paths:
+      - dist
+    expire_in: 1 week
   except:
     refs:
       - /^v\d+\.\d+\.\d+.*$/
@@ -31,6 +35,8 @@ release-develop:
   artifacts:
     paths:
       - CHANGELOG.md
+      - dist
+    expire_in: 1 week
   only:
     refs:
       - develop
@@ -42,6 +48,7 @@ release-prod:
   artifacts:
     paths:
       - CHANGELOG.md
+      - dist
   only:
     refs:
       - master
