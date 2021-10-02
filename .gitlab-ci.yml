@@ -10,10 +10,9 @@ cache:
     - .yarn/
 
 stages:
-  - release
   - build
+  - release
   - deploy
-  - cleanup
 
 build:
   stage: build
@@ -46,3 +45,16 @@ release-prod:
   only:
     refs:
       - master
+
+pages:
+  stage: deploy
+  script:
+    - yarn build
+    - cp -r demo public
+    - cp -r docs public
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 day
+  only:
+    - master
