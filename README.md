@@ -13,9 +13,9 @@
 
 JavaScript (TypeScript) library to create beautiful SVG guitar chord charts directly in the browser.
 
-**Demo**: https://omnibrain.github.io/svguitar/  [ [source](https://github.com/omnibrain/svguitar/blob/master/demo/index.html) ]
+**Demo**: https://voellmy.gitlab.io/svguitar/  [ [source](https://github.com/omnibrain/svguitar/blob/master/demo/index.html) ]
 
-**TypeScript API Documentation**: https://omnibrain.github.io/svguitar/docs/
+**TypeScript API Documentation**: https://voellmy.gitlab.io/svguitar/docs/
 
 Example chord charts:
 
