@@ -1,0 +1,48 @@
+image: node:16
+
+before_script:
+  - yarn install --cache-folder .yarn
+
+# Cache node modules in between jobs
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .yarn/
+
+stages:
+  - release
+  - build
+  - deploy
+  - cleanup
+
+build:
+  stage: build
+  script:
+    - yarn install
+    - yarn test
+    - yarn build
+  except:
+    refs:
+      - /^v\d+\.\d+\.\d+.*$/
+
+release-develop:
+  stage: release
+  script:
+    - npx semantic-release
+  artifacts:
+    paths:
+      - CHANGELOG.md
+  only:
+    refs:
+      - develop
+
+release-prod:
+  stage: release
+  script:
+    - npx semantic-release
+  artifacts:
+    paths:
+      - CHANGELOG.md
+  only:
+    refs:
+      - master

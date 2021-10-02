@@ -37,8 +37,6 @@
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
     "test:prod": "run-s lint test",
-    "deploy-pages": "run-s build publish-pages",
-    "publish-pages": "ts-node tools/gh-pages-publish",
     "report-coverage": "run-s test publish-coverage",
     "publish-coverage": "cat ./coverage/lcov.info | coveralls",
     "commit": "git-cz",
@@ -55,6 +53,30 @@
     "commitizen": {
       "path": "node_modules/cz-conventional-changelog"
     }
+  },
+  "release": {
+    "branches": [
+      "master",
+      {
+        "name": "beta",
+        "prerelease": true
+      }
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            "dist/*.tgz",
+            "CHANGELOG.md"
+          ]
+        }
+      ]
+    ]
   },
   "jest": {
     "transform": {
@@ -96,6 +118,11 @@
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
+    "@semantic-release/changelog": "^6.0.0",
+    "@semantic-release/commit-analyzer": "^9.0.1",
+    "@semantic-release/github": "^8.0.1",
+    "@semantic-release/npm": "^8.0.0",
+    "@semantic-release/release-notes-generator": "^10.0.2",
     "@types/jest": "^26.0.0",
     "@types/node": "^14.0.0",
     "@typescript-eslint/eslint-plugin": "^4.9.1",
@@ -127,7 +154,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.6.0",
     "rollup-plugin-typescript2": "^0.29.0",
-    "semantic-release": "^17.0.0",
+    "semantic-release": "^18.0.0",
     "shelljs": "^0.8.3",
     "ts-jest": "^26.0.0",
     "ts-node": "^9.1.1",
