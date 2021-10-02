@@ -122,7 +122,7 @@ export class RoughJsRenderer extends Renderer {
     }
 
     const circle = this.rc.circle(x + diameter / 2, y + diameter / 2, diameter, options)
-    circle.classList.add(Renderer.toClassName(classes))
+    circle.classList.add(...RoughJsRenderer.toClassArray(classes))
 
     this.svgNode.appendChild(circle)
 
@@ -165,7 +165,7 @@ export class RoughJsRenderer extends Renderer {
         stroke: color,
       })
 
-      line.classList.add(Renderer.toClassName(classes))
+      line.classList.add(...RoughJsRenderer.toClassArray(classes))
       this.svgNode.appendChild(line)
     }
   }
@@ -209,8 +209,8 @@ export class RoughJsRenderer extends Renderer {
       roughness: 1.5,
     })
     rect.setAttribute('transform', `translate(${x}, ${y})`)
-    rect.classList.add(Renderer.toClassName(classes))
-    rect2.classList.add(Renderer.toClassName(classes))
+    rect.classList.add(...RoughJsRenderer.toClassArray(classes))
+    rect2.classList.add(...RoughJsRenderer.toClassArray(classes))
     this.svgNode.appendChild(rect)
     this.svgNode.appendChild(rect2)
 
@@ -233,7 +233,7 @@ export class RoughJsRenderer extends Renderer {
       roughness: 1.5,
     })
     triangle.setAttribute('transform', `translate(${x}, ${y})`)
-    triangle.classList.add(Renderer.toClassName(classes))
+    triangle.classList.add(...RoughJsRenderer.toClassArray(classes))
     this.svgNode.appendChild(triangle)
 
     return RoughJsRenderer.boxToElement(triangle.getBBox(), () => triangle.remove())
@@ -256,7 +256,7 @@ export class RoughJsRenderer extends Renderer {
       roughness: 1.5,
     })
     pentagon.setAttribute('transform', `translate(${x}, ${y})`)
-    pentagon.classList.add(Renderer.toClassName(classes))
+    pentagon.classList.add(...RoughJsRenderer.toClassArray(classes))
     this.svgNode.appendChild(pentagon)
 
     return RoughJsRenderer.boxToElement(pentagon.getBBox(), () => pentagon.remove())
@@ -323,7 +323,7 @@ export class RoughJsRenderer extends Renderer {
         throw new Error(`Invalid alignment ${alignment}`)
     }
 
-    txtElem.classList.add(Renderer.toClassName(classes))
+    txtElem.classList.add(...RoughJsRenderer.toClassArray(classes))
     txtElem.setAttributeNS(null, 'x', String(x + xOffset))
     txtElem.setAttributeNS(null, 'y', String(y + (plain ? 0 : bbox.height / 2)))
 
@@ -355,6 +355,10 @@ export class RoughJsRenderer extends Renderer {
         w - brr
       } ${h} L ${blr} ${h} A ${blr} ${blr} 0 0 1 0 ${h - blr} Z`
     )
+  }
+
+  private static toClassArray(classes?: string | string[]): string[] {
+    return Renderer.toClassName(classes).split(' ')
   }
 }
 
