@@ -51,7 +51,7 @@ pages:
   script:
     - yarn build
     - cp -r demo public
-    - cp -r docs public
+    - cp -r docs public/docs
   artifacts:
     paths:
       - public
