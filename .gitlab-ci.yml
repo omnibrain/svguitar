@@ -23,6 +23,8 @@ build:
   artifacts:
     paths:
       - dist
+      - docs
+      - demo
     expire_in: 1 week
   except:
     refs:
@@ -36,6 +38,8 @@ release-develop:
     paths:
       - CHANGELOG.md
       - dist
+      - docs
+      - demo
     expire_in: 1 week
   only:
     refs:
