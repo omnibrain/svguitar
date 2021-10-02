@@ -65,6 +65,7 @@ export class SvgJsRenderer extends Renderer {
     color: string,
     fontFamily: string,
     alignment: Alignment,
+    classes?: string | string[],
     plain?: boolean,
   ): GraphcisElement {
     let element
@@ -84,6 +85,7 @@ export class SvgJsRenderer extends Renderer {
           'dominant-baseline': 'central',
         })
         .fill(color)
+        .addClass(Renderer.toClassName(classes))
     } else {
       element = this.svg
         .text(text)
@@ -94,6 +96,7 @@ export class SvgJsRenderer extends Renderer {
           anchor: alignment,
         })
         .fill(color)
+        .addClass(Renderer.toClassName(classes))
     }
 
     return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
@@ -106,6 +109,7 @@ export class SvgJsRenderer extends Renderer {
     strokeWidth: number,
     strokeColor: string,
     fill?: string,
+    classes?: string | string[],
   ): GraphcisElement {
     const element = this.svg
       .circle(diameter)
@@ -115,6 +119,7 @@ export class SvgJsRenderer extends Renderer {
         color: strokeColor,
         width: strokeWidth,
       })
+      .addClass(Renderer.toClassName(classes))
 
     return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
   }
@@ -126,6 +131,7 @@ export class SvgJsRenderer extends Renderer {
     height: number,
     strokeWidth: number,
     strokeColor: string,
+    classes?: string | string[],
     fill?: string,
     radius?: number,
   ): GraphcisElement {
@@ -138,6 +144,7 @@ export class SvgJsRenderer extends Renderer {
         color: strokeColor,
       })
       .radius(radius || 0)
+      .addClass(Renderer.toClassName(classes))
 
     return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
   }
@@ -148,6 +155,7 @@ export class SvgJsRenderer extends Renderer {
     size: number,
     strokeWidth: number,
     strokeColor: string,
+    classes?: string | string[],
     fill?: string | undefined,
   ): GraphcisElement {
     const element = this.svg
@@ -158,6 +166,7 @@ export class SvgJsRenderer extends Renderer {
         width: strokeWidth,
         color: strokeColor,
       })
+      .addClass(Renderer.toClassName(classes))
 
     return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
   }
@@ -169,8 +178,9 @@ export class SvgJsRenderer extends Renderer {
     strokeWidth: number,
     strokeColor: string,
     fill: string,
+    classes?: string | string[],
   ): GraphcisElement {
-    return this.ngon(x, y, size, strokeWidth, strokeColor, fill, 5)
+    return this.ngon(x, y, size, strokeWidth, strokeColor, fill, 5, classes)
   }
 
   private ngon(
@@ -181,6 +191,7 @@ export class SvgJsRenderer extends Renderer {
     strokeColor: string,
     fill: string,
     edges: number,
+    classes?: string | string[],
   ) {
     const element = this.svg
       .path(Renderer.ngonPath(x, y, size, edges))
@@ -190,6 +201,7 @@ export class SvgJsRenderer extends Renderer {
         width: strokeWidth,
         color: strokeColor,
       })
+      .addClass(Renderer.toClassName(classes))
 
     return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
   }

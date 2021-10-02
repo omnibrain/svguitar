@@ -24,6 +24,7 @@ export abstract class Renderer {
     y2: number,
     strokeWidth: number,
     color: string,
+    classes?: string | string[],
   ): void
 
   abstract size(width: number, height: number): void
@@ -42,6 +43,7 @@ export abstract class Renderer {
     color: string,
     fontFamily: string,
     alignment: Alignment,
+    classes?: string | string[],
     plain?: boolean,
   ): GraphcisElement
 
@@ -52,6 +54,7 @@ export abstract class Renderer {
     strokeWidth: number,
     strokeColor: string,
     fill?: string,
+    classes?: string | string[],
   ): GraphcisElement
 
   abstract rect(
@@ -61,6 +64,7 @@ export abstract class Renderer {
     height: number,
     strokeWidth: number,
     strokeColor: string,
+    classes?: string | string[],
     fill?: string,
     radius?: number,
   ): GraphcisElement
@@ -71,6 +75,7 @@ export abstract class Renderer {
     size: number,
     strokeWidth: number,
     strokeColor: string,
+    classes?: string | string[],
     fill?: string,
   ): GraphcisElement
 
@@ -81,6 +86,7 @@ export abstract class Renderer {
     strokeWidth: number,
     strokeColor: string,
     fill?: string,
+    classes?: string | string[],
   ): GraphcisElement
 
   protected static trianglePath(x: number, y: number, size: number): string {
@@ -109,5 +115,13 @@ export abstract class Renderer {
     const lines = points.reduce((acc, [posX, posY]) => `${acc} L${posX} ${posY}`, '')
 
     return `M${curX} ${curY} ${lines}`
+  }
+
+  protected static toClassName(classes?: string | string[]): string {
+    if (!classes) {
+      return ''
+    }
+
+    return Array.isArray(classes) ? classes.join(' ') : classes
   }
 }

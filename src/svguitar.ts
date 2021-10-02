@@ -18,6 +18,7 @@ export type Barre = {
   textColor?: string
   strokeWidth?: number
   strokeColor?: string
+  className?: string
 }
 export type Chord = {
   /**
@@ -46,6 +47,7 @@ export interface FingerOptions {
   shape?: Shape
   strokeColor?: string
   strokeWidth?: number
+  className?: string
 }
 
 /**
@@ -76,6 +78,20 @@ export enum Shape {
 export enum ChordStyle {
   normal = 'normal',
   handdrawn = 'handdrawn',
+}
+
+export enum ElementType {
+  FRET = 'fret',
+  STRING = 'string',
+  BARRE = 'barre',
+  BARRE_TEXT = 'barre-text',
+  FINGER = 'finger',
+  TITLE = 'title',
+  TUNING = 'tuning',
+  FRET_POSITION = 'fret-position',
+  STRING_TEXT = 'string-text',
+  SILENT_STRING = 'silent-string',
+  OPEN_STRING = 'open-string',
 }
 
 export interface ChordSettings {
@@ -455,6 +471,7 @@ export class SVGuitarChord {
 
     tuning.forEach((tuning_, i): void => {
       if (i < strings) {
+        const classNames = [ElementType.TUNING, `${ElementType.TUNING}-${i}`]
         const tuningText = this.renderer.text(
           tuning_,
           stringXPositions[i],
@@ -463,6 +480,7 @@ export class SVGuitarChord {
           color,
           fontFamily,
           Alignment.MIDDLE,
+          classNames,
         )
 
         if (tuning_) {
@@ -506,6 +524,7 @@ export class SVGuitarChord {
         return
       }
 
+      const className = ElementType.FRET_POSITION
       if (fretLabelPosition === FretLabelPosition.RIGHT) {
         const svgText = this.renderer.text(
           text,
@@ -515,6 +534,7 @@ export class SVGuitarChord {
           color,
           fontFamily,
           Alignment.LEFT,
+          className,
         )
 
         const { width, x } = svgText
@@ -531,6 +551,7 @@ export class SVGuitarChord {
           color,
           fontFamily,
           Alignment.RIGHT,
+          className,
         )
 
         const { x } = svgText
@@ -576,7 +597,10 @@ export class SVGuitarChord {
       fretSize = topFretWidth
     }
 
-    this.renderer.line(startX, y + fretSize / 2, endX, y + fretSize / 2, fretSize, color)
+    this.renderer.line(startX, y + fretSize / 2, endX, y + fretSize / 2, fretSize, color, [
+      'top-fret',
+      `fret-0`,
+    ])
 
     return y + fretSize
   }
@@ -651,6 +675,7 @@ export class SVGuitarChord {
           const textColor = fingerOptions.textColor ?? this.settings.color ?? defaultSettings.color
           const textSize = this.settings.nutTextSize ?? defaultSettings.nutTextSize
           const fontFamily = this.settings.fontFamily ?? defaultSettings.fontFamily
+          const classNames = [ElementType.STRING_TEXT, `${ElementType.STRING_TEXT}-${stringIndex}`]
 
           this.renderer.text(
             fingerOptions.text,
@@ -660,28 +685,53 @@ export class SVGuitarChord {
             textColor,
             fontFamily,
             Alignment.MIDDLE,
+            classNames,
             true,
           )
         }
 
         if (value === OPEN) {
           // draw an O
+          const classNames = [ElementType.OPEN_STRING, `${ElementType.OPEN_STRING}-${stringIndex}`]
+
           this.renderer.circle(
             stringXPositions[stringIndex] - size / 2,
             y + padding,
             size,
             effectiveStrokeWidth,
             effectiveStrokeColor,
+            undefined,
+            classNames,
           )
         } else {
           // draw an X
+          const classNames = [
+            ElementType.SILENT_STRING,
+            `${ElementType.SILENT_STRING}-${stringIndex}`,
+          ]
           const startX = stringXPositions[stringIndex] - size / 2
           const endX = startX + size
           const startY = y + padding
           const endY = startY + size
 
-          this.renderer.line(startX, startY, endX, endY, effectiveStrokeWidth, effectiveStrokeColor)
-          this.renderer.line(startX, endY, endX, startY, effectiveStrokeWidth, effectiveStrokeColor)
+          this.renderer.line(
+            startX,
+            startY,
+            endX,
+            endY,
+            effectiveStrokeWidth,
+            effectiveStrokeColor,
+            classNames,
+          )
+          this.renderer.line(
+            startX,
+            endY,
+            endX,
+            startY,
+            effectiveStrokeWidth,
+            effectiveStrokeColor,
+            classNames,
+          )
         }
       })
 
@@ -711,13 +761,23 @@ export class SVGuitarChord {
     const nutTextSize = this.settings.nutTextSize ?? defaultSettings.nutTextSize
 
     // draw frets
-    fretYPositions.forEach((fretY) => {
-      this.renderer.line(startX, fretY, endX, fretY, strokeWidth, fretColor)
+    fretYPositions.forEach((fretY, i) => {
+      const classNames = [ElementType.FRET, `${ElementType.FRET}-${i}`]
+      this.renderer.line(startX, fretY, endX, fretY, strokeWidth, fretColor, classNames)
     })
 
     // draw strings
-    stringXPositions.forEach((stringX) => {
-      this.renderer.line(stringX, y, stringX, y + height + strokeWidth / 2, strokeWidth, fretColor)
+    stringXPositions.forEach((stringX, i) => {
+      const classNames = [ElementType.STRING, `${ElementType.STRING}-${i}`]
+      this.renderer.line(
+        stringX,
+        y,
+        stringX,
+        y + height + strokeWidth / 2,
+        strokeWidth,
+        fretColor,
+        classNames,
+      )
     })
 
     // draw barre chords
@@ -730,6 +790,7 @@ export class SVGuitarChord {
         color,
         textColor,
         strokeColor,
+        className,
         strokeWidth: individualBarreChordStrokeWidth,
       }) => {
         const barreCenterY = fretYPositions[fret - 1] - strokeWidth / 4 - fretSpacing / 2
@@ -747,6 +808,12 @@ export class SVGuitarChord {
           this.settings.barreChordStrokeWidth ??
           defaultSettings.barreChordStrokeWidth
 
+        const classNames = [
+          ElementType.BARRE,
+          `${ElementType.BARRE}-fret-${fret - 1}`,
+          ...(className ? [className] : []),
+        ]
+
         this.renderer.rect(
           fromStringX - stringSpacing / 4,
           barreCenterY - nutSize / 2,
@@ -754,12 +821,15 @@ export class SVGuitarChord {
           nutSize,
           barreChordStrokeWidth,
           barreChordStrokeColor,
+          classNames,
           color ?? nutColor,
           nutSize * barreChordRadius,
         )
 
         // draw text on the barre chord
         if (text) {
+          const textClassNames = [ElementType.BARRE_TEXT, `${ElementType.BARRE_TEXT}-${fret}`]
+
           this.renderer.text(
             text,
             fromStringX + distance / 2,
@@ -768,6 +838,7 @@ export class SVGuitarChord {
             textColor ?? nutTextColor,
             fontFamily,
             Alignment.MIDDLE,
+            textClassNames,
             true,
           )
         }
@@ -789,6 +860,14 @@ export class SVGuitarChord {
         const nutCenterY = y + fretIndex * fretSpacing - fretSpacing / 2
         const fingerOptions = SVGuitarChord.getFingerOptions(textOrOptions)
 
+        const classNames = [
+          ElementType.FINGER,
+          `${ElementType.FINGER}-string-${stringIndex}`,
+          `${ElementType.FINGER}-fret-${fretIndex - 1}`,
+          `${ElementType.FINGER}-string-${stringIndex}-fret-${fretIndex - 1}`,
+          ...(fingerOptions.className ? [fingerOptions.className] : []),
+        ]
+
         this.drawNut(
           nutCenterX,
           nutCenterY,
@@ -797,6 +876,7 @@ export class SVGuitarChord {
           nutTextSize,
           fontFamily,
           fingerOptions,
+          classNames,
         )
       })
 
@@ -811,6 +891,7 @@ export class SVGuitarChord {
     textSize: number,
     fontFamily: string,
     fingerOptions: FingerOptions,
+    classNames: string[],
   ) {
     const shape = fingerOptions.shape ?? defaultSettings.shape
     const nutTextColor =
@@ -826,6 +907,8 @@ export class SVGuitarChord {
     const startX = x - size / 2
     const startY = y - size / 2
 
+    const classNamesWithShape = [...classNames, `${ElementType.FINGER}-${shape}`]
+
     switch (shape) {
       case Shape.CIRCLE:
         this.renderer.circle(
@@ -835,6 +918,7 @@ export class SVGuitarChord {
           nutStrokeWidth,
           nutStrokeColor,
           fingerOptions.color ?? color,
+          classNamesWithShape,
         )
         break
       case Shape.SQUARE:
@@ -845,6 +929,7 @@ export class SVGuitarChord {
           size,
           nutStrokeWidth,
           nutStrokeColor,
+          classNamesWithShape,
           fingerOptions.color ?? color,
         )
         break
@@ -855,6 +940,7 @@ export class SVGuitarChord {
           size,
           nutStrokeWidth,
           nutStrokeColor,
+          classNamesWithShape,
           fingerOptions.color ?? color,
         )
         break
@@ -866,6 +952,7 @@ export class SVGuitarChord {
           nutStrokeWidth,
           nutStrokeColor,
           fingerOptions.color ?? color,
+          classNamesWithShape,
         )
         break
       default:
@@ -877,6 +964,7 @@ export class SVGuitarChord {
     }
 
     // draw text on the nut
+    const textClassNames = [...classNames, `${ElementType.FINGER}-text`]
     if (fingerOptions.text) {
       this.renderer.text(
         fingerOptions.text,
@@ -886,6 +974,7 @@ export class SVGuitarChord {
         fingerOptions.textColor ?? nutTextColor,
         fontFamily,
         Alignment.MIDDLE,
+        textClassNames,
         true,
       )
     }
@@ -913,6 +1002,7 @@ export class SVGuitarChord {
       color,
       fontFamily,
       Alignment.MIDDLE,
+      ElementType.TITLE,
     )
 
     // check if the title fits. If not, try with a smaller size

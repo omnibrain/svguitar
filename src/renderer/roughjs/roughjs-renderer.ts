@@ -108,6 +108,7 @@ export class RoughJsRenderer extends Renderer {
     strokeWidth: number,
     strokeColor: string,
     fill?: string,
+    classes?: string | string[],
   ): GraphcisElement {
     const options: Options = {
       fill: fill || 'none',
@@ -121,6 +122,7 @@ export class RoughJsRenderer extends Renderer {
     }
 
     const circle = this.rc.circle(x + diameter / 2, y + diameter / 2, diameter, options)
+    circle.classList.add(Renderer.toClassName(classes))
 
     this.svgNode.appendChild(circle)
 
@@ -142,7 +144,15 @@ export class RoughJsRenderer extends Renderer {
     this.svgNode.remove()
   }
 
-  line(x1: number, y1: number, x2: number, y2: number, strokeWidth: number, color: string): void {
+  line(
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    strokeWidth: number,
+    color: string,
+    classes?: string | string[],
+  ): void {
     if (strokeWidth > 5 && (x1 - x2 === 0 || y1 - y2 === 0)) {
       if (Math.abs(x1 - x2) > Math.abs(y1 - y2)) {
         this.rect(x1, y1, x2 - x1, strokeWidth, 0, color, color)
@@ -155,6 +165,7 @@ export class RoughJsRenderer extends Renderer {
         stroke: color,
       })
 
+      line.classList.add(Renderer.toClassName(classes))
       this.svgNode.appendChild(line)
     }
   }
@@ -166,6 +177,7 @@ export class RoughJsRenderer extends Renderer {
     height: number,
     strokeWidth: number,
     strokeColor: string,
+    classes?: string | string[],
     fill?: string,
     radius?: number,
   ): GraphcisElement {
@@ -197,6 +209,8 @@ export class RoughJsRenderer extends Renderer {
       roughness: 1.5,
     })
     rect.setAttribute('transform', `translate(${x}, ${y})`)
+    rect.classList.add(Renderer.toClassName(classes))
+    rect2.classList.add(Renderer.toClassName(classes))
     this.svgNode.appendChild(rect)
     this.svgNode.appendChild(rect2)
 
@@ -209,6 +223,7 @@ export class RoughJsRenderer extends Renderer {
     size: number,
     strokeWidth: number,
     strokeColor: string,
+    classes?: string | string[],
     fill?: string | undefined,
   ): GraphcisElement {
     const triangle = this.rc.path(Renderer.trianglePath(0, 0, size), {
@@ -218,6 +233,7 @@ export class RoughJsRenderer extends Renderer {
       roughness: 1.5,
     })
     triangle.setAttribute('transform', `translate(${x}, ${y})`)
+    triangle.classList.add(Renderer.toClassName(classes))
     this.svgNode.appendChild(triangle)
 
     return RoughJsRenderer.boxToElement(triangle.getBBox(), () => triangle.remove())
@@ -230,18 +246,20 @@ export class RoughJsRenderer extends Renderer {
     strokeWidth: number,
     strokeColor: string,
     fill?: string,
+    classes?: string | string[],
     spikes = 5,
   ): GraphcisElement {
-    const triangle = this.rc.path(Renderer.ngonPath(0, 0, size, spikes), {
+    const pentagon = this.rc.path(Renderer.ngonPath(0, 0, size, spikes), {
       fill: fill || 'none',
       fillWeight: 2.5,
       stroke: strokeColor || fill || 'none',
       roughness: 1.5,
     })
-    triangle.setAttribute('transform', `translate(${x}, ${y})`)
-    this.svgNode.appendChild(triangle)
+    pentagon.setAttribute('transform', `translate(${x}, ${y})`)
+    pentagon.classList.add(Renderer.toClassName(classes))
+    this.svgNode.appendChild(pentagon)
 
-    return RoughJsRenderer.boxToElement(triangle.getBBox(), () => triangle.remove())
+    return RoughJsRenderer.boxToElement(pentagon.getBBox(), () => pentagon.remove())
   }
 
   size(width: number, height: number): void {
@@ -266,6 +284,7 @@ export class RoughJsRenderer extends Renderer {
     color: string,
     fontFamily: string,
     alignment: Alignment,
+    classes?: string | string[],
     plain?: boolean,
   ): GraphcisElement {
     // Place the SVG namespace in a variable to easily reference it.
@@ -304,6 +323,7 @@ export class RoughJsRenderer extends Renderer {
         throw new Error(`Invalid alignment ${alignment}`)
     }
 
+    txtElem.classList.add(Renderer.toClassName(classes))
     txtElem.setAttributeNS(null, 'x', String(x + xOffset))
     txtElem.setAttributeNS(null, 'y', String(y + (plain ? 0 : bbox.height / 2)))
 

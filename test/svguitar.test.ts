@@ -789,6 +789,45 @@ describe('SVGuitarChord', () => {
     saveSvg('fixed diagram position 3', container.outerHTML)
   })
 
+  it('Should add custom classes to the barrre chord', () => {
+    svguitar
+      .chord({
+        fingers: [],
+        barres: [
+          {
+            fret: 1,
+            fromString: 4,
+            toString: 1,
+            className: 'custom-class-123',
+          },
+        ],
+      })
+      .configure({
+        title: 'Barre with Custom Class',
+      })
+      .draw()
+
+    saveSvg('barre with class', container.outerHTML)
+  })
+
+  it('Should add custom classes to fingers', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [1, 2, { text: 'a', className: 'custom-class-a' }],
+          [2, 1, { text: 'b', className: 'custom-class-b' }],
+          [3, 1, { text: 'c', className: 'custom-class-c' }],
+        ],
+        barres: [],
+      })
+      .configure({
+        title: 'Fingers with Custom Class',
+      })
+      .draw()
+
+    saveSvg('fingers with class', container.outerHTML)
+  })
+
   test.each`
     setting          | value | valid
     ${'strings'}     | ${1}  | ${false}
