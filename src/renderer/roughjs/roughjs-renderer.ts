@@ -358,6 +358,10 @@ export class RoughJsRenderer extends Renderer {
   }
 
   private static toClassArray(classes?: string | string[]): string[] {
+    if (!classes) {
+      return []
+    }
+
     return Renderer.toClassName(classes).split(' ')
   }
 }
