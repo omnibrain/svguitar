@@ -4513,12 +4513,12 @@ ignore@^5.1.4:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.1.8.tgz#f150a8b50a34289b33e22f5889abd4d8016f0e57"
   integrity sha512-BMpfD7PpiETpBl/A6S498BaIJ6Y/ABT93ETbby2fP00v4EbvPBXWEoaR1UBPKs3iR53pJY7EtZk5KACI57i1Uw==
 
-image-size@^0.8.3:
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/image-size/-/image-size-0.8.3.tgz#f0b568857e034f29baffd37013587f2c0cad8b46"
-  integrity sha512-SMtq1AJ+aqHB45c3FsB4ERK0UCiA2d3H1uq8s+8T0Pf8A3W4teyBQyaFaktH6xvZqh+npwlKU7i4fJo0r7TYTg==
+image-size@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/image-size/-/image-size-1.0.0.tgz#58b31fe4743b1cec0a0ac26f5c914d3c5b2f0750"
+  integrity sha512-JLJ6OwBfO1KcA+TvJT+v8gbE6iWbj24LyDNFgFEN0lzegn6cC6a/p3NIDaepMsJjQjlUWqIC7wJv8lBFxPNjcw==
   dependencies:
-    queue "6.0.1"
+    queue "6.0.2"
 
 import-fresh@^3.0.0, import-fresh@^3.2.1:
   version "3.2.2"
@@ -7672,10 +7672,10 @@ qs@~6.5.2:
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
   integrity sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
 
-queue@6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/queue/-/queue-6.0.1.tgz#abd5a5b0376912f070a25729e0b6a7d565683791"
-  integrity sha512-AJBQabRCCNr9ANq8v77RJEv73DPbn55cdTb+Giq4X0AVnNVZvMHlYp7XlQiN+1npCZj1DuSmaA2hYVUUDgxFDg==
+queue@6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/queue/-/queue-6.0.2.tgz#b91525283e2315c7553d2efa18d83e76432fed65"
+  integrity sha512-iHZWu+q3IdFZFX36ro/lKBkSvfkztY5Y7HMiPlOUjhupPcG2JMfst2KKEpu5XndviX/3UhFbRngUPNKtgvtZiA==
   dependencies:
     inherits "~2.0.3"
 
@@ -8956,13 +8956,13 @@ supports-hyperlinks@^2.2.0:
     has-flag "^4.0.0"
     supports-color "^7.0.0"
 
-svgdom@^0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/svgdom/-/svgdom-0.1.8.tgz#4ac7013978b0fe058c1c7bd57a6cbba2d7498f72"
-  integrity sha512-TMiy+bqAKuk20HSlNOxBp7eEBdihYl1As3GlDEpob4/R5F3NY1TmVyEdt6WL+aueyTzoQycAuC75KJtvmJ2IEw==
+svgdom@^0.1.9:
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/svgdom/-/svgdom-0.1.10.tgz#4ce84403b548fe87c9f61365453f88c53a801bdf"
+  integrity sha512-MMx2owmn+V8xYc+29MWVEsKZi7ZGxvnV4U/QNyX+miSH4F+veOL7gFO86kKawIfx1K+CogSK9ZAtod7dsf8LSA==
   dependencies:
     fontkit "^1.8.1"
-    image-size "^0.8.3"
+    image-size "^1.0.0"
     sax "^1.2.4"
 
 symbol-tree@^3.2.4:
