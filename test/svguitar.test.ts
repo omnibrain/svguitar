@@ -1,4 +1,4 @@
-import { FretLabelPosition, Shape, SVGuitarChord } from '../src/svguitar'
+import { FretLabelPosition, Orientation, Shape, SVGuitarChord } from '../src/svguitar'
 import { saveSvg, setUpSvgDom } from './testutils'
 
 const document = setUpSvgDom()
@@ -26,19 +26,28 @@ describe('SVGuitarChord', () => {
     expect(container.querySelector('svg')).toBeNull()
   })
 
-  it('Should render an svg of an arbitrary chord', () => {
+  it.only('Should render an svg of an arbitrary chord', () => {
     svguitar
       .chord({
         fingers: [
-          [1, 2],
-          [2, 1],
-          [3, 2],
+          [1, 2, '1'],
+          [2, 1, '2'],
+          [3, 2, '3'],
           [4, 0], // fret 0 = open string
           [5, 'x'], // fret x = muted string
         ],
-        barres: [],
+        barres: [
+          {
+            fret: 1,
+            fromString: 4,
+            toString: 1,
+            text: 'B',
+          },
+        ],
       })
       .configure({
+        position: 5,
+        tuning: ['1', '2', '3', '4', '5', '6'],
         strings: 5,
         frets: 6,
         title: 'Amaj7',
@@ -46,6 +55,38 @@ describe('SVGuitarChord', () => {
       .draw()
 
     saveSvg('arbitrary chord', container.outerHTML)
+  })
+
+  it.only('Should render an svg of a horizontal chart', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [1, 2, '1'],
+          [2, 1, '2'],
+          [3, 2, '3'],
+          [4, 0], // fret 0 = open string
+          [5, 'x'], // fret x = muted string
+        ],
+        barres: [
+          {
+            fret: 1,
+            fromString: 4,
+            toString: 1,
+            text: 'B',
+          },
+        ],
+      })
+      .configure({
+        position: 5,
+        tuning: ['1', '2', '3', '4', '5', '6'],
+        orientation: Orientation.HORIZONTAL,
+        strings: 5,
+        frets: 6,
+        title: 'Amaj7',
+      })
+      .draw()
+
+    saveSvg('horizontal chord', container.outerHTML)
   })
 
   it('Should render fingers over barre chords', () => {
