@@ -122,6 +122,11 @@ new SVGuitarChord('#some-selector')
     // Customizations (all optional, defaults shown)
 
     /**
+     * Orientation of the chord diagram. Chose between 'vertical' or 'horizontal'
+     */
+    orientation: 'vertical',
+
+    /**
      * Select between 'normal' and 'handdrawn'
      */
     style: 'normal',
@@ -135,6 +140,7 @@ new SVGuitarChord('#some-selector')
      * The number of frets
      */
     frets: 4,
+
     /**
      * Default position if no positon is provided (first fret is 1)
      */
