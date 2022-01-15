@@ -1,7 +1,7 @@
 import { Box, Container, QuerySelector, SVG } from '@svgdotjs/svg.js'
 import { Alignment, GraphcisElement, Renderer } from '../renderer'
 import { constants } from '../../constants'
-import { isNode } from '../../utils'
+import { isNode } from '../../utils/is-node'
 
 export class SvgJsRenderer extends Renderer {
   private svg: Container

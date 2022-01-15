@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import { QuerySelector } from '@svgdotjs/svg.js'
-import { range } from './utils'
+import { range } from './utils/range'
 import { constants } from './constants'
 import { Alignment, GraphcisElement, Renderer, RoughJsRenderer, SvgJsRenderer } from './renderer'
 import { Constructor, ReturnTypeOf, SVGuitarPlugin } from './plugin'
@@ -80,6 +80,11 @@ export enum ChordStyle {
   handdrawn = 'handdrawn',
 }
 
+export enum Orientation {
+  vertical = 'vertical',
+  horizontal = 'horizontal',
+}
+
 export enum ElementType {
   FRET = 'fret',
   STRING = 'string',
@@ -95,6 +100,11 @@ export enum ElementType {
 }
 
 export interface ChordSettings {
+  /**
+   * Orientation of the chord diagram. Chose between "vertical" or "horizontal". Defaults to "vertical".
+   */
+  orientation?: Orientation
+
   /**
    * Style of the chord diagram. Currently you can chose between "normal" and "handdrawn".
    */
@@ -304,6 +314,7 @@ interface RequiredChordSettings {
   barreChordRadius: number
   fontFamily: string
   shape: Shape
+  orientation: Orientation
 }
 
 const defaultSettings: RequiredChordSettings = {
@@ -331,6 +342,7 @@ const defaultSettings: RequiredChordSettings = {
   barreChordRadius: 0.25,
   fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
   shape: Shape.CIRCLE,
+  orientation: Orientation.vertical,
 }
 
 export class SVGuitarChord {
@@ -408,7 +420,6 @@ export class SVGuitarChord {
 
   draw(): { width: number; height: number } {
     this.clear()
-    this.drawTopEdges()
     this.drawBackground()
 
     let y
@@ -423,7 +434,12 @@ export class SVGuitarChord {
     // now set the final height of the svg (and add some padding relative to the fret spacing)
     y += this.fretSpacing() / 10
 
-    this.renderer.size(constants.width, y)
+    const width = this.width(constants.width, y)
+    const height = this.height(y, constants.width)
+
+    this.renderer.size(width, height)
+
+    this.drawTopEdges(y)
 
     return {
       width: constants.width,
@@ -472,15 +488,19 @@ export class SVGuitarChord {
     tuning.forEach((tuning_, i): void => {
       if (i < strings) {
         const classNames = [ElementType.TUNING, `${ElementType.TUNING}-${i}`]
+
+        const { x: textX, y: textY } = this.coordinates(stringXPositions[i], y + padding)
+
         const tuningText = this.renderer.text(
           tuning_,
-          stringXPositions[i],
-          y + padding,
+          textX,
+          textY,
           tuningsFontSize,
           color,
           fontFamily,
           Alignment.MIDDLE,
           classNames,
+          true,
         )
 
         if (tuning_) {
@@ -490,7 +510,7 @@ export class SVGuitarChord {
     })
 
     if (text) {
-      return y + text.height + padding * 2
+      return y + this.height(text.height, text.width) + padding * 2
     }
     return y
   }
@@ -515,63 +535,88 @@ export class SVGuitarChord {
     // add some padding relative to the string spacing. Also make sure the padding is at least
     // 1/2 nutSize plus some padding to prevent the nut overlapping the position label.
     const padding = Math.max(this.stringSpacing() / 5, nutSize / 2 + 5)
+    const className = ElementType.FRET_POSITION
 
-    const drawText = (sizeMultiplier = 1) => {
-      if (sizeMultiplier < 0.01) {
-        // text does not fit: don't render it at all.
-        // eslint-disable-next-line no-console
-        console.warn('Not enough space to draw the starting fret')
-        return
+    if (this.orientation === Orientation.vertical) {
+      const drawText = (sizeMultiplier = 1) => {
+        if (sizeMultiplier < 0.01) {
+          // text does not fit: don't render it at all.
+          // eslint-disable-next-line no-console
+          console.warn('Not enough space to draw the starting fret')
+          return
+        }
+
+        if (fretLabelPosition === FretLabelPosition.RIGHT) {
+          const svgText = this.renderer.text(
+            text,
+            endX + padding,
+            y,
+            size * sizeMultiplier,
+            color,
+            fontFamily,
+            Alignment.LEFT,
+            className,
+          )
+
+          const { width, x } = svgText
+          if (x + width > constants.width) {
+            svgText.remove()
+            drawText(sizeMultiplier * 0.9)
+          }
+        } else {
+          const svgText = this.renderer.text(
+            text,
+            1 / sizeMultiplier + startX - padding,
+            y,
+            size * sizeMultiplier,
+            color,
+            fontFamily,
+            Alignment.RIGHT,
+            className,
+          )
+
+          const { x } = svgText
+          if (x < 0) {
+            svgText.remove()
+            drawText(sizeMultiplier * 0.8)
+          }
+        }
       }
 
-      const className = ElementType.FRET_POSITION
-      if (fretLabelPosition === FretLabelPosition.RIGHT) {
-        const svgText = this.renderer.text(
-          text,
-          endX + padding,
-          y,
-          size * sizeMultiplier,
-          color,
-          fontFamily,
-          Alignment.LEFT,
-          className,
-        )
+      drawText()
 
-        const { width, x } = svgText
-        if (x + width > constants.width) {
-          svgText.remove()
-          drawText(sizeMultiplier * 0.9)
-        }
-      } else {
-        const svgText = this.renderer.text(
-          text,
-          1 / sizeMultiplier + startX - padding,
-          y,
-          size * sizeMultiplier,
-          color,
-          fontFamily,
-          Alignment.RIGHT,
-          className,
-        )
-
-        const { x } = svgText
-        if (x < 0) {
-          svgText.remove()
-          drawText(sizeMultiplier * 0.8)
-        }
-      }
+      return
     }
 
-    drawText()
+    // Horizontal orientation
+    const { x: textX, y: textY } =
+      fretLabelPosition === FretLabelPosition.RIGHT
+        ? this.coordinates(endX + padding, y)
+        : this.coordinates(startX - padding, y)
+    this.renderer.text(
+      text,
+      textX,
+      textY,
+      size,
+      color,
+      fontFamily,
+      Alignment.MIDDLE,
+      className,
+      true,
+    )
   }
 
   /**
    * Hack to prevent the empty space of the svg from being cut off without having to define a
    * fixed width
    */
-  private drawTopEdges() {
-    this.renderer.circle(constants.width, 0, 0, 0, 'transparent', 'none')
-    this.renderer.circle(0, 0, 0, 0, 'transparent', 'none')
+  private drawTopEdges(y: number) {
+    const orientation = this.settings.orientation ?? defaultSettings.orientation
+
+    const xTopRight = orientation === Orientation.vertical ? constants.width : y
+
+    this.renderer.circle(0, 0, 0, 0, 'transparent', 'none', 'top-left')
+    this.renderer.circle(xTopRight, 0, 0, 0, 'transparent', 'none', 'top-right')
   }
 
   private drawBackground() {
@@ -597,10 +642,10 @@ export class SVGuitarChord {
       fretSize = topFretWidth
     }
 
-    this.renderer.line(startX, y + fretSize / 2, endX, y + fretSize / 2, fretSize, color, [
-      'top-fret',
-      `fret-0`,
-    ])
+    const { x: lineX1, y: lineY1 } = this.coordinates(startX, y + fretSize / 2)
+    const { x: lineX2, y: lineY2 } = this.coordinates(endX, y + fretSize / 2)
+
+    this.renderer.line(lineX1, lineY1, lineX2, lineY2, fretSize, color, ['top-fret', 'fret-0'])
 
     return y + fretSize
   }
@@ -693,10 +738,16 @@ export class SVGuitarChord {
         if (value === OPEN) {
           // draw an O
           const classNames = [ElementType.OPEN_STRING, `${ElementType.OPEN_STRING}-${stringIndex}`]
-
-          this.renderer.circle(
+          const { x: lineX1, y: lineY1 } = this.rectCoordinates(
             stringXPositions[stringIndex] - size / 2,
             y + padding,
+            size,
+            size,
+          )
+
+          this.renderer.circle(
+            lineX1,
+            lineY1,
             size,
             effectiveStrokeWidth,
             effectiveStrokeColor,
@@ -714,20 +765,27 @@ export class SVGuitarChord {
           const startY = y + padding
           const endY = startY + size
 
+          const { x: line1X1, y: line1Y1 } = this.coordinates(startX, startY)
+          const { x: line1X2, y: line1Y2 } = this.coordinates(endX, endY)
+
           this.renderer.line(
-            startX,
-            startY,
-            endX,
-            endY,
+            line1X1,
+            line1Y1,
+            line1X2,
+            line1Y2,
             effectiveStrokeWidth,
             effectiveStrokeColor,
             classNames,
           )
+
+          const { x: line2X1, y: line2Y1 } = this.coordinates(startX, endY)
+          const { x: line2X2, y: line2Y2 } = this.coordinates(endX, startY)
+
           this.renderer.line(
-            startX,
-            endY,
-            endX,
-            startY,
+            line2X1,
+            line2Y1,
+            line2X2,
+            line2Y2,
             effectiveStrokeWidth,
             effectiveStrokeColor,
             classNames,
@@ -763,21 +821,20 @@ export class SVGuitarChord {
     // draw frets
     fretYPositions.forEach((fretY, i) => {
       const classNames = [ElementType.FRET, `${ElementType.FRET}-${i}`]
-      this.renderer.line(startX, fretY, endX, fretY, strokeWidth, fretColor, classNames)
+      const { x: lineX1, y: lineY1 } = this.coordinates(startX, fretY)
+      const { x: lineX2, y: lineY2 } = this.coordinates(endX, fretY)
+
+      this.renderer.line(lineX1, lineY1, lineX2, lineY2, strokeWidth, fretColor, classNames)
     })
 
     // draw strings
     stringXPositions.forEach((stringX, i) => {
       const classNames = [ElementType.STRING, `${ElementType.STRING}-${i}`]
-      this.renderer.line(
-        stringX,
-        y,
-        stringX,
-        y + height + strokeWidth / 2,
-        strokeWidth,
-        fretColor,
-        classNames,
-      )
+
+      const { x: lineX1, y: lineY1 } = this.coordinates(stringX, y)
+      const { x: lineX2, y: lineY2 } = this.coordinates(stringX, y + height + strokeWidth / 2)
+
+      this.renderer.line(lineX1, lineY1, lineX2, lineY2, strokeWidth, fretColor, classNames)
     })
 
     // draw barre chords
@@ -814,11 +871,21 @@ export class SVGuitarChord {
           ...(className ? [className] : []),
         ]
 
-        this.renderer.rect(
+        const barreWidth = distance + stringSpacing / 2
+        const barreHeight = nutSize
+
+        const { x: rectX, y: rectY, height: rectHeight, width: rectWidth } = this.rectCoordinates(
           fromStringX - stringSpacing / 4,
           barreCenterY - nutSize / 2,
-          distance + stringSpacing / 2,
-          nutSize,
+          barreWidth,
+          barreHeight,
+        )
+
+        this.renderer.rect(
+          rectX,
+          rectY,
+          rectWidth,
+          rectHeight,
           barreChordStrokeWidth,
           barreChordStrokeColor,
           classNames,
@@ -830,10 +897,12 @@ export class SVGuitarChord {
         if (text) {
           const textClassNames = [ElementType.BARRE_TEXT, `${ElementType.BARRE_TEXT}-${fret}`]
 
+          const { x: textX, y: textY } = this.coordinates(fromStringX + distance / 2, barreCenterY)
+
           this.renderer.text(
             text,
-            fromStringX + distance / 2,
-            barreCenterY,
+            textX,
+            textY,
             nutTextSize,
             textColor ?? nutTextColor,
             fontFamily,
@@ -867,6 +936,8 @@ export class SVGuitarChord {
           `${ElementType.FINGER}-string-${stringIndex}-fret-${fretIndex - 1}`,
           ...(fingerOptions.className ? [fingerOptions.className] : []),
         ]
+
+        // const { x: x0, y: y0 } = this.coordinates(nutCenterX, nutCenterY)
 
         this.drawNut(
           nutCenterX,
@@ -909,11 +980,13 @@ export class SVGuitarChord {
 
     const classNamesWithShape = [...classNames, `${ElementType.FINGER}-${shape}`]
 
+    const { x: x0, y: y0 } = this.rectCoordinates(startX, startY, size, size)
+
     switch (shape) {
       case Shape.CIRCLE:
         this.renderer.circle(
-          startX,
-          startY,
+          x0,
+          y0,
           size,
           nutStrokeWidth,
           nutStrokeColor,
@@ -923,8 +996,8 @@ export class SVGuitarChord {
         break
       case Shape.SQUARE:
         this.renderer.rect(
-          startX,
-          startY,
+          x0,
+          y0,
           size,
           size,
           nutStrokeWidth,
@@ -935,8 +1008,8 @@ export class SVGuitarChord {
         break
       case Shape.TRIANGLE:
         this.renderer.triangle(
-          startX,
-          startY,
+          x0,
+          y0,
           size,
           nutStrokeWidth,
           nutStrokeColor,
@@ -946,8 +1019,8 @@ export class SVGuitarChord {
         break
       case Shape.PENTAGON:
         this.renderer.pentagon(
-          startX,
-          startY,
+          x0,
+          y0,
           size,
           nutStrokeWidth,
           nutStrokeColor,
@@ -966,10 +1039,12 @@ export class SVGuitarChord {
     // draw text on the nut
     const textClassNames = [...classNames, `${ElementType.FINGER}-text`]
     if (fingerOptions.text) {
+      const { x: textX, y: textY } = this.coordinates(x, y)
+
       this.renderer.text(
         fingerOptions.text,
-        x,
-        y,
+        textX,
+        textY,
         textSize,
         fingerOptions.textColor ?? nutTextColor,
         fontFamily,
@@ -994,30 +1069,65 @@ export class SVGuitarChord {
       (this.settings.fixedDiagramPosition ? 'X' : '')
 
     // draw the title
-    const { x, y, width, height, remove } = this.renderer.text(
+    if (this.orientation === Orientation.vertical) {
+      const { x, y, width, height, remove } = this.renderer.text(
+        title,
+        constants.width / 2,
+        5,
+        size,
+        color,
+        fontFamily,
+        Alignment.MIDDLE,
+        ElementType.TITLE,
+      )
+
+      // check if the title fits. If not, try with a smaller size
+      if (x < -0.0001) {
+        remove()
+
+        // try again with smaller font
+        return this.drawTitle(size * (constants.width / width))
+      }
+
+      if (!this.settings.title && this.settings.fixedDiagramPosition) {
+        remove()
+      }
+
+      return y + height + titleBottomMargin
+    }
+
+    // render temporary text to get the height of the title
+    const { remove: removeTempText, height, width } = this.renderer.text(
       title,
-      constants.width / 2,
-      5,
+      0,
+      0,
       size,
       color,
       fontFamily,
-      Alignment.MIDDLE,
+      Alignment.LEFT,
       ElementType.TITLE,
     )
+    removeTempText()
 
-    // check if the title fits. If not, try with a smaller size
-    if (x < -0.0001) {
-      remove()
+    const { x: textX, y: textY } = this.rectCoordinates(constants.width / 2, 5, 0, 0)
 
-      // try again with smaller font
-      return this.drawTitle(size * (constants.width / width))
-    }
+    const { remove } = this.renderer.text(
+      title,
+      textX,
+      textY,
+      size,
+      color,
+      fontFamily,
+      Alignment.LEFT,
+      ElementType.TITLE,
+      true,
+    )
 
     if (!this.settings.title && this.settings.fixedDiagramPosition) {
       remove()
     }
 
-    return y + height + titleBottomMargin
+    return width + titleBottomMargin
   }
 
   clear(): void {
@@ -1052,5 +1162,99 @@ export class SVGuitarChord {
     }
 
     return textOrOptions
+  }
+
+  /**
+   * rotates x value if orientation is horizontal
+   *
+   * @param x x in vertical orientation
+   * @param y y in vertical orientation
+   * @returns
+   */
+  private x(x: number, y: number): number {
+    return this.orientation === Orientation.vertical ? x : y
+  }
+
+  /**
+   * rotates y value if orientation is horizontal
+   *
+   * @param x x in vertical orientation
+   * @param y y in vertical orientation
+   * @returns
+   */
+  private y(x: number, y: number): number {
+    return this.orientation === Orientation.vertical ? y : Math.abs(x - constants.width)
+  }
+
+  /**
+   * rotates coordinates if orientation is horizontal
+   *
+   * @param x x in vertical orientation
+   * @param y y in vertical orientation
+   * @returns
+   */
+  private coordinates(x: number, y: number): { x: number; y: number } {
+    return {
+      x: this.x(x, y),
+      y: this.y(x, y),
+    }
+  }
+
+  /**
+   * rotates coordinates of a rectangle if orientation is horizontal
+   *
+   * @param x x in vertical orientation
+   * @param y y in vertical orientation
+   * @param width width in vertical orientation
+   * @param height height in vertical orientation
+   * @returns
+   */
+  private rectCoordinates(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+  ): { x: number; y: number; width: number; height: number } {
+    if (this.orientation === Orientation.vertical) {
+      return {
+        x,
+        y,
+        width,
+        height,
+      }
+    }
+
+    return {
+      x: this.x(x, y),
+      y: this.y(x, y) - width,
+      width: this.width(width, height),
+      height: this.height(height, width),
+    }
+  }
+
+  /**
+   * rotates height if orientation is horizontal
+   *
+   * @param height_ height in vertical orientation
+   * @param width width in vertical orientation
+   * @returns
+   */
+  private height(height_: number, width: number): number {
+    return this.orientation === Orientation.vertical ? height_ : width
+  }
+
+  /**
+   * rotates width if orientation is horizontal
+   *
+   * @param width_ width in vertical orientation
+   * @param height height in vertical orientation
+   * @returns
+   */
+  private width(width_: number, height: number): number {
+    return this.orientation === Orientation.horizontal ? height : width_
+  }
+
+  private get orientation(): Orientation {
+    return this.settings.orientation ?? defaultSettings.orientation
   }
 }

@@ -1,4 +1,4 @@
-import { FretLabelPosition, Shape, SVGuitarChord } from '../src/svguitar'
+import { FretLabelPosition, Orientation, Shape, SVGuitarChord } from '../src/svguitar'
 import { saveSvg, setUpSvgDom } from './testutils'
 
 const document = setUpSvgDom()
@@ -30,15 +30,24 @@ describe('SVGuitarChord', () => {
     svguitar
       .chord({
         fingers: [
-          [1, 2],
-          [2, 1],
-          [3, 2],
+          [1, 2, '1'],
+          [2, 1, '2'],
+          [3, 2, '3'],
           [4, 0], // fret 0 = open string
           [5, 'x'], // fret x = muted string
         ],
-        barres: [],
+        barres: [
+          {
+            fret: 3,
+            fromString: 4,
+            toString: 1,
+            text: 'B',
+          },
+        ],
       })
       .configure({
+        position: 5,
+        tuning: ['1', '2', '3', '4', '5', '6'],
         strings: 5,
         frets: 6,
         title: 'Amaj7',
@@ -46,6 +55,74 @@ describe('SVGuitarChord', () => {
       .draw()
 
     saveSvg('arbitrary chord', container.outerHTML)
+  })
+
+  it('Should render an svg of a horizontal chart', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [1, 2, '1'],
+          [2, 1, '2'],
+          [3, 2, '3'],
+          [4, 0], // fret 0 = open string
+          [5, 'x'], // fret x = muted string
+        ],
+        barres: [
+          {
+            fret: 3,
+            fromString: 4,
+            toString: 1,
+            text: 'B',
+          },
+        ],
+      })
+      .configure({
+        position: 5,
+        tuning: ['1', '2', '3', '4', '5', '6'],
+        orientation: Orientation.horizontal,
+        strings: 5,
+        frets: 6,
+        title: 'Amaj7',
+      })
+      .draw()
+
+    saveSvg('horizontal chord', container.outerHTML)
+  })
+
+  it('Should render an svg of a horizontal chart', () => {
+    svguitar
+      .chord({
+        fingers: [],
+        barres: [],
+      })
+      .configure({
+        fixedDiagramPosition: true,
+        orientation: Orientation.horizontal,
+        strings: 5,
+        frets: 6,
+      })
+      .draw()
+
+    saveSvg('horizontal fixed diagram position', container.outerHTML)
+  })
+
+  it('Should render the fret position correctly on the bottom', () => {
+    svguitar
+      .chord({
+        fingers: [],
+        barres: [],
+      })
+      .configure({
+        fixedDiagramPosition: true,
+        orientation: Orientation.horizontal,
+        fretLabelPosition: FretLabelPosition.LEFT,
+        strings: 5,
+        frets: 6,
+        position: 5,
+      })
+      .draw()
+
+    saveSvg('horizontal bottom fret position', container.outerHTML)
   })
 
   it('Should render fingers over barre chords', () => {
