@@ -154,7 +154,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.6.0",
     "rollup-plugin-typescript2": "^0.29.0",
-    "semantic-release": "^18.0.0",
+    "semantic-release": "^19.0.3",
     "shelljs": "^0.8.3",
     "ts-jest": "^26.0.0",
     "ts-node": "^9.1.1",
