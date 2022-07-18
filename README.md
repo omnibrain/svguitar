@@ -1,6 +1,6 @@
 # SVGuitar - JavaScript Guitar Chord Renderer
 
-[![Pipeline](https://gitlab.com/Voellmy/svguitar/badges/master/pipeline.svg)](https://gitlab.com/Voellmy/svguitar/-/pipelines)
+![build](https://github.com/omnibrain/svguitar/actions/workflows/semantic-release.yml/badge.svg)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![Coveralls](https://img.shields.io/coveralls/omnibrain/svguitar.svg)](https://coveralls.io/github/omnibrain/svguitar)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
@@ -9,9 +9,9 @@
 
 JavaScript (TypeScript) library to create beautiful SVG guitar chord charts directly in the browser.
 
-**Demo**: https://voellmy.gitlab.io/svguitar/ [ [source](https://github.com/omnibrain/svguitar/blob/master/demo/index.html) ]
+**Demo**: https://omnibrain.github.io/svguitar/ [ [source](https://github.com/omnibrain/svguitar/blob/master/demo/index.html) ]
 
-**TypeScript API Documentation**: https://voellmy.gitlab.io/svguitar/docs/
+**TypeScript API Documentation**: https://omnibrain.github.io/svguitar/docs/
 
 Example chord charts:
 
