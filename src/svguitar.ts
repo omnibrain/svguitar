@@ -722,10 +722,15 @@ export class SVGuitarChord {
           const fontFamily = this.settings.fontFamily ?? defaultSettings.fontFamily
           const classNames = [ElementType.STRING_TEXT, `${ElementType.STRING_TEXT}-${stringIndex}`]
 
-          this.renderer.text(
-            fingerOptions.text,
+          const { x: textX, y: textY } = this.coordinates(
             stringXPositions[stringIndex],
             y + padding + size / 2,
+          )
+
+          this.renderer.text(
+            fingerOptions.text,
+            textX,
+            textY,
             textSize,
             textColor,
             fontFamily,
@@ -738,6 +743,7 @@ export class SVGuitarChord {
         if (value === OPEN) {
           // draw an O
           const classNames = [ElementType.OPEN_STRING, `${ElementType.OPEN_STRING}-${stringIndex}`]
+
           const { x: lineX1, y: lineY1 } = this.rectCoordinates(
             stringXPositions[stringIndex] - size / 2,
             y + padding,

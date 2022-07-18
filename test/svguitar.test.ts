@@ -226,6 +226,26 @@ describe('SVGuitarChord', () => {
     saveSvg('silent and open colored', container.outerHTML)
   })
 
+  it('Should render text on silent and open string indicators vertically', () => {
+    svguitar
+      .chord({
+        fingers: [
+          [2, 0, 'A'],
+          [3, 'x', 'B'],
+          [4, 0, { text: 'C', textColor: 'green' }],
+          [5, 'x', { text: 'D', textColor: 'blue' }],
+        ],
+        barres: [],
+      })
+      .configure({
+        orientation: Orientation.horizontal,
+        title: 'Text on Open & Silent Strings Horizontal',
+      })
+      .draw()
+
+    saveSvg('silent and open colored', container.outerHTML)
+  })
+
   it('Should render nuts with a different color', () => {
     svguitar
       .chord({
