@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-      - next
 permissions:
   contents: write
 jobs:
