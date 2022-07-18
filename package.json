@@ -58,7 +58,7 @@
     "branches": [
       "master",
       {
-        "name": "develop",
+        "name": "next",
         "prerelease": true
       }
     ],
