@@ -39,9 +39,13 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
+var __spread = (this && this.__spread) || function () {
+    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+    return ar;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SVGuitarChord = exports.ChordStyle = exports.Shape = exports.FretLabelPosition = exports.SILENT = exports.OPEN = void 0;
-var utils_1 = require("./utils");
+exports.SVGuitarChord = exports.ElementType = exports.Orientation = exports.ChordStyle = exports.Shape = exports.FretLabelPosition = exports.SILENT = exports.OPEN = void 0;
+var range_1 = require("./utils/range");
 var constants_1 = require("./constants");
 var renderer_1 = require("./renderer");
 /**
@@ -72,6 +76,25 @@ var ChordStyle;
     ChordStyle["normal"] = "normal";
     ChordStyle["handdrawn"] = "handdrawn";
 })(ChordStyle = exports.ChordStyle || (exports.ChordStyle = {}));
+var Orientation;
+(function (Orientation) {
+    Orientation["vertical"] = "vertical";
+    Orientation["horizontal"] = "horizontal";
+})(Orientation = exports.Orientation || (exports.Orientation = {}));
+var ElementType;
+(function (ElementType) {
+    ElementType["FRET"] = "fret";
+    ElementType["STRING"] = "string";
+    ElementType["BARRE"] = "barre";
+    ElementType["BARRE_TEXT"] = "barre-text";
+    ElementType["FINGER"] = "finger";
+    ElementType["TITLE"] = "title";
+    ElementType["TUNING"] = "tuning";
+    ElementType["FRET_POSITION"] = "fret-position";
+    ElementType["STRING_TEXT"] = "string-text";
+    ElementType["SILENT_STRING"] = "silent-string";
+    ElementType["OPEN_STRING"] = "open-string";
+})(ElementType = exports.ElementType || (exports.ElementType = {}));
 var defaultSettings = {
     style: ChordStyle.normal,
     strings: 6,
@@ -97,6 +120,7 @@ var defaultSettings = {
     barreChordRadius: 0.25,
     fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
     shape: Shape.CIRCLE,
+    orientation: Orientation.vertical,
 };
 var SVGuitarChord = /** @class */ (function () {
     function SVGuitarChord(container) {
@@ -165,7 +189,6 @@ var SVGuitarChord = /** @class */ (function () {
     SVGuitarChord.prototype.draw = function () {
         var _a;
         this.clear();
-        this.drawTopEdges();
         this.drawBackground();
         var y;
         y = this.drawTitle((_a = this.settings.titleFontSize) !== null && _a !== void 0 ? _a : defaultSettings.titleFontSize);
@@ -176,7 +199,10 @@ var SVGuitarChord = /** @class */ (function () {
         y = this.drawTunings(y);
         // now set the final height of the svg (and add some padding relative to the fret spacing)
         y += this.fretSpacing() / 10;
-        this.renderer.size(constants_1.constants.width, y);
+        var width = this.width(constants_1.constants.width, y);
+        var height = this.height(y, constants_1.constants.width);
+        this.renderer.size(width, height);
+        this.drawTopEdges(y);
         return {
             width: constants_1.constants.width,
             height: y,
@@ -216,14 +242,16 @@ var SVGuitarChord = /** @class */ (function () {
         var text;
         tuning.forEach(function (tuning_, i) {
             if (i < strings) {
-                var tuningText = _this.renderer.text(tuning_, stringXPositions[i], y + padding, tuningsFontSize, color, fontFamily, renderer_1.Alignment.MIDDLE);
+                var classNames = [ElementType.TUNING, ElementType.TUNING + "-" + i];
+                var _a = _this.coordinates(stringXPositions[i], y + padding), textX = _a.x, textY = _a.y;
+                var tuningText = _this.renderer.text(tuning_, textX, textY, tuningsFontSize, color, fontFamily, renderer_1.Alignment.MIDDLE, classNames, true);
                 if (tuning_) {
                     text = tuningText;
                 }
             }
         });
         if (text) {
-            return y + text.height + padding * 2;
+            return y + this.height(text.height, text.width) + padding * 2;
         }
         return y;
     };
@@ -246,40 +274,52 @@ var SVGuitarChord = /** @class */ (function () {
         // add some padding relative to the string spacing. Also make sure the padding is at least
         // 1/2 nutSize plus some padding to prevent the nut overlapping the position label.
         var padding = Math.max(this.stringSpacing() / 5, nutSize / 2 + 5);
-        var drawText = function (sizeMultiplier) {
-            if (sizeMultiplier === void 0) { sizeMultiplier = 1; }
-            if (sizeMultiplier < 0.01) {
-                // text does not fit: don't render it at all.
-                // eslint-disable-next-line no-console
-                console.warn('Not enough space to draw the starting fret');
-                return;
-            }
-            if (fretLabelPosition === FretLabelPosition.RIGHT) {
-                var svgText = _this.renderer.text(text, endX + padding, y, size * sizeMultiplier, color, fontFamily, renderer_1.Alignment.LEFT);
-                var width = svgText.width, x = svgText.x;
-                if (x + width > constants_1.constants.width) {
-                    svgText.remove();
-                    drawText(sizeMultiplier * 0.9);
+        var className = ElementType.FRET_POSITION;
+        if (this.orientation === Orientation.vertical) {
+            var drawText_1 = function (sizeMultiplier) {
+                if (sizeMultiplier === void 0) { sizeMultiplier = 1; }
+                if (sizeMultiplier < 0.01) {
+                    // text does not fit: don't render it at all.
+                    // eslint-disable-next-line no-console
+                    console.warn('Not enough space to draw the starting fret');
+                    return;
                 }
-            }
-            else {
-                var svgText = _this.renderer.text(text, 1 / sizeMultiplier + startX - padding, y, size * sizeMultiplier, color, fontFamily, renderer_1.Alignment.RIGHT);
-                var x = svgText.x;
-                if (x < 0) {
-                    svgText.remove();
-                    drawText(sizeMultiplier * 0.8);
+                if (fretLabelPosition === FretLabelPosition.RIGHT) {
+                    var svgText = _this.renderer.text(text, endX + padding, y, size * sizeMultiplier, color, fontFamily, renderer_1.Alignment.LEFT, className);
+                    var width = svgText.width, x = svgText.x;
+                    if (x + width > constants_1.constants.width) {
+                        svgText.remove();
+                        drawText_1(sizeMultiplier * 0.9);
+                    }
                 }
-            }
-        };
-        drawText();
+                else {
+                    var svgText = _this.renderer.text(text, 1 / sizeMultiplier + startX - padding, y, size * sizeMultiplier, color, fontFamily, renderer_1.Alignment.RIGHT, className);
+                    var x = svgText.x;
+                    if (x < 0) {
+                        svgText.remove();
+                        drawText_1(sizeMultiplier * 0.8);
+                    }
+                }
+            };
+            drawText_1();
+            return;
+        }
+        // Horizontal orientation
+        var _j = fretLabelPosition === FretLabelPosition.RIGHT
+            ? this.coordinates(endX + padding, y)
+            : this.coordinates(startX - padding, y), textX = _j.x, textY = _j.y;
+        this.renderer.text(text, textX, textY, size, color, fontFamily, renderer_1.Alignment.MIDDLE, className, true);
     };
     /**
      * Hack to prevent the empty space of the svg from being cut off without having to define a
      * fixed width
      */
-    SVGuitarChord.prototype.drawTopEdges = function () {
-        this.renderer.circle(constants_1.constants.width, 0, 0, 0, 'transparent', 'none');
-        this.renderer.circle(0, 0, 0, 0, 'transparent', 'none');
+    SVGuitarChord.prototype.drawTopEdges = function (y) {
+        var _a;
+        var orientation = (_a = this.settings.orientation) !== null && _a !== void 0 ? _a : defaultSettings.orientation;
+        var xTopRight = orientation === Orientation.vertical ? constants_1.constants.width : y;
+        this.renderer.circle(0, 0, 0, 0, 'transparent', 'none', 'top-left');
+        this.renderer.circle(xTopRight, 0, 0, 0, 'transparent', 'none', 'top-right');
     };
     SVGuitarChord.prototype.drawBackground = function () {
         if (this.settings.backgroundColor) {
@@ -302,7 +342,9 @@ var SVGuitarChord = /** @class */ (function () {
         else {
             fretSize = topFretWidth;
         }
-        this.renderer.line(startX, y + fretSize / 2, endX, y + fretSize / 2, fretSize, color);
+        var _g = this.coordinates(startX, y + fretSize / 2), lineX1 = _g.x, lineY1 = _g.y;
+        var _h = this.coordinates(endX, y + fretSize / 2), lineX2 = _h.x, lineY2 = _h.y;
+        this.renderer.line(lineX1, lineY1, lineX2, lineY2, fretSize, color, ['top-fret', 'fret-0']);
         return y + fretSize;
     };
     SVGuitarChord.prototype.stringXPos = function () {
@@ -311,7 +353,7 @@ var SVGuitarChord = /** @class */ (function () {
         var sidePadding = (_b = this.settings.sidePadding) !== null && _b !== void 0 ? _b : defaultSettings.sidePadding;
         var startX = constants_1.constants.width * sidePadding;
         var stringsSpacing = this.stringSpacing();
-        return utils_1.range(strings).map(function (i) { return startX + stringsSpacing * i; });
+        return range_1.range(strings).map(function (i) { return startX + stringsSpacing * i; });
     };
     SVGuitarChord.prototype.stringSpacing = function () {
         var _a, _b;
@@ -332,7 +374,7 @@ var SVGuitarChord = /** @class */ (function () {
         var _a;
         var frets = (_a = this.settings.frets) !== null && _a !== void 0 ? _a : defaultSettings.frets;
         var fretSpacing = this.fretSpacing();
-        return utils_1.range(frets, 1).map(function (i) { return startY + fretSpacing * i; });
+        return range_1.range(frets, 1).map(function (i) { return startY + fretSpacing * i; });
     };
     SVGuitarChord.prototype.toArrayIndex = function (stringIndex) {
         var _a;
@@ -375,20 +417,32 @@ var SVGuitarChord = /** @class */ (function () {
                 var textColor = (_e = (_d = fingerOptions.textColor) !== null && _d !== void 0 ? _d : _this.settings.color) !== null && _e !== void 0 ? _e : defaultSettings.color;
                 var textSize = (_f = _this.settings.nutTextSize) !== null && _f !== void 0 ? _f : defaultSettings.nutTextSize;
                 var fontFamily = (_g = _this.settings.fontFamily) !== null && _g !== void 0 ? _g : defaultSettings.fontFamily;
-                _this.renderer.text(fingerOptions.text, stringXPositions[stringIndex], y + padding + size / 2, textSize, textColor, fontFamily, renderer_1.Alignment.MIDDLE, true);
+                var classNames = [ElementType.STRING_TEXT, ElementType.STRING_TEXT + "-" + stringIndex];
+                var _j = _this.coordinates(stringXPositions[stringIndex], y + padding + size / 2), textX = _j.x, textY = _j.y;
+                _this.renderer.text(fingerOptions.text, textX, textY, textSize, textColor, fontFamily, renderer_1.Alignment.MIDDLE, classNames, true);
             }
             if (value === exports.OPEN) {
                 // draw an O
-                _this.renderer.circle(stringXPositions[stringIndex] - size / 2, y + padding, size, effectiveStrokeWidth, effectiveStrokeColor);
+                var classNames = [ElementType.OPEN_STRING, ElementType.OPEN_STRING + "-" + stringIndex];
+                var _k = _this.rectCoordinates(stringXPositions[stringIndex] - size / 2, y + padding, size, size), lineX1 = _k.x, lineY1 = _k.y;
+                _this.renderer.circle(lineX1, lineY1, size, effectiveStrokeWidth, effectiveStrokeColor, undefined, classNames);
             }
             else {
                 // draw an X
+                var classNames = [
+                    ElementType.SILENT_STRING,
+                    ElementType.SILENT_STRING + "-" + stringIndex,
+                ];
                 var startX = stringXPositions[stringIndex] - size / 2;
                 var endX = startX + size;
                 var startY = y + padding;
                 var endY = startY + size;
-                _this.renderer.line(startX, startY, endX, endY, effectiveStrokeWidth, effectiveStrokeColor);
-                _this.renderer.line(startX, endY, endX, startY, effectiveStrokeWidth, effectiveStrokeColor);
+                var _l = _this.coordinates(startX, startY), line1X1 = _l.x, line1Y1 = _l.y;
+                var _m = _this.coordinates(endX, endY), line1X2 = _m.x, line1Y2 = _m.y;
+                _this.renderer.line(line1X1, line1Y1, line1X2, line1Y2, effectiveStrokeWidth, effectiveStrokeColor, classNames);
+                var _o = _this.coordinates(startX, endY), line2X1 = _o.x, line2Y1 = _o.y;
+                var _p = _this.coordinates(endX, startY), line2X2 = _p.x, line2Y2 = _p.y;
+                _this.renderer.line(line2X1, line2Y1, line2X2, line2Y2, effectiveStrokeWidth, effectiveStrokeColor, classNames);
             }
         });
         return hasEmpty || this.settings.fixedDiagramPosition ? y + size + 2 * padding : y + padding;
@@ -415,26 +469,41 @@ var SVGuitarChord = /** @class */ (function () {
         var nutTextColor = (_l = this.settings.nutTextColor) !== null && _l !== void 0 ? _l : defaultSettings.nutTextColor;
         var nutTextSize = (_m = this.settings.nutTextSize) !== null && _m !== void 0 ? _m : defaultSettings.nutTextSize;
         // draw frets
-        fretYPositions.forEach(function (fretY) {
-            _this.renderer.line(startX, fretY, endX, fretY, strokeWidth, fretColor);
+        fretYPositions.forEach(function (fretY, i) {
+            var classNames = [ElementType.FRET, ElementType.FRET + "-" + i];
+            var _a = _this.coordinates(startX, fretY), lineX1 = _a.x, lineY1 = _a.y;
+            var _b = _this.coordinates(endX, fretY), lineX2 = _b.x, lineY2 = _b.y;
+            _this.renderer.line(lineX1, lineY1, lineX2, lineY2, strokeWidth, fretColor, classNames);
         });
         // draw strings
-        stringXPositions.forEach(function (stringX) {
-            _this.renderer.line(stringX, y, stringX, y + height + strokeWidth / 2, strokeWidth, fretColor);
+        stringXPositions.forEach(function (stringX, i) {
+            var classNames = [ElementType.STRING, ElementType.STRING + "-" + i];
+            var _a = _this.coordinates(stringX, y), lineX1 = _a.x, lineY1 = _a.y;
+            var _b = _this.coordinates(stringX, y + height + strokeWidth / 2), lineX2 = _b.x, lineY2 = _b.y;
+            _this.renderer.line(lineX1, lineY1, lineX2, lineY2, strokeWidth, fretColor, classNames);
         });
         // draw barre chords
         this.chordInternal.barres.forEach(function (_a) {
             var _b, _c, _d, _e;
-            var fret = _a.fret, fromString = _a.fromString, toString = _a.toString, text = _a.text, color = _a.color, textColor = _a.textColor, strokeColor = _a.strokeColor, individualBarreChordStrokeWidth = _a.strokeWidth;
+            var fret = _a.fret, fromString = _a.fromString, toString = _a.toString, text = _a.text, color = _a.color, textColor = _a.textColor, strokeColor = _a.strokeColor, className = _a.className, individualBarreChordStrokeWidth = _a.strokeWidth;
             var barreCenterY = fretYPositions[fret - 1] - strokeWidth / 4 - fretSpacing / 2;
             var fromStringX = stringXPositions[_this.toArrayIndex(fromString)];
             var distance = Math.abs(toString - fromString) * stringSpacing;
             var barreChordStrokeColor = (_d = (_c = (_b = strokeColor !== null && strokeColor !== void 0 ? strokeColor : _this.settings.barreChordStrokeColor) !== null && _b !== void 0 ? _b : _this.settings.nutColor) !== null && _c !== void 0 ? _c : _this.settings.color) !== null && _d !== void 0 ? _d : defaultSettings.color;
             var barreChordStrokeWidth = (_e = individualBarreChordStrokeWidth !== null && individualBarreChordStrokeWidth !== void 0 ? individualBarreChordStrokeWidth : _this.settings.barreChordStrokeWidth) !== null && _e !== void 0 ? _e : defaultSettings.barreChordStrokeWidth;
-            _this.renderer.rect(fromStringX - stringSpacing / 4, barreCenterY - nutSize / 2, distance + stringSpacing / 2, nutSize, barreChordStrokeWidth, barreChordStrokeColor, color !== null && color !== void 0 ? color : nutColor, nutSize * barreChordRadius);
+            var classNames = __spread([
+                ElementType.BARRE,
+                ElementType.BARRE + "-fret-" + (fret - 1)
+            ], (className ? [className] : []));
+            var barreWidth = distance + stringSpacing / 2;
+            var barreHeight = nutSize;
+            var _f = _this.rectCoordinates(fromStringX - stringSpacing / 4, barreCenterY - nutSize / 2, barreWidth, barreHeight), rectX = _f.x, rectY = _f.y, rectHeight = _f.height, rectWidth = _f.width;
+            _this.renderer.rect(rectX, rectY, rectWidth, rectHeight, barreChordStrokeWidth, barreChordStrokeColor, classNames, color !== null && color !== void 0 ? color : nutColor, nutSize * barreChordRadius);
             // draw text on the barre chord
             if (text) {
-                _this.renderer.text(text, fromStringX + distance / 2, barreCenterY, nutTextSize, textColor !== null && textColor !== void 0 ? textColor : nutTextColor, fontFamily, renderer_1.Alignment.MIDDLE, true);
+                var textClassNames = [ElementType.BARRE_TEXT, ElementType.BARRE_TEXT + "-" + fret];
+                var _g = _this.coordinates(fromStringX + distance / 2, barreCenterY), textX = _g.x, textY = _g.y;
+                _this.renderer.text(text, textX, textY, nutTextSize, textColor !== null && textColor !== void 0 ? textColor : nutTextColor, fontFamily, renderer_1.Alignment.MIDDLE, textClassNames, true);
             }
         });
         // draw fingers
@@ -456,11 +525,18 @@ var SVGuitarChord = /** @class */ (function () {
             var nutCenterX = startX + stringIndex * stringSpacing;
             var nutCenterY = y + fretIndex * fretSpacing - fretSpacing / 2;
             var fingerOptions = SVGuitarChord.getFingerOptions(textOrOptions);
-            _this.drawNut(nutCenterX, nutCenterY, nutSize, nutColor, nutTextSize, fontFamily, fingerOptions);
+            var classNames = __spread([
+                ElementType.FINGER,
+                ElementType.FINGER + "-string-" + stringIndex,
+                ElementType.FINGER + "-fret-" + (fretIndex - 1),
+                ElementType.FINGER + "-string-" + stringIndex + "-fret-" + (fretIndex - 1)
+            ], (fingerOptions.className ? [fingerOptions.className] : []));
+            // const { x: x0, y: y0 } = this.coordinates(nutCenterX, nutCenterY)
+            _this.drawNut(nutCenterX, nutCenterY, nutSize, nutColor, nutTextSize, fontFamily, fingerOptions, classNames);
         });
         return y + height;
     };
-    SVGuitarChord.prototype.drawNut = function (x, y, size, color, textSize, fontFamily, fingerOptions) {
+    SVGuitarChord.prototype.drawNut = function (x, y, size, color, textSize, fontFamily, fingerOptions, classNames) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
         var shape = (_a = fingerOptions.shape) !== null && _a !== void 0 ? _a : defaultSettings.shape;
         var nutTextColor = (_c = (_b = fingerOptions.textColor) !== null && _b !== void 0 ? _b : this.settings.nutTextColor) !== null && _c !== void 0 ? _c : defaultSettings.nutTextColor;
@@ -468,18 +544,20 @@ var SVGuitarChord = /** @class */ (function () {
         var nutStrokeWidth = (_j = (_h = fingerOptions.strokeWidth) !== null && _h !== void 0 ? _h : this.settings.nutStrokeWidth) !== null && _j !== void 0 ? _j : defaultSettings.nutStrokeWidth;
         var startX = x - size / 2;
         var startY = y - size / 2;
+        var classNamesWithShape = __spread(classNames, [ElementType.FINGER + "-" + shape]);
+        var _q = this.rectCoordinates(startX, startY, size, size), x0 = _q.x, y0 = _q.y;
         switch (shape) {
             case Shape.CIRCLE:
-                this.renderer.circle(startX, startY, size, nutStrokeWidth, nutStrokeColor, (_k = fingerOptions.color) !== null && _k !== void 0 ? _k : color);
+                this.renderer.circle(x0, y0, size, nutStrokeWidth, nutStrokeColor, (_k = fingerOptions.color) !== null && _k !== void 0 ? _k : color, classNamesWithShape);
                 break;
             case Shape.SQUARE:
-                this.renderer.rect(startX, startY, size, size, nutStrokeWidth, nutStrokeColor, (_l = fingerOptions.color) !== null && _l !== void 0 ? _l : color);
+                this.renderer.rect(x0, y0, size, size, nutStrokeWidth, nutStrokeColor, classNamesWithShape, (_l = fingerOptions.color) !== null && _l !== void 0 ? _l : color);
                 break;
             case Shape.TRIANGLE:
-                this.renderer.triangle(startX, startY, size, nutStrokeWidth, nutStrokeColor, (_m = fingerOptions.color) !== null && _m !== void 0 ? _m : color);
+                this.renderer.triangle(x0, y0, size, nutStrokeWidth, nutStrokeColor, classNamesWithShape, (_m = fingerOptions.color) !== null && _m !== void 0 ? _m : color);
                 break;
             case Shape.PENTAGON:
-                this.renderer.pentagon(startX, startY, size, nutStrokeWidth, nutStrokeColor, (_o = fingerOptions.color) !== null && _o !== void 0 ? _o : color);
+                this.renderer.pentagon(x0, y0, size, nutStrokeWidth, nutStrokeColor, (_o = fingerOptions.color) !== null && _o !== void 0 ? _o : color, classNamesWithShape);
                 break;
             default:
                 throw new Error("Invalid shape \"" + fingerOptions.shape + "\". Valid shapes are: " + Object.values(Shape)
@@ -487,8 +565,10 @@ var SVGuitarChord = /** @class */ (function () {
                     .join(', ') + ".");
         }
         // draw text on the nut
+        var textClassNames = __spread(classNames, [ElementType.FINGER + "-text"]);
         if (fingerOptions.text) {
-            this.renderer.text(fingerOptions.text, x, y, textSize, (_p = fingerOptions.textColor) !== null && _p !== void 0 ? _p : nutTextColor, fontFamily, renderer_1.Alignment.MIDDLE, true);
+            var _r = this.coordinates(x, y), textX = _r.x, textY = _r.y;
+            this.renderer.text(fingerOptions.text, textX, textY, textSize, (_p = fingerOptions.textColor) !== null && _p !== void 0 ? _p : nutTextColor, fontFamily, renderer_1.Alignment.MIDDLE, textClassNames, true);
         }
     };
     SVGuitarChord.prototype.drawTitle = function (size) {
@@ -501,17 +581,28 @@ var SVGuitarChord = /** @class */ (function () {
         // just rendering a space but that doesn't work.
         var title = (_e = (_d = this.chordInternal.title) !== null && _d !== void 0 ? _d : this.settings.title) !== null && _e !== void 0 ? _e : (this.settings.fixedDiagramPosition ? 'X' : '');
         // draw the title
-        var _f = this.renderer.text(title, constants_1.constants.width / 2, 5, size, color, fontFamily, renderer_1.Alignment.MIDDLE), x = _f.x, y = _f.y, width = _f.width, height = _f.height, remove = _f.remove;
-        // check if the title fits. If not, try with a smaller size
-        if (x < -0.0001) {
-            remove();
-            // try again with smaller font
-            return this.drawTitle(size * (constants_1.constants.width / width));
+        if (this.orientation === Orientation.vertical) {
+            var _f = this.renderer.text(title, constants_1.constants.width / 2, 5, size, color, fontFamily, renderer_1.Alignment.MIDDLE, ElementType.TITLE), x = _f.x, y = _f.y, width_1 = _f.width, height_1 = _f.height, remove_1 = _f.remove;
+            // check if the title fits. If not, try with a smaller size
+            if (x < -0.0001) {
+                remove_1();
+                // try again with smaller font
+                return this.drawTitle(size * (constants_1.constants.width / width_1));
+            }
+            if (!this.settings.title && this.settings.fixedDiagramPosition) {
+                remove_1();
+            }
+            return y + height_1 + titleBottomMargin;
         }
+        // render temporary text to get the height of the title
+        var _g = this.renderer.text(title, 0, 0, size, color, fontFamily, renderer_1.Alignment.LEFT, ElementType.TITLE), removeTempText = _g.remove, height = _g.height, width = _g.width;
+        removeTempText();
+        var _h = this.rectCoordinates(constants_1.constants.width / 2, 5, 0, 0), textX = _h.x, textY = _h.y;
+        var remove = this.renderer.text(title, textX, textY, size, color, fontFamily, renderer_1.Alignment.LEFT, ElementType.TITLE, true).remove;
         if (!this.settings.title && this.settings.fixedDiagramPosition) {
             remove();
         }
-        return y + height + titleBottomMargin;
+        return width + titleBottomMargin;
     };
     SVGuitarChord.prototype.clear = function () {
         this.renderer.clear();
@@ -540,6 +631,92 @@ var SVGuitarChord = /** @class */ (function () {
         }
         return textOrOptions;
     };
+    /**
+     * rotates x value if orientation is horizontal
+     *
+     * @param x x in vertical orientation
+     * @param y y in vertical orientation
+     * @returns
+     */
+    SVGuitarChord.prototype.x = function (x, y) {
+        return this.orientation === Orientation.vertical ? x : y;
+    };
+    /**
+     * rotates y value if orientation is horizontal
+     *
+     * @param x x in vertical orientation
+     * @param y y in vertical orientation
+     * @returns
+     */
+    SVGuitarChord.prototype.y = function (x, y) {
+        return this.orientation === Orientation.vertical ? y : Math.abs(x - constants_1.constants.width);
+    };
+    /**
+     * rotates coordinates if orientation is horizontal
+     *
+     * @param x x in vertical orientation
+     * @param y y in vertical orientation
+     * @returns
+     */
+    SVGuitarChord.prototype.coordinates = function (x, y) {
+        return {
+            x: this.x(x, y),
+            y: this.y(x, y),
+        };
+    };
+    /**
+     * rotates coordinates of a rectangle if orientation is horizontal
+     *
+     * @param x x in vertical orientation
+     * @param y y in vertical orientation
+     * @param width width in vertical orientation
+     * @param height height in vertical orientation
+     * @returns
+     */
+    SVGuitarChord.prototype.rectCoordinates = function (x, y, width, height) {
+        if (this.orientation === Orientation.vertical) {
+            return {
+                x: x,
+                y: y,
+                width: width,
+                height: height,
+            };
+        }
+        return {
+            x: this.x(x, y),
+            y: this.y(x, y) - width,
+            width: this.width(width, height),
+            height: this.height(height, width),
+        };
+    };
+    /**
+     * rotates height if orientation is horizontal
+     *
+     * @param height_ height in vertical orientation
+     * @param width width in vertical orientation
+     * @returns
+     */
+    SVGuitarChord.prototype.height = function (height_, width) {
+        return this.orientation === Orientation.vertical ? height_ : width;
+    };
+    /**
+     * rotates width if orientation is horizontal
+     *
+     * @param width_ width in vertical orientation
+     * @param height height in vertical orientation
+     * @returns
+     */
+    SVGuitarChord.prototype.width = function (width_, height) {
+        return this.orientation === Orientation.horizontal ? height : width_;
+    };
+    Object.defineProperty(SVGuitarChord.prototype, "orientation", {
+        get: function () {
+            var _a;
+            return (_a = this.settings.orientation) !== null && _a !== void 0 ? _a : defaultSettings.orientation;
+        },
+        enumerable: false,
+        configurable: true
+    });
     SVGuitarChord.plugins = [];
     return SVGuitarChord;
 }());

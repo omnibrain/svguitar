@@ -18,6 +18,26 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spread = (this && this.__spread) || function () {
+    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+    return ar;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RoughJsRenderer = void 0;
 var roughjs_1 = require("roughjs");
@@ -95,7 +115,8 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             }
         });
     };
-    RoughJsRenderer.prototype.circle = function (x, y, diameter, strokeWidth, strokeColor, fill) {
+    RoughJsRenderer.prototype.circle = function (x, y, diameter, strokeWidth, strokeColor, fill, classes) {
+        var _a;
         var options = {
             fill: fill || 'none',
             fillWeight: 2.5,
@@ -106,6 +127,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             options.strokeWidth = strokeWidth;
         }
         var circle = this.rc.circle(x + diameter / 2, y + diameter / 2, diameter, options);
+        (_a = circle.classList).add.apply(_a, __spread(RoughJsRenderer.toClassArray(classes)));
         this.svgNode.appendChild(circle);
         return RoughJsRenderer.boxToElement(circle.getBBox(), function () {
             return circle ? circle.remove() : undefined;
@@ -121,7 +143,8 @@ var RoughJsRenderer = /** @class */ (function (_super) {
     RoughJsRenderer.prototype.remove = function () {
         this.svgNode.remove();
     };
-    RoughJsRenderer.prototype.line = function (x1, y1, x2, y2, strokeWidth, color) {
+    RoughJsRenderer.prototype.line = function (x1, y1, x2, y2, strokeWidth, color, classes) {
+        var _a;
         if (strokeWidth > 5 && (x1 - x2 === 0 || y1 - y2 === 0)) {
             if (Math.abs(x1 - x2) > Math.abs(y1 - y2)) {
                 this.rect(x1, y1, x2 - x1, strokeWidth, 0, color, color);
@@ -135,10 +158,12 @@ var RoughJsRenderer = /** @class */ (function (_super) {
                 strokeWidth: strokeWidth,
                 stroke: color,
             });
+            (_a = line.classList).add.apply(_a, __spread(RoughJsRenderer.toClassArray(classes)));
             this.svgNode.appendChild(line);
         }
     };
-    RoughJsRenderer.prototype.rect = function (x, y, width, height, strokeWidth, strokeColor, fill, radius) {
+    RoughJsRenderer.prototype.rect = function (x, y, width, height, strokeWidth, strokeColor, classes, fill, radius) {
+        var _a, _b;
         var rect2 = this.rc.rectangle(x, y, width, height, {
             // fill: fill || 'none',
             fill: 'none',
@@ -159,11 +184,14 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             roughness: 1.5,
         });
         rect.setAttribute('transform', "translate(" + x + ", " + y + ")");
+        (_a = rect.classList).add.apply(_a, __spread(RoughJsRenderer.toClassArray(classes)));
+        (_b = rect2.classList).add.apply(_b, __spread(RoughJsRenderer.toClassArray(classes)));
         this.svgNode.appendChild(rect);
         this.svgNode.appendChild(rect2);
         return RoughJsRenderer.boxToElement(rect.getBBox(), function () { return rect.remove(); });
     };
-    RoughJsRenderer.prototype.triangle = function (x, y, size, strokeWidth, strokeColor, fill) {
+    RoughJsRenderer.prototype.triangle = function (x, y, size, strokeWidth, strokeColor, classes, fill) {
+        var _a;
         var triangle = this.rc.path(renderer_1.Renderer.trianglePath(0, 0, size), {
             fill: fill || 'none',
             fillWeight: 2.5,
@@ -171,20 +199,23 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             roughness: 1.5,
         });
         triangle.setAttribute('transform', "translate(" + x + ", " + y + ")");
+        (_a = triangle.classList).add.apply(_a, __spread(RoughJsRenderer.toClassArray(classes)));
         this.svgNode.appendChild(triangle);
         return RoughJsRenderer.boxToElement(triangle.getBBox(), function () { return triangle.remove(); });
     };
-    RoughJsRenderer.prototype.pentagon = function (x, y, size, strokeWidth, strokeColor, fill, spikes) {
+    RoughJsRenderer.prototype.pentagon = function (x, y, size, strokeWidth, strokeColor, fill, classes, spikes) {
+        var _a;
         if (spikes === void 0) { spikes = 5; }
-        var triangle = this.rc.path(renderer_1.Renderer.ngonPath(0, 0, size, spikes), {
+        var pentagon = this.rc.path(renderer_1.Renderer.ngonPath(0, 0, size, spikes), {
             fill: fill || 'none',
             fillWeight: 2.5,
             stroke: strokeColor || fill || 'none',
             roughness: 1.5,
         });
-        triangle.setAttribute('transform', "translate(" + x + ", " + y + ")");
-        this.svgNode.appendChild(triangle);
-        return RoughJsRenderer.boxToElement(triangle.getBBox(), function () { return triangle.remove(); });
+        pentagon.setAttribute('transform', "translate(" + x + ", " + y + ")");
+        (_a = pentagon.classList).add.apply(_a, __spread(RoughJsRenderer.toClassArray(classes)));
+        this.svgNode.appendChild(pentagon);
+        return RoughJsRenderer.boxToElement(pentagon.getBBox(), function () { return pentagon.remove(); });
     };
     RoughJsRenderer.prototype.size = function (width, height) {
         this.svgNode.setAttribute('viewBox', "0 0 " + Math.ceil(width) + " " + Math.ceil(height));
@@ -196,7 +227,8 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         bg.setAttributeNS(null, 'fill', color);
         this.svgNode.insertBefore(bg, this.svgNode.firstChild);
     };
-    RoughJsRenderer.prototype.text = function (text, x, y, fontSize, color, fontFamily, alignment, plain) {
+    RoughJsRenderer.prototype.text = function (text, x, y, fontSize, color, fontFamily, alignment, classes, plain) {
+        var _a;
         // Place the SVG namespace in a variable to easily reference it.
         var txtElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         txtElem.setAttributeNS(null, 'x', String(x));
@@ -225,6 +257,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             default:
                 throw new Error("Invalid alignment " + alignment);
         }
+        (_a = txtElem.classList).add.apply(_a, __spread(RoughJsRenderer.toClassArray(classes)));
         txtElem.setAttributeNS(null, 'x', String(x + xOffset));
         txtElem.setAttributeNS(null, 'y', String(y + (plain ? 0 : bbox.height / 2)));
         return RoughJsRenderer.boxToElement(txtElem.getBBox(), txtElem.remove.bind(txtElem));
@@ -242,6 +275,12 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         return ("M 0 " + tlr + " A " + tlr + " " + tlr + " 0 0 1 " + tlr + " 0" +
             (" L " + (w - trr) + " 0") +
             (" A " + trr + " " + trr + " 0 0 1 " + w + " " + trr + " L " + w + " " + (h - brr) + " A " + brr + " " + brr + " 0 0 1 " + (w - brr) + " " + h + " L " + blr + " " + h + " A " + blr + " " + blr + " 0 0 1 0 " + (h - blr) + " Z"));
+    };
+    RoughJsRenderer.toClassArray = function (classes) {
+        if (!classes) {
+            return [];
+        }
+        return renderer_1.Renderer.toClassName(classes).split(' ');
     };
     return RoughJsRenderer;
 }(renderer_1.Renderer));

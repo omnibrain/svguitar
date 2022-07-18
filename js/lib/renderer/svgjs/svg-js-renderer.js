@@ -17,7 +17,7 @@ exports.SvgJsRenderer = void 0;
 var svg_js_1 = require("@svgdotjs/svg.js");
 var renderer_1 = require("../renderer");
 var constants_1 = require("../../constants");
-var utils_1 = require("../../utils");
+var is_node_1 = require("../../utils/is-node");
 var SvgJsRenderer = /** @class */ (function (_super) {
     __extends(SvgJsRenderer, _super);
     function SvgJsRenderer(container) {
@@ -31,7 +31,7 @@ var SvgJsRenderer = /** @class */ (function (_super) {
         so I'm not going to care for now.
          */
         /* istanbul ignore else */
-        if (utils_1.isNode()) {
+        if (is_node_1.isNode()) {
             // node (jest)
             _this.svg = svg_js_1.SVG(container);
         }
@@ -57,7 +57,7 @@ var SvgJsRenderer = /** @class */ (function (_super) {
     SvgJsRenderer.prototype.background = function (color) {
         this.svg.rect().size('100%', '100%').fill(color);
     };
-    SvgJsRenderer.prototype.text = function (text, x, y, fontSize, color, fontFamily, alignment, plain) {
+    SvgJsRenderer.prototype.text = function (text, x, y, fontSize, color, fontFamily, alignment, classes, plain) {
         var element;
         if (plain) {
             // create a text element centered at x,y. No SVG.js magic.
@@ -73,7 +73,8 @@ var SvgJsRenderer = /** @class */ (function (_super) {
                 anchor: alignment,
                 'dominant-baseline': 'central',
             })
-                .fill(color);
+                .fill(color)
+                .addClass(renderer_1.Renderer.toClassName(classes));
         }
         else {
             element = this.svg
@@ -84,11 +85,12 @@ var SvgJsRenderer = /** @class */ (function (_super) {
                 size: fontSize,
                 anchor: alignment,
             })
-                .fill(color);
+                .fill(color)
+                .addClass(renderer_1.Renderer.toClassName(classes));
         }
         return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element));
     };
-    SvgJsRenderer.prototype.circle = function (x, y, diameter, strokeWidth, strokeColor, fill) {
+    SvgJsRenderer.prototype.circle = function (x, y, diameter, strokeWidth, strokeColor, fill, classes) {
         var element = this.svg
             .circle(diameter)
             .move(x, y)
@@ -96,10 +98,11 @@ var SvgJsRenderer = /** @class */ (function (_super) {
             .stroke({
             color: strokeColor,
             width: strokeWidth,
-        });
+        })
+            .addClass(renderer_1.Renderer.toClassName(classes));
         return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element));
     };
-    SvgJsRenderer.prototype.rect = function (x, y, width, height, strokeWidth, strokeColor, fill, radius) {
+    SvgJsRenderer.prototype.rect = function (x, y, width, height, strokeWidth, strokeColor, classes, fill, radius) {
         var element = this.svg
             .rect(width, height)
             .move(x, y)
@@ -108,10 +111,11 @@ var SvgJsRenderer = /** @class */ (function (_super) {
             width: strokeWidth,
             color: strokeColor,
         })
-            .radius(radius || 0);
+            .radius(radius || 0)
+            .addClass(renderer_1.Renderer.toClassName(classes));
         return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element));
     };
-    SvgJsRenderer.prototype.triangle = function (x, y, size, strokeWidth, strokeColor, fill) {
+    SvgJsRenderer.prototype.triangle = function (x, y, size, strokeWidth, strokeColor, classes, fill) {
         var element = this.svg
             .path(renderer_1.Renderer.trianglePath(x, y, size))
             .move(x, y)
@@ -119,13 +123,14 @@ var SvgJsRenderer = /** @class */ (function (_super) {
             .stroke({
             width: strokeWidth,
             color: strokeColor,
-        });
+        })
+            .addClass(renderer_1.Renderer.toClassName(classes));
         return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element));
     };
-    SvgJsRenderer.prototype.pentagon = function (x, y, size, strokeWidth, strokeColor, fill) {
-        return this.ngon(x, y, size, strokeWidth, strokeColor, fill, 5);
+    SvgJsRenderer.prototype.pentagon = function (x, y, size, strokeWidth, strokeColor, fill, classes) {
+        return this.ngon(x, y, size, strokeWidth, strokeColor, fill, 5, classes);
     };
-    SvgJsRenderer.prototype.ngon = function (x, y, size, strokeWidth, strokeColor, fill, edges) {
+    SvgJsRenderer.prototype.ngon = function (x, y, size, strokeWidth, strokeColor, fill, edges, classes) {
         var element = this.svg
             .path(renderer_1.Renderer.ngonPath(x, y, size, edges))
             .move(x, y)
@@ -133,7 +138,8 @@ var SvgJsRenderer = /** @class */ (function (_super) {
             .stroke({
             width: strokeWidth,
             color: strokeColor,
-        });
+        })
+            .addClass(renderer_1.Renderer.toClassName(classes));
         return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element));
     };
     SvgJsRenderer.boxToElement = function (box, remove) {

@@ -12,6 +12,7 @@ export declare type Barre = {
     textColor?: string;
     strokeWidth?: number;
     strokeColor?: string;
+    className?: string;
 };
 export declare type Chord = {
     /**
@@ -38,6 +39,7 @@ export interface FingerOptions {
     shape?: Shape;
     strokeColor?: string;
     strokeWidth?: number;
+    className?: string;
 }
 /**
  * Value for an open string (O)
@@ -64,7 +66,28 @@ export declare enum ChordStyle {
     normal = "normal",
     handdrawn = "handdrawn"
 }
+export declare enum Orientation {
+    vertical = "vertical",
+    horizontal = "horizontal"
+}
+export declare enum ElementType {
+    FRET = "fret",
+    STRING = "string",
+    BARRE = "barre",
+    BARRE_TEXT = "barre-text",
+    FINGER = "finger",
+    TITLE = "title",
+    TUNING = "tuning",
+    FRET_POSITION = "fret-position",
+    STRING_TEXT = "string-text",
+    SILENT_STRING = "silent-string",
+    OPEN_STRING = "open-string"
+}
 export interface ChordSettings {
+    /**
+     * Orientation of the chord diagram. Chose between "vertical" or "horizontal". Defaults to "vertical".
+     */
+    orientation?: Orientation;
     /**
      * Style of the chord diagram. Currently you can chose between "normal" and "handdrawn".
      */
@@ -266,4 +289,55 @@ export declare class SVGuitarChord {
      * @param textOrOptions
      */
     private static getFingerOptions;
+    /**
+     * rotates x value if orientation is horizontal
+     *
+     * @param x x in vertical orientation
+     * @param y y in vertical orientation
+     * @returns
+     */
+    private x;
+    /**
+     * rotates y value if orientation is horizontal
+     *
+     * @param x x in vertical orientation
+     * @param y y in vertical orientation
+     * @returns
+     */
+    private y;
+    /**
+     * rotates coordinates if orientation is horizontal
+     *
+     * @param x x in vertical orientation
+     * @param y y in vertical orientation
+     * @returns
+     */
+    private coordinates;
+    /**
+     * rotates coordinates of a rectangle if orientation is horizontal
+     *
+     * @param x x in vertical orientation
+     * @param y y in vertical orientation
+     * @param width width in vertical orientation
+     * @param height height in vertical orientation
+     * @returns
+     */
+    private rectCoordinates;
+    /**
+     * rotates height if orientation is horizontal
+     *
+     * @param height_ height in vertical orientation
+     * @param width width in vertical orientation
+     * @returns
+     */
+    private height;
+    /**
+     * rotates width if orientation is horizontal
+     *
+     * @param width_ width in vertical orientation
+     * @param height height in vertical orientation
+     * @returns
+     */
+    private width;
+    private get orientation();
 }

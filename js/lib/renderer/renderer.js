@@ -50,6 +50,12 @@ var Renderer = /** @class */ (function () {
         }, '');
         return "M" + curX + " " + curY + " " + lines;
     };
+    Renderer.toClassName = function (classes) {
+        if (!classes) {
+            return '';
+        }
+        return Array.isArray(classes) ? classes.join(' ') : classes;
+    };
     return Renderer;
 }());
 exports.Renderer = Renderer;

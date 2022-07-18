@@ -10,17 +10,18 @@ export declare class RoughJsRenderer extends Renderer {
      * encoded font into the SVG so that the font always looks correct.
      */
     private embedDefs;
-    circle(x: number, y: number, diameter: number, strokeWidth: number, strokeColor: string, fill?: string): GraphcisElement;
+    circle(x: number, y: number, diameter: number, strokeWidth: number, strokeColor: string, fill?: string, classes?: string | string[]): GraphcisElement;
     clear(): void;
     remove(): void;
-    line(x1: number, y1: number, x2: number, y2: number, strokeWidth: number, color: string): void;
-    rect(x: number, y: number, width: number, height: number, strokeWidth: number, strokeColor: string, fill?: string, radius?: number): GraphcisElement;
-    triangle(x: number, y: number, size: number, strokeWidth: number, strokeColor: string, fill?: string | undefined): GraphcisElement;
-    pentagon(x: number, y: number, size: number, strokeWidth: number, strokeColor: string, fill?: string, spikes?: number): GraphcisElement;
+    line(x1: number, y1: number, x2: number, y2: number, strokeWidth: number, color: string, classes?: string | string[]): void;
+    rect(x: number, y: number, width: number, height: number, strokeWidth: number, strokeColor: string, classes?: string | string[], fill?: string, radius?: number): GraphcisElement;
+    triangle(x: number, y: number, size: number, strokeWidth: number, strokeColor: string, classes?: string | string[], fill?: string | undefined): GraphcisElement;
+    pentagon(x: number, y: number, size: number, strokeWidth: number, strokeColor: string, fill?: string, classes?: string | string[], spikes?: number): GraphcisElement;
     size(width: number, height: number): void;
     background(color: string): void;
-    text(text: string, x: number, y: number, fontSize: number, color: string, fontFamily: string, alignment: Alignment, plain?: boolean): GraphcisElement;
+    text(text: string, x: number, y: number, fontSize: number, color: string, fontFamily: string, alignment: Alignment, classes?: string | string[], plain?: boolean): GraphcisElement;
     private static boxToElement;
     private static roundedRectData;
+    private static toClassArray;
 }
 export default RoughJsRenderer;

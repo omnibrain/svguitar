@@ -8,11 +8,11 @@ export declare class SvgJsRenderer extends Renderer {
     clear(): void;
     remove(): void;
     background(color: string): void;
-    text(text: string, x: number, y: number, fontSize: number, color: string, fontFamily: string, alignment: Alignment, plain?: boolean): GraphcisElement;
-    circle(x: number, y: number, diameter: number, strokeWidth: number, strokeColor: string, fill?: string): GraphcisElement;
-    rect(x: number, y: number, width: number, height: number, strokeWidth: number, strokeColor: string, fill?: string, radius?: number): GraphcisElement;
-    triangle(x: number, y: number, size: number, strokeWidth: number, strokeColor: string, fill?: string | undefined): GraphcisElement;
-    pentagon(x: number, y: number, size: number, strokeWidth: number, strokeColor: string, fill: string): GraphcisElement;
+    text(text: string, x: number, y: number, fontSize: number, color: string, fontFamily: string, alignment: Alignment, classes?: string | string[], plain?: boolean): GraphcisElement;
+    circle(x: number, y: number, diameter: number, strokeWidth: number, strokeColor: string, fill?: string, classes?: string | string[]): GraphcisElement;
+    rect(x: number, y: number, width: number, height: number, strokeWidth: number, strokeColor: string, classes?: string | string[], fill?: string, radius?: number): GraphcisElement;
+    triangle(x: number, y: number, size: number, strokeWidth: number, strokeColor: string, classes?: string | string[], fill?: string | undefined): GraphcisElement;
+    pentagon(x: number, y: number, size: number, strokeWidth: number, strokeColor: string, fill: string, classes?: string | string[]): GraphcisElement;
     private ngon;
     private static boxToElement;
 }

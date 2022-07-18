@@ -52,7 +52,13 @@
 			<a href="../enums/chordstyle.html" class="tsd-kind-icon">Chord<wbr>Style</a>
 		</li>
 		<li class=" tsd-kind-enum">
+			<a href="../enums/elementtype.html" class="tsd-kind-icon">Element<wbr>Type</a>
+		</li>
+		<li class=" tsd-kind-enum">
 			<a href="../enums/fretlabelposition.html" class="tsd-kind-icon">Fret<wbr>Label<wbr>Position</a>
+		</li>
+		<li class=" tsd-kind-enum">
+			<a href="../enums/orientation.html" class="tsd-kind-icon">Orientation</a>
 		</li>
 		<li class=" tsd-kind-enum">
 			<a href="../enums/shape.html" class="tsd-kind-icon">Shape</a>
@@ -98,6 +104,9 @@
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-static">
 					<a href="renderer.html#ngonpath" class="tsd-kind-icon">ngon<wbr>Path</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-static">
+					<a href="renderer.html#toclassname" class="tsd-kind-icon">to<wbr>Class<wbr>Name</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-static">
 					<a href="renderer.html#trianglepath" class="tsd-kind-icon">triangle<wbr>Path</a>
@@ -232,6 +241,7 @@
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="renderer.html#text" class="tsd-kind-icon">text</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="renderer.html#triangle" class="tsd-kind-icon">triangle</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-static"><a href="renderer.html#ngonpath" class="tsd-kind-icon">ngon<wbr>Path</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-static"><a href="renderer.html#toclassname" class="tsd-kind-icon">to<wbr>Class<wbr>Name</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-static"><a href="renderer.html#trianglepath" class="tsd-kind-icon">triangle<wbr>Path</a></li>
 						</ul>
 					</section>
@@ -250,7 +260,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/0c508a1/src/renderer/renderer.ts#L17">renderer/renderer.ts:17</a></li>
+								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/4617669/src/renderer/renderer.ts#L17">renderer/renderer.ts:17</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -272,7 +282,7 @@
 				<div class="tsd-signature tsd-kind-icon">container<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">QuerySelector</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/0c508a1/src/renderer/renderer.ts#L18">renderer/renderer.ts:18</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/4617669/src/renderer/renderer.ts#L18">renderer/renderer.ts:18</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -289,7 +299,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/0c508a1/src/renderer/renderer.ts#L35">renderer/renderer.ts:35</a></li>
+								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/4617669/src/renderer/renderer.ts#L36">renderer/renderer.ts:36</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -306,13 +316,13 @@
 				<a name="circle" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> circle</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">circle<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, diameter<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeWidth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeColor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fill<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/graphciselement.html" class="tsd-signature-type">GraphcisElement</a></li>
+					<li class="tsd-signature tsd-kind-icon">circle<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, diameter<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeWidth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeColor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fill<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, classes<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/graphciselement.html" class="tsd-signature-type">GraphcisElement</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/0c508a1/src/renderer/renderer.ts#L48">renderer/renderer.ts:48</a></li>
+								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/4617669/src/renderer/renderer.ts#L50">renderer/renderer.ts:50</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -335,6 +345,9 @@
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> fill: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
 							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> classes: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="../interfaces/graphciselement.html" class="tsd-signature-type">GraphcisElement</a></h4>
 					</li>
@@ -350,7 +363,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/0c508a1/src/renderer/renderer.ts#L31">renderer/renderer.ts:31</a></li>
+								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/4617669/src/renderer/renderer.ts#L32">renderer/renderer.ts:32</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -361,13 +374,13 @@
 				<a name="line" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> line</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">line<span class="tsd-signature-symbol">(</span>x1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, x2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeWidth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, color<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">line<span class="tsd-signature-symbol">(</span>x1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, x2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeWidth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, color<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, classes<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/0c508a1/src/renderer/renderer.ts#L20">renderer/renderer.ts:20</a></li>
+								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/4617669/src/renderer/renderer.ts#L20">renderer/renderer.ts:20</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -390,6 +403,9 @@
 							<li>
 								<h5>color: <span class="tsd-signature-type">string</span></h5>
 							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> classes: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 					</li>
@@ -399,13 +415,13 @@
 				<a name="pentagon" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> pentagon</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">pentagon<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, size<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeWidth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeColor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fill<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/graphciselement.html" class="tsd-signature-type">GraphcisElement</a></li>
+					<li class="tsd-signature tsd-kind-icon">pentagon<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, size<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeWidth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeColor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fill<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, classes<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/graphciselement.html" class="tsd-signature-type">GraphcisElement</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/0c508a1/src/renderer/renderer.ts#L77">renderer/renderer.ts:77</a></li>
+								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/4617669/src/renderer/renderer.ts#L82">renderer/renderer.ts:82</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -428,6 +444,9 @@
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> fill: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
 							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> classes: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="../interfaces/graphciselement.html" class="tsd-signature-type">GraphcisElement</a></h4>
 					</li>
@@ -437,13 +456,13 @@
 				<a name="rect" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> rect</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">rect<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeWidth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeColor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fill<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, radius<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/graphciselement.html" class="tsd-signature-type">GraphcisElement</a></li>
+					<li class="tsd-signature tsd-kind-icon">rect<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeWidth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeColor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, classes<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span>, fill<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, radius<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/graphciselement.html" class="tsd-signature-type">GraphcisElement</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/0c508a1/src/renderer/renderer.ts#L57">renderer/renderer.ts:57</a></li>
+								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/4617669/src/renderer/renderer.ts#L60">renderer/renderer.ts:60</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -467,6 +486,9 @@
 								<h5>strokeColor: <span class="tsd-signature-type">string</span></h5>
 							</li>
 							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> classes: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
+							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> fill: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
 							</li>
 							<li>
@@ -487,7 +509,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/0c508a1/src/renderer/renderer.ts#L33">renderer/renderer.ts:33</a></li>
+								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/4617669/src/renderer/renderer.ts#L34">renderer/renderer.ts:34</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -504,7 +526,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/0c508a1/src/renderer/renderer.ts#L29">renderer/renderer.ts:29</a></li>
+								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/4617669/src/renderer/renderer.ts#L30">renderer/renderer.ts:30</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -524,13 +546,13 @@
 				<a name="text" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> text</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">text<span class="tsd-signature-symbol">(</span>text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, fontSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, color<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fontFamily<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, alignment<span class="tsd-signature-symbol">: </span><a href="../enums/alignment.html" class="tsd-signature-type">Alignment</a>, plain<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/graphciselement.html" class="tsd-signature-type">GraphcisElement</a></li>
+					<li class="tsd-signature tsd-kind-icon">text<span class="tsd-signature-symbol">(</span>text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, fontSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, color<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fontFamily<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, alignment<span class="tsd-signature-symbol">: </span><a href="../enums/alignment.html" class="tsd-signature-type">Alignment</a>, classes<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span>, plain<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/graphciselement.html" class="tsd-signature-type">GraphcisElement</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/0c508a1/src/renderer/renderer.ts#L37">renderer/renderer.ts:37</a></li>
+								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/4617669/src/renderer/renderer.ts#L38">renderer/renderer.ts:38</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -557,6 +579,9 @@
 								<h5>alignment: <a href="../enums/alignment.html" class="tsd-signature-type">Alignment</a></h5>
 							</li>
 							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> classes: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
+							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> plain: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
 							</li>
 						</ul>
@@ -568,13 +593,13 @@
 				<a name="triangle" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> triangle</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">triangle<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, size<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeWidth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeColor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fill<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/graphciselement.html" class="tsd-signature-type">GraphcisElement</a></li>
+					<li class="tsd-signature tsd-kind-icon">triangle<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, size<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeWidth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, strokeColor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, classes<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span>, fill<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/graphciselement.html" class="tsd-signature-type">GraphcisElement</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/0c508a1/src/renderer/renderer.ts#L68">renderer/renderer.ts:68</a></li>
+								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/4617669/src/renderer/renderer.ts#L72">renderer/renderer.ts:72</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -595,6 +620,9 @@
 								<h5>strokeColor: <span class="tsd-signature-type">string</span></h5>
 							</li>
 							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> classes: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
+							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> fill: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
 							</li>
 						</ul>
@@ -612,7 +640,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/0c508a1/src/renderer/renderer.ts#L90">renderer/renderer.ts:90</a></li>
+								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/4617669/src/renderer/renderer.ts#L96">renderer/renderer.ts:96</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -635,6 +663,29 @@
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-static">
+				<a name="toclassname" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagProtected">Protected</span> to<wbr>Class<wbr>Name</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-static">
+					<li class="tsd-signature tsd-kind-icon">to<wbr>Class<wbr>Name<span class="tsd-signature-symbol">(</span>classes<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/4617669/src/renderer/renderer.ts#L120">renderer/renderer.ts:120</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> classes: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-static">
 				<a name="trianglepath" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagProtected">Protected</span> triangle<wbr>Path</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-static">
@@ -644,7 +695,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/0c508a1/src/renderer/renderer.ts#L86">renderer/renderer.ts:86</a></li>
+								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/4617669/src/renderer/renderer.ts#L92">renderer/renderer.ts:92</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
