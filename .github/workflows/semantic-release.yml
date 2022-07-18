@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - run: yarn install
+      - run: yarn build
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v3
         env:
