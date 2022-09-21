@@ -307,6 +307,7 @@ Pull Requests are very welcome!
 Here are some projects that use `svguitar`:
 
 - [ChordPic - Easily Create Guitar Chord Charts](https://chordpic.com)
+- [muted.io - Magical Music Theory Tools to Learn Music Online for Free](https://muted.io/)
 - [Chordpress Wordpress Plugin - ChordPro Text Formatter](https://wordpress.org/plugins/chordpress/)
 
 Are you using SVGuitar? Create an issue to get your project listed here! Or simply create a pull request with your project added.
