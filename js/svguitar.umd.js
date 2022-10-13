@@ -7668,6 +7668,7 @@
         ElementType["STRING_TEXT"] = "string-text";
         ElementType["SILENT_STRING"] = "silent-string";
         ElementType["OPEN_STRING"] = "open-string";
+        ElementType["WATERMARK"] = "watermark";
     })(exports.ElementType || (exports.ElementType = {}));
     var defaultSettings = {
         style: exports.ChordStyle.normal,
@@ -7695,6 +7696,7 @@
         fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
         shape: exports.Shape.CIRCLE,
         orientation: exports.Orientation.vertical,
+        watermarkFontSize: 12,
     };
     var SVGuitarChord = /** @class */ (function () {
         function SVGuitarChord(container) {
@@ -7771,6 +7773,7 @@
             this.drawPosition(y);
             y = this.drawGrid(y);
             y = this.drawTunings(y);
+            y = this.drawWatermark(y);
             // now set the final height of the svg (and add some padding relative to the fret spacing)
             y += this.fretSpacing() / 10;
             var width = this.width(constants.width, y);
@@ -7825,9 +7828,35 @@
                 }
             });
             if (text) {
-                return y + this.height(text.height, text.width) + padding * 2;
+                return y + this.height(text.height, text.width);
             }
             return y;
+        };
+        SVGuitarChord.prototype.drawWatermark = function (y) {
+            var _a, _b, _c, _d, _e, _f;
+            if (!this.settings.watermark) {
+                return y;
+            }
+            var padding = this.fretSpacing() / 5;
+            var orientation = (_a = this.settings.orientation) !== null && _a !== void 0 ? _a : defaultSettings.orientation;
+            var stringXPositions = this.stringXPos();
+            var endX = stringXPositions[stringXPositions.length - 1];
+            var startX = stringXPositions[0];
+            var color = (_c = (_b = this.settings.watermarkColor) !== null && _b !== void 0 ? _b : this.settings.color) !== null && _c !== void 0 ? _c : defaultSettings.color;
+            var fontSize = (_d = this.settings.watermarkFontSize) !== null && _d !== void 0 ? _d : defaultSettings.watermarkFontSize;
+            var fontFamily = (_f = (_e = this.settings.watermarkFontFamily) !== null && _e !== void 0 ? _e : this.settings.fontFamily) !== null && _f !== void 0 ? _f : defaultSettings.fontFamily;
+            var textX;
+            var textY;
+            if (orientation === exports.Orientation.vertical) {
+                textX = startX + (endX - startX) / 2;
+                textY = y + padding;
+            }
+            else {
+                textX = y / 2;
+                textY = this.y(startX, 0) + padding;
+            }
+            var height = this.renderer.text(this.settings.watermark, textX, textY, fontSize, color, fontFamily, Alignment.MIDDLE, exports.ElementType.WATERMARK).height;
+            return y + height * 2;
         };
         SVGuitarChord.prototype.drawPosition = function (y) {
             var _this = this;
@@ -8156,7 +8185,7 @@
             var title = (_e = (_d = this.chordInternal.title) !== null && _d !== void 0 ? _d : this.settings.title) !== null && _e !== void 0 ? _e : (this.settings.fixedDiagramPosition ? 'X' : '');
             // draw the title
             if (this.orientation === exports.Orientation.vertical) {
-                var _f = this.renderer.text(title, constants.width / 2, 5, size, color, fontFamily, Alignment.MIDDLE, exports.ElementType.TITLE), x = _f.x, y = _f.y, width_1 = _f.width, height_1 = _f.height, remove_1 = _f.remove;
+                var _f = this.renderer.text(title, constants.width / 2, 5, size, color, fontFamily, Alignment.MIDDLE, exports.ElementType.TITLE), x = _f.x, y = _f.y, width_1 = _f.width, height = _f.height, remove_1 = _f.remove;
                 // check if the title fits. If not, try with a smaller size
                 if (x < -0.0001) {
                     remove_1();
@@ -8166,10 +8195,10 @@
                 if (!this.settings.title && this.settings.fixedDiagramPosition) {
                     remove_1();
                 }
-                return y + height_1 + titleBottomMargin;
+                return y + height + titleBottomMargin;
             }
             // render temporary text to get the height of the title
-            var _g = this.renderer.text(title, 0, 0, size, color, fontFamily, Alignment.LEFT, exports.ElementType.TITLE), removeTempText = _g.remove, height = _g.height, width = _g.width;
+            var _g = this.renderer.text(title, 0, 0, size, color, fontFamily, Alignment.LEFT, exports.ElementType.TITLE), removeTempText = _g.remove, width = _g.width;
             removeTempText();
             var _h = this.rectCoordinates(constants.width / 2, 5, 0, 0), textX = _h.x, textY = _h.y;
             var remove = this.renderer.text(title, textX, textY, size, color, fontFamily, Alignment.LEFT, exports.ElementType.TITLE, true).remove;

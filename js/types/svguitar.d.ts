@@ -81,7 +81,8 @@ export declare enum ElementType {
     FRET_POSITION = "fret-position",
     STRING_TEXT = "string-text",
     SILENT_STRING = "silent-string",
-    OPEN_STRING = "open-string"
+    OPEN_STRING = "open-string",
+    WATERMARK = "watermark"
 }
 export interface ChordSettings {
     /**
@@ -234,6 +235,22 @@ export interface ChordSettings {
      * no matter if a title is defined or not.
      */
     fixedDiagramPosition?: boolean;
+    /**
+     * Text of the watermark
+     */
+    watermark?: string;
+    /**
+     * Font size of the watermark
+     */
+    watermarkFontSize?: number;
+    /**
+     * Color of the watermark (overrides color)
+     */
+    watermarkColor?: string;
+    /**
+     * Font-family of the watermark (overrides fontFamily)
+     */
+    watermarkFontFamily?: string;
 }
 export declare class SVGuitarChord {
     private container;
@@ -259,6 +276,7 @@ export declare class SVGuitarChord {
     };
     static sanityCheckSettings(settings: Partial<ChordSettings>): void;
     private drawTunings;
+    private drawWatermark;
     private drawPosition;
     /**
      * Hack to prevent the empty space of the svg from being cut off without having to define a
