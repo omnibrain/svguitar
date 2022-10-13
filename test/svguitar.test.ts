@@ -925,6 +925,43 @@ describe('SVGuitarChord', () => {
     saveSvg('fingers with class', container.outerHTML)
   })
 
+  it('Should add a watermark', () => {
+    svguitar
+      .chord({
+        fingers: [],
+        barres: [],
+      })
+      .configure({
+        tuning: ['1', '2', '3', '4', '5', '6'],
+        title: 'With watermark',
+        watermark: 'test watermark',
+        watermarkFontSize: 20,
+        watermarkColor: 'rgba(255, 0, 0, 0.5)',
+      })
+      .draw()
+
+    saveSvg('with watermark', container.outerHTML)
+  })
+
+  it('Should add a watermark on a horizontal chart', () => {
+    svguitar
+      .chord({
+        fingers: [],
+        barres: [],
+      })
+      .configure({
+        orientation: Orientation.horizontal,
+        tuning: ['1', '2', '3', '4', '5', '6'],
+        title: 'Horizontal watermark',
+        watermark: 'test watermark',
+        watermarkFontSize: 20,
+        watermarkColor: 'rgba(255, 0, 0, 0.5)',
+      })
+      .draw()
+
+    saveSvg('with watermark horizontal', container.outerHTML)
+  })
+
   test.each`
     setting          | value | valid
     ${'strings'}     | ${1}  | ${false}

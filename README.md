@@ -273,27 +273,52 @@ new SVGuitarChord('#some-selector')
      * The color of the title (overrides color)
      */
     titleColor: '#000000',
+
     /**
      * The color of the strings (overrides color)
      */
     stringColor: '#000000',
+
     /**
      * The color of the fret position (overrides color)
      */
     fretLabelColor: '#000000',
+
     /**
      * The color of the tunings (overrides color)
      */
     tuningsColor: '#000000',
+
     /**
      * The color of the frets (overrides color)
      */
     fretColor: '#000000',
+
     /**
      * When set to true the distance between the chord diagram and the top of the SVG stayes the same,
      * no matter if a title is defined or not.
      */
     fixedDiagramPosition: false,
+
+    /**
+     * Text of the watermark (text on the bottom of the chart)
+     */
+    watermark: 'some watermark'
+
+    /**
+     * Font size of the watermark
+     */
+    watermarkFontSize: 12,
+
+    /**
+     * Color of the watermark (overrides color)
+     */
+    watermarkColor: '#000000',
+
+    /**
+     * Font-family of the watermark (overrides fontFamily)
+     */
+    watermarkFontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
   })
   .draw()
 ```

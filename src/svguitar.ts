@@ -97,6 +97,7 @@ export enum ElementType {
   STRING_TEXT = 'string-text',
   SILENT_STRING = 'silent-string',
   OPEN_STRING = 'open-string',
+  WATERMARK = 'watermark',
 }
 
 export interface ChordSettings {
@@ -283,6 +284,26 @@ export interface ChordSettings {
    * no matter if a title is defined or not.
    */
   fixedDiagramPosition?: boolean
+
+  /**
+   * Text of the watermark
+   */
+  watermark?: string
+
+  /**
+   * Font size of the watermark
+   */
+  watermarkFontSize?: number
+
+  /**
+   * Color of the watermark (overrides color)
+   */
+  watermarkColor?: string
+
+  /**
+   * Font-family of the watermark (overrides fontFamily)
+   */
+  watermarkFontFamily?: string
 }
 
 /**
@@ -315,6 +336,7 @@ interface RequiredChordSettings {
   fontFamily: string
   shape: Shape
   orientation: Orientation
+  watermarkFontSize: number
 }
 
 const defaultSettings: RequiredChordSettings = {
@@ -343,6 +365,7 @@ const defaultSettings: RequiredChordSettings = {
   fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
   shape: Shape.CIRCLE,
   orientation: Orientation.vertical,
+  watermarkFontSize: 12,
 }
 
 export class SVGuitarChord {
@@ -430,6 +453,7 @@ export class SVGuitarChord {
     this.drawPosition(y)
     y = this.drawGrid(y)
     y = this.drawTunings(y)
+    y = this.drawWatermark(y)
 
     // now set the final height of the svg (and add some padding relative to the fret spacing)
     y += this.fretSpacing() / 10
@@ -510,9 +534,51 @@ export class SVGuitarChord {
     })
 
     if (text) {
-      return y + this.height(text.height, text.width) + padding * 2
+      return y + this.height(text.height, text.width)
     }
+
     return y
+  }
+
+  private drawWatermark(y: number): number {
+    if (!this.settings.watermark) {
+      return y
+    }
+
+    const padding = this.fretSpacing() / 5
+    const orientation = this.settings.orientation ?? defaultSettings.orientation
+    const stringXPositions = this.stringXPos()
+    const endX = stringXPositions[stringXPositions.length - 1]
+    const startX = stringXPositions[0]
+
+    const color = this.settings.watermarkColor ?? this.settings.color ?? defaultSettings.color
+    const fontSize = this.settings.watermarkFontSize ?? defaultSettings.watermarkFontSize
+    const fontFamily =
+      this.settings.watermarkFontFamily ?? this.settings.fontFamily ?? defaultSettings.fontFamily
+
+    let textX
+    let textY
+
+    if (orientation === Orientation.vertical) {
+      textX = startX + (endX - startX) / 2
+      textY = y + padding
+    } else {
+      textX = y / 2
+      textY = this.y(startX, 0) + padding
+    }
+
+    const { height } = this.renderer.text(
+      this.settings.watermark,
+      textX,
+      textY,
+      fontSize,
+      color,
+      fontFamily,
+      Alignment.MIDDLE,
+      ElementType.WATERMARK,
+    )
+
+    return y + height * 2
   }
 
   private drawPosition(y: number): void {
@@ -1103,7 +1169,7 @@ export class SVGuitarChord {
     }
 
     // render temporary text to get the height of the title
-    const { remove: removeTempText, height, width } = this.renderer.text(
+    const { remove: removeTempText, width } = this.renderer.text(
       title,
       0,
       0,
