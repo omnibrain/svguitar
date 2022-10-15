@@ -259,7 +259,7 @@ var SVGuitarChord = /** @class */ (function () {
         return y;
     };
     SVGuitarChord.prototype.drawWatermark = function (y) {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e, _f, _g;
         if (!this.settings.watermark) {
             return y;
         }
@@ -278,7 +278,9 @@ var SVGuitarChord = /** @class */ (function () {
             textY = y + padding;
         }
         else {
-            textX = y / 2;
+            var lastFret = y;
+            var firstFret = y - ((_g = this.settings.frets) !== null && _g !== void 0 ? _g : defaultSettings.frets) * this.fretSpacing();
+            textX = firstFret + (lastFret - firstFret) / 2;
             textY = this.y(startX, 0) + padding;
         }
         var height = this.renderer.text(this.settings.watermark, textX, textY, fontSize, color, fontFamily, renderer_1.Alignment.MIDDLE, ElementType.WATERMARK).height;
