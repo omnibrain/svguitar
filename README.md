@@ -303,7 +303,7 @@ new SVGuitarChord('#some-selector')
     /**
      * Text of the watermark (text on the bottom of the chart)
      */
-    watermark: 'some watermark'
+    watermark: 'some watermark',
 
     /**
      * Font size of the watermark
