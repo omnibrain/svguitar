@@ -563,7 +563,9 @@ export class SVGuitarChord {
       textX = startX + (endX - startX) / 2
       textY = y + padding
     } else {
-      textX = y / 2
+      const lastFret = y
+      const firstFret = y - (this.settings.frets ?? defaultSettings.frets) * this.fretSpacing()
+      textX = firstFret + (lastFret - firstFret) / 2
       textY = this.y(startX, 0) + padding
     }
 
