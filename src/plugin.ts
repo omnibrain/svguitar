@@ -11,9 +11,9 @@ export type AnyFunction = (...args: any) => any
  * @author https://stackoverflow.com/users/2887218/jcalz
  * @see https://stackoverflow.com/a/50375286/10325032
  */
-type UnionToIntersection<Union> = (Union extends any ? (argument: Union) => void : never) extends (
-  argument: infer Intersection,
-) => void // tslint:disable-line: no-unused
+export type UnionToIntersection<Union> = (
+  Union extends any ? (argument: Union) => void : never
+) extends (argument: infer Intersection) => void // tslint:disable-line: no-unused
   ? Intersection
   : never
 

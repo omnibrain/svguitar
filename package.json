@@ -29,7 +29,7 @@
     "lint": "eslint -c .eslintrc.js --ext .ts src",
     "prebuild": "rimraf dist",
     "build": "run-s build:tsc build:rollup build:typedoc build:demo",
-    "build:typedoc": "typedoc --out docs --target es6 --theme minimal --mode file src",
+    "build:typedoc": "typedoc --out docs src/svguitar.ts",
     "build:tsc": "tsc --module commonjs",
     "build:rollup": "rollup -c rollup.config.ts",
     "build:demo": "ts-node tools/build-demo",
@@ -153,17 +153,17 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.6.0",
-    "rollup-plugin-typescript2": "^0.29.0",
+    "rollup-plugin-typescript2": "^0.34.1",
     "semantic-release": "^19.0.3",
     "shelljs": "^0.8.3",
     "ts-jest": "^26.0.0",
-    "ts-node": "^9.1.1",
-    "typedoc": "^0.19.2",
-    "typescript": "4.0.5"
+    "ts-node": "^10.9.1",
+    "typedoc": "^0.23.17",
+    "typescript": "^4.8.4"
   },
   "dependencies": {
     "@svgdotjs/svg.js": "3.0.16",
-    "svgdom": "^0.1.9",
-    "roughjs": "^4.5.2"
+    "roughjs": "^4.5.2",
+    "svgdom": "^0.1.9"
   }
 }

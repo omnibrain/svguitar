@@ -1,9 +1,31 @@
 /* eslint-disable max-classes-per-file */
 import { QuerySelector } from '@svgdotjs/svg.js'
-import { range } from './utils/range'
 import { constants } from './constants'
+import {
+  AnyFunction,
+  ApiExtension,
+  Constructor,
+  ReturnTypeOf,
+  SVGuitarPlugin,
+  UnionToIntersection,
+} from './plugin'
 import { Alignment, GraphcisElement, Renderer, RoughJsRenderer, SvgJsRenderer } from './renderer'
-import { Constructor, ReturnTypeOf, SVGuitarPlugin } from './plugin'
+import { range } from './utils/range'
+
+// export types for Typedoc
+export type {
+  Constructor,
+  ReturnTypeOf,
+  SVGuitarPlugin,
+  Renderer,
+  Alignment,
+  GraphcisElement,
+  RoughJsRenderer,
+  SvgJsRenderer,
+  ApiExtension,
+  AnyFunction,
+  UnionToIntersection,
+}
 
 // Chord diagram input types (compatible with Vexchords input, see https://github.com/0xfe/vexchords)
 export type SilentString = 'x'
