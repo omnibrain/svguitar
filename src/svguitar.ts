@@ -22,7 +22,7 @@ export type Barre = {
 }
 export type Chord = {
   /**
-   * The fingers (nuts)
+   * The fingers
    */
   fingers: Finger[]
 
@@ -147,37 +147,37 @@ export interface ChordSettings {
   tuningsFontSize?: number
 
   /**
-   * Size of a nut relative to the string spacing
+   * Size of a finger relative to the string spacing
    */
-  nutSize?: number
+  fingerSize?: number
 
   /**
-   * Color of a finger / nut
+   * Color of a finger
    */
-  nutColor?: string
+  fingerColor?: string
 
   /**
-   * The color of text inside nuts
+   * The color of text inside fingers or barres
    */
-  nutTextColor?: string
+  fingerTextColor?: string
 
   /**
-   * The size of text inside nuts
+   * The size of text inside fingers or barres
    */
-  nutTextSize?: number
+  fingerTextSize?: number
 
   /**
-   * stroke color of a nut. Defaults to the nut color if not set
+   * stroke color of a finger. Defaults to the finger color if not set
    */
-  nutStrokeColor?: string
+  fingerStrokeColor?: string
 
   /**
-   * stroke width of a nut
+   * stroke width of a finger or barre
    */
-  nutStrokeWidth?: number
+  fingerStrokeWidth?: number
 
   /**
-   * stroke color of a barre chord. Defaults to the nut color if not set
+   * stroke color of a barre chord. Defaults to the finger color if not set
    */
   barreChordStrokeColor?: string
 
@@ -259,7 +259,7 @@ export interface ChordSettings {
   fretColor?: string
 
   /**
-   * Barre chord rectangle border radius relative to the nutSize (eg. 1 means completely round
+   * Barre chord rectangle border radius relative to the fingerSize (eg. 1 means completely round
    * edges, 0 means not rounded at all)
    */
   barreChordRadius?: number
@@ -319,10 +319,10 @@ interface RequiredChordSettings {
   tuningsFontSize: number
   fretLabelFontSize: number
   fretLabelPosition: FretLabelPosition
-  nutSize: number
-  nutTextColor: string
-  nutTextSize: number
-  nutStrokeWidth: number
+  fingerSize: number
+  fingerTextColor: string
+  fingerTextSize: number
+  fingerStrokeWidth: number
   barreChordStrokeWidth: number
   sidePadding: number
   titleFontSize: number
@@ -348,10 +348,10 @@ const defaultSettings: RequiredChordSettings = {
   tuningsFontSize: 28,
   fretLabelFontSize: 38,
   fretLabelPosition: FretLabelPosition.RIGHT,
-  nutSize: 0.65,
-  nutTextColor: '#FFF',
-  nutTextSize: 24,
-  nutStrokeWidth: 0,
+  fingerSize: 0.65,
+  fingerTextColor: '#FFF',
+  fingerTextSize: 24,
+  fingerStrokeWidth: 0,
   barreChordStrokeWidth: 0,
   sidePadding: 0.2,
   titleFontSize: 48,
@@ -488,8 +488,8 @@ export class SVGuitarChord {
       throw new Error('Fret size cannot be smaller than 0')
     }
 
-    if (typeof settings.nutSize !== 'undefined' && settings.nutSize < 0) {
-      throw new Error('Nut size cannot be smaller than 0')
+    if (typeof settings.fingerSize !== 'undefined' && settings.fingerSize < 0) {
+      throw new Error('Finger size cannot be smaller than 0')
     }
 
     if (typeof settings.strokeWidth !== 'undefined' && settings.strokeWidth < 0) {
@@ -596,13 +596,14 @@ export class SVGuitarChord {
     const text = `${position}fr`
     const size = this.settings.fretLabelFontSize ?? defaultSettings.fretLabelFontSize
     const color = this.settings.fretLabelColor ?? this.settings.color ?? defaultSettings.color
-    const nutSize = this.stringSpacing() * (this.settings.nutSize ?? defaultSettings.nutSize)
+    const fingerSize =
+      this.stringSpacing() * (this.settings.fingerSize ?? defaultSettings.fingerSize)
     const fontFamily = this.settings.fontFamily ?? defaultSettings.fontFamily
     const fretLabelPosition = this.settings.fretLabelPosition ?? defaultSettings.fretLabelPosition
 
     // add some padding relative to the string spacing. Also make sure the padding is at least
-    // 1/2 nutSize plus some padding to prevent the nut overlapping the position label.
-    const padding = Math.max(this.stringSpacing() / 5, nutSize / 2 + 5)
+    // 1/2 fingerSize plus some padding to prevent the finger overlapping the position label.
+    const padding = Math.max(this.stringSpacing() / 5, fingerSize / 2 + 5)
     const className = ElementType.FRET_POSITION
 
     if (this.orientation === Orientation.vertical) {
@@ -786,7 +787,7 @@ export class SVGuitarChord {
 
         if (fingerOptions.text) {
           const textColor = fingerOptions.textColor ?? this.settings.color ?? defaultSettings.color
-          const textSize = this.settings.nutTextSize ?? defaultSettings.nutTextSize
+          const textSize = this.settings.fingerTextSize ?? defaultSettings.fingerTextSize
           const fontFamily = this.settings.fontFamily ?? defaultSettings.fontFamily
           const classNames = [ElementType.STRING_TEXT, `${ElementType.STRING_TEXT}-${stringIndex}`]
 
@@ -873,7 +874,7 @@ export class SVGuitarChord {
   private drawGrid(y: number): number {
     const frets = this.settings.frets ?? defaultSettings.frets
     const fretSize = this.settings.fretSize ?? defaultSettings.fretSize
-    const relativeNutSize = this.settings.nutSize ?? defaultSettings.nutSize
+    const relativefingerSize = this.settings.fingerSize ?? defaultSettings.fingerSize
     const stringXPositions = this.stringXPos()
     const fretYPositions = this.fretLinesYPos(y)
     const stringSpacing = this.stringSpacing()
@@ -883,14 +884,14 @@ export class SVGuitarChord {
     const startX = stringXPositions[0]
     const endX = stringXPositions[stringXPositions.length - 1]
 
-    const nutSize = relativeNutSize * stringSpacing
-    const nutColor = this.settings.nutColor ?? this.settings.color ?? defaultSettings.color
+    const fingerSize = relativefingerSize * stringSpacing
+    const fingerColor = this.settings.fingerColor ?? this.settings.color ?? defaultSettings.color
     const fretColor = this.settings.fretColor ?? this.settings.color ?? defaultSettings.color
     const barreChordRadius = this.settings.barreChordRadius ?? defaultSettings.barreChordRadius
     const strokeWidth = this.settings.strokeWidth ?? defaultSettings.strokeWidth
     const fontFamily = this.settings.fontFamily ?? defaultSettings.fontFamily
-    const nutTextColor = this.settings.nutTextColor ?? defaultSettings.nutTextColor
-    const nutTextSize = this.settings.nutTextSize ?? defaultSettings.nutTextSize
+    const fingerTextColor = this.settings.fingerTextColor ?? defaultSettings.fingerTextColor
+    const fingerTextSize = this.settings.fingerTextSize ?? defaultSettings.fingerTextSize
 
     // draw frets
     fretYPositions.forEach((fretY, i) => {
@@ -931,7 +932,7 @@ export class SVGuitarChord {
         const barreChordStrokeColor =
           strokeColor ??
           this.settings.barreChordStrokeColor ??
-          this.settings.nutColor ??
+          this.settings.fingerColor ??
           this.settings.color ??
           defaultSettings.color
         const barreChordStrokeWidth =
@@ -946,11 +947,11 @@ export class SVGuitarChord {
         ]
 
         const barreWidth = distance + stringSpacing / 2
-        const barreHeight = nutSize
+        const barreHeight = fingerSize
 
         const { x: rectX, y: rectY, height: rectHeight, width: rectWidth } = this.rectCoordinates(
           fromStringX - stringSpacing / 4,
-          barreCenterY - nutSize / 2,
+          barreCenterY - fingerSize / 2,
           barreWidth,
           barreHeight,
         )
@@ -963,8 +964,8 @@ export class SVGuitarChord {
           barreChordStrokeWidth,
           barreChordStrokeColor,
           classNames,
-          color ?? nutColor,
-          nutSize * barreChordRadius,
+          color ?? fingerColor,
+          fingerSize * barreChordRadius,
         )
 
         // draw text on the barre chord
@@ -977,8 +978,8 @@ export class SVGuitarChord {
             text,
             textX,
             textY,
-            nutTextSize,
-            textColor ?? nutTextColor,
+            fingerTextSize,
+            textColor ?? fingerTextColor,
             fontFamily,
             Alignment.MIDDLE,
             textClassNames,
@@ -999,8 +1000,8 @@ export class SVGuitarChord {
         ],
       )
       .forEach(([stringIndex, fretIndex, textOrOptions]) => {
-        const nutCenterX = startX + stringIndex * stringSpacing
-        const nutCenterY = y + fretIndex * fretSpacing - fretSpacing / 2
+        const fingerCenterX = startX + stringIndex * stringSpacing
+        const fingerCenterY = y + fretIndex * fretSpacing - fretSpacing / 2
         const fingerOptions = SVGuitarChord.getFingerOptions(textOrOptions)
 
         const classNames = [
@@ -1011,14 +1012,14 @@ export class SVGuitarChord {
           ...(fingerOptions.className ? [fingerOptions.className] : []),
         ]
 
-        // const { x: x0, y: y0 } = this.coordinates(nutCenterX, nutCenterY)
+        // const { x: x0, y: y0 } = this.coordinates(fingerCenterX, fingerCenterY)
 
-        this.drawNut(
-          nutCenterX,
-          nutCenterY,
-          nutSize,
-          nutColor,
-          nutTextSize,
+        this.drawFinger(
+          fingerCenterX,
+          fingerCenterY,
+          fingerSize,
+          fingerColor,
+          fingerTextSize,
           fontFamily,
           fingerOptions,
           classNames,
@@ -1028,7 +1029,7 @@ export class SVGuitarChord {
     return y + height
   }
 
-  private drawNut(
+  private drawFinger(
     x: number,
     y: number,
     size: number,
@@ -1039,16 +1040,18 @@ export class SVGuitarChord {
     classNames: string[],
   ) {
     const shape = fingerOptions.shape ?? defaultSettings.shape
-    const nutTextColor =
-      fingerOptions.textColor ?? this.settings.nutTextColor ?? defaultSettings.nutTextColor
-    const nutStrokeColor =
+    const fingerTextColor =
+      fingerOptions.textColor ?? this.settings.fingerTextColor ?? defaultSettings.fingerTextColor
+    const fingerStrokeColor =
       fingerOptions.strokeColor ??
-      this.settings.nutStrokeColor ??
-      this.settings.nutColor ??
+      this.settings.fingerStrokeColor ??
+      this.settings.fingerColor ??
       this.settings.color ??
       defaultSettings.color
-    const nutStrokeWidth =
-      fingerOptions.strokeWidth ?? this.settings.nutStrokeWidth ?? defaultSettings.nutStrokeWidth
+    const fingerStrokeWidth =
+      fingerOptions.strokeWidth ??
+      this.settings.fingerStrokeWidth ??
+      defaultSettings.fingerStrokeWidth
     const startX = x - size / 2
     const startY = y - size / 2
 
@@ -1062,8 +1065,8 @@ export class SVGuitarChord {
           x0,
           y0,
           size,
-          nutStrokeWidth,
-          nutStrokeColor,
+          fingerStrokeWidth,
+          fingerStrokeColor,
           fingerOptions.color ?? color,
           classNamesWithShape,
         )
@@ -1074,8 +1077,8 @@ export class SVGuitarChord {
           y0,
           size,
           size,
-          nutStrokeWidth,
-          nutStrokeColor,
+          fingerStrokeWidth,
+          fingerStrokeColor,
           classNamesWithShape,
           fingerOptions.color ?? color,
         )
@@ -1085,8 +1088,8 @@ export class SVGuitarChord {
           x0,
           y0,
           size,
-          nutStrokeWidth,
-          nutStrokeColor,
+          fingerStrokeWidth,
+          fingerStrokeColor,
           classNamesWithShape,
           fingerOptions.color ?? color,
         )
@@ -1096,8 +1099,8 @@ export class SVGuitarChord {
           x0,
           y0,
           size,
-          nutStrokeWidth,
-          nutStrokeColor,
+          fingerStrokeWidth,
+          fingerStrokeColor,
           fingerOptions.color ?? color,
           classNamesWithShape,
         )
@@ -1110,7 +1113,7 @@ export class SVGuitarChord {
         )
     }
 
-    // draw text on the nut
+    // draw text on the finger
     const textClassNames = [...classNames, `${ElementType.FINGER}-text`]
     if (fingerOptions.text) {
       const { x: textX, y: textY } = this.coordinates(x, y)
@@ -1120,7 +1123,7 @@ export class SVGuitarChord {
         textX,
         textY,
         textSize,
-        fingerOptions.textColor ?? nutTextColor,
+        fingerOptions.textColor ?? fingerTextColor,
         fontFamily,
         Alignment.MIDDLE,
         textClassNames,

@@ -167,37 +167,37 @@ new SVGuitarChord('#some-selector')
     tuningsFontSize: 28,
 
     /**
-     * Size of a nut relative to the string spacing
+     * Size of a finger or barre relative to the string spacing
      */
-    nutSize: 0.65,
+    fingerSize: 0.65,
 
     /**
-     * Color of a finger / nut
+     * Color of a finger or barre
      */
-    nutColor: '#000',
+    fingerColor: '#000',
 
     /**
-     * The color of text inside nuts
+     * The color of text inside fingers and barres
      */
-    nutTextColor: '#FFF',
+    fingerTextColor: '#FFF',
 
     /**
-     * The size of text inside nuts
+     * The size of text inside fingers and barres
      */
-    nutTextSize: 22,
+    fingerTextSize: 22,
 
     /**
-     * stroke color of a nut. Defaults to the nut color if not set
+     * stroke color of a finger or barre. Defaults to the finger color if not set
      */
-    nutStrokeColor: '#000000',
+    fingerStrokeColor: '#000000',
 
     /**
-     * stroke width of a nut
+     * stroke width of a finger or barre
      */
-    nutStrokeWidth: 0,
+    fingerStrokeWidth: 0,
 
     /**
-     * stroke color of a barre chord. Defaults to the nut color if not set
+     * stroke color of a barre chord. Defaults to the finger color if not set
      */
     barreChordStrokeColor: '#000000',
 
@@ -250,7 +250,7 @@ new SVGuitarChord('#some-selector')
     backgroundColor: 'none',
 
     /**
-     * Barre chord rectangle border radius relative to the nutSize (eg. 1 means completely round endges, 0 means not rounded at all)
+     * Barre chord rectangle border radius relative to the fingerSize (eg. 1 means completely round endges, 0 means not rounded at all)
      */
     barreChordRadius: 0.25,
 

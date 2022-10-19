@@ -148,7 +148,7 @@ describe('SVGuitarChord', () => {
     saveSvg('finger over barre', container.outerHTML)
   })
 
-  it('Should render text on the nuts', () => {
+  it('Should render text on the fingers', () => {
     svguitar
       .chord({
         fingers: [
@@ -163,12 +163,12 @@ describe('SVGuitarChord', () => {
       .configure({
         strings: 5,
         frets: 6,
-        title: 'Text on Nuts',
-        nutTextColor: 'tomato',
+        title: 'Text on Fingers',
+        fingerTextColor: 'tomato',
       })
       .draw()
 
-    saveSvg('text on nuts', container.outerHTML)
+    saveSvg('text on fingers', container.outerHTML)
   })
 
   it('Should set the stroke width on silent and open string indicators', () => {
@@ -246,7 +246,7 @@ describe('SVGuitarChord', () => {
     saveSvg('silent and open colored', container.outerHTML)
   })
 
-  it('Should render nuts with a different color', () => {
+  it('Should render fingers with a different color', () => {
     svguitar
       .chord({
         fingers: [
@@ -258,14 +258,14 @@ describe('SVGuitarChord', () => {
       .configure({
         strings: 5,
         frets: 6,
-        title: 'Colored Nuts',
+        title: 'Colored Fingers',
       })
       .draw()
 
-    saveSvg('colored nuts', container.outerHTML)
+    saveSvg('colored fingers', container.outerHTML)
   })
 
-  it('Should render square nuts', () => {
+  it('Should render square fingers', () => {
     svguitar
       .chord({
         fingers: [
@@ -277,14 +277,14 @@ describe('SVGuitarChord', () => {
       .configure({
         strings: 5,
         frets: 6,
-        title: 'Square Nuts',
+        title: 'Square Fingers',
       })
       .draw()
 
-    saveSvg('square nuts', container.outerHTML)
+    saveSvg('square fingers', container.outerHTML)
   })
 
-  it('Should render triangle nuts', () => {
+  it('Should render triangle fingers', () => {
     svguitar
       .chord({
         fingers: [
@@ -296,14 +296,14 @@ describe('SVGuitarChord', () => {
       .configure({
         strings: 5,
         frets: 6,
-        title: 'Triangle Nuts',
+        title: 'Triangle Fingers',
       })
       .draw()
 
-    saveSvg('triangle nuts', container.outerHTML)
+    saveSvg('triangle fingers', container.outerHTML)
   })
 
-  it('Should render pentagon shaped nuts', () => {
+  it('Should render pentagon shaped fingers', () => {
     svguitar
       .chord({
         fingers: [
@@ -315,14 +315,14 @@ describe('SVGuitarChord', () => {
       .configure({
         strings: 5,
         frets: 6,
-        title: 'Pentagon Nuts',
+        title: 'Pentagon Fingers',
       })
       .draw()
 
-    saveSvg('pentagon nuts', container.outerHTML)
+    saveSvg('pentagon fingers', container.outerHTML)
   })
 
-  it('Should render outline square nuts ', () => {
+  it('Should render outline square fingers ', () => {
     svguitar
       .chord({
         fingers: [
@@ -341,14 +341,14 @@ describe('SVGuitarChord', () => {
         barres: [],
       })
       .configure({
-        title: 'Outline Square Nuts',
+        title: 'Outline Square Fingers',
       })
       .draw()
 
-    saveSvg('outline square nuts', container.outerHTML)
+    saveSvg('outline square fingers', container.outerHTML)
   })
 
-  it('Should render outline triangle nuts', () => {
+  it('Should render outline triangle fingers', () => {
     svguitar
       .chord({
         fingers: [
@@ -367,14 +367,14 @@ describe('SVGuitarChord', () => {
         barres: [],
       })
       .configure({
-        title: 'Outline Triangle Nuts',
+        title: 'Outline Triangle Fingers',
       })
       .draw()
 
-    saveSvg('outline triangle nuts', container.outerHTML)
+    saveSvg('outline triangle fingers', container.outerHTML)
   })
 
-  it('Should render pentagon shaped nuts', () => {
+  it('Should render pentagon shaped fingers', () => {
     svguitar
       .chord({
         fingers: [
@@ -393,11 +393,11 @@ describe('SVGuitarChord', () => {
         barres: [],
       })
       .configure({
-        title: 'Outline Pentagon Nuts',
+        title: 'Outline Pentagon Fingers',
       })
       .draw()
 
-    saveSvg('outline pentagon nuts', container.outerHTML)
+    saveSvg('outline pentagon fingers', container.outerHTML)
   })
 
   it('Should render an outlined barre chord', () => {
@@ -438,15 +438,15 @@ describe('SVGuitarChord', () => {
         ],
       })
       .configure({
-        nutStrokeWidth: 3,
+        fingerStrokeWidth: 3,
         barreChordStrokeWidth: 3,
         barreChordStrokeColor: 'green',
-        nutStrokeColor: 'red',
+        fingerStrokeColor: 'red',
         title: 'Outlined',
       })
       .draw()
 
-    saveSvg('outline nuts', container.outerHTML)
+    saveSvg('outline fingers', container.outerHTML)
   })
 
   it('Should throw an error if an invliad shape is provided', () => {
@@ -460,7 +460,7 @@ describe('SVGuitarChord', () => {
     }).toThrowError(/XXX/)
   })
 
-  it('Should render text on nuts with a different color', () => {
+  it('Should render text on fingers with a different color', () => {
     svguitar
       .chord({
         fingers: [
@@ -473,11 +473,11 @@ describe('SVGuitarChord', () => {
       .configure({
         strings: 5,
         frets: 6,
-        title: 'Colored Text on Nuts',
+        title: 'Colored Text on Fingers',
       })
       .draw()
 
-    saveSvg('colored text on nuts', container.outerHTML)
+    saveSvg('colored text on fingers', container.outerHTML)
   })
 
   it('Should render barre chords with a different color', () => {
@@ -569,7 +569,7 @@ describe('SVGuitarChord', () => {
         strings: 5,
         frets: 5,
         title: 'Text on Barres',
-        nutTextColor: 'lightgreen',
+        fingerTextColor: 'lightgreen',
       })
       .draw()
 
@@ -755,7 +755,7 @@ describe('SVGuitarChord', () => {
         tuningsFontSize: 28,
         fretLabelFontSize: 38,
         fretLabelPosition: FretLabelPosition.RIGHT,
-        nutSize: 0.65,
+        fingerSize: 0.65,
         sidePadding: 0.2,
         titleFontSize: 48,
         titleBottomMargin: 0,
@@ -847,9 +847,9 @@ describe('SVGuitarChord', () => {
       .configure({
         title: 'Centered Barre',
         fretSize: 1,
-        nutSize: 1,
+        fingerSize: 1,
         strokeWidth: 5,
-        nutColor: 'tomato',
+        fingerColor: 'tomato',
         barreChordRadius: 0,
       })
       .draw()
@@ -971,7 +971,7 @@ describe('SVGuitarChord', () => {
     ${'position'}    | ${1}  | ${true}
     ${'position'}    | ${0}  | ${false}
     ${'fretSize'}    | ${-1} | ${false}
-    ${'nutSize'}     | ${-1} | ${false}
+    ${'fingerSize'}  | ${-1} | ${false}
     ${'strokeWidth'} | ${-1} | ${false}
   `('Should correctly sanity check the settings', ({ setting, value, valid }) => {
     // console.log(`Should ${valid ? 'not' : ''} thrown if ${setting} is ${value}`)
