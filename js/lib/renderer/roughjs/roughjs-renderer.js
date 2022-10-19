@@ -13,6 +13,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -34,9 +36,14 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
-var __spread = (this && this.__spread) || function () {
-    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
-    return ar;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RoughJsRenderer = void 0;
@@ -62,7 +69,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             _this.containerNode = container;
             var node = document.querySelector(container);
             if (!node) {
-                throw new Error("No element found with selector \"" + container + "\"");
+                throw new Error("No element found with selector \"".concat(container, "\""));
             }
             _this.containerNode = node;
         }
@@ -127,7 +134,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             options.strokeWidth = strokeWidth;
         }
         var circle = this.rc.circle(x + diameter / 2, y + diameter / 2, diameter, options);
-        (_a = circle.classList).add.apply(_a, __spread(RoughJsRenderer.toClassArray(classes)));
+        (_a = circle.classList).add.apply(_a, __spreadArray([], __read(RoughJsRenderer.toClassArray(classes)), false));
         this.svgNode.appendChild(circle);
         return RoughJsRenderer.boxToElement(circle.getBBox(), function () {
             return circle ? circle.remove() : undefined;
@@ -158,7 +165,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
                 strokeWidth: strokeWidth,
                 stroke: color,
             });
-            (_a = line.classList).add.apply(_a, __spread(RoughJsRenderer.toClassArray(classes)));
+            (_a = line.classList).add.apply(_a, __spreadArray([], __read(RoughJsRenderer.toClassArray(classes)), false));
             this.svgNode.appendChild(line);
         }
     };
@@ -183,9 +190,9 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             stroke: strokeColor || fill || 'none',
             roughness: 1.5,
         });
-        rect.setAttribute('transform', "translate(" + x + ", " + y + ")");
-        (_a = rect.classList).add.apply(_a, __spread(RoughJsRenderer.toClassArray(classes)));
-        (_b = rect2.classList).add.apply(_b, __spread(RoughJsRenderer.toClassArray(classes)));
+        rect.setAttribute('transform', "translate(".concat(x, ", ").concat(y, ")"));
+        (_a = rect.classList).add.apply(_a, __spreadArray([], __read(RoughJsRenderer.toClassArray(classes)), false));
+        (_b = rect2.classList).add.apply(_b, __spreadArray([], __read(RoughJsRenderer.toClassArray(classes)), false));
         this.svgNode.appendChild(rect);
         this.svgNode.appendChild(rect2);
         return RoughJsRenderer.boxToElement(rect.getBBox(), function () { return rect.remove(); });
@@ -198,8 +205,8 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             stroke: strokeColor || fill || 'none',
             roughness: 1.5,
         });
-        triangle.setAttribute('transform', "translate(" + x + ", " + y + ")");
-        (_a = triangle.classList).add.apply(_a, __spread(RoughJsRenderer.toClassArray(classes)));
+        triangle.setAttribute('transform', "translate(".concat(x, ", ").concat(y, ")"));
+        (_a = triangle.classList).add.apply(_a, __spreadArray([], __read(RoughJsRenderer.toClassArray(classes)), false));
         this.svgNode.appendChild(triangle);
         return RoughJsRenderer.boxToElement(triangle.getBBox(), function () { return triangle.remove(); });
     };
@@ -212,13 +219,13 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             stroke: strokeColor || fill || 'none',
             roughness: 1.5,
         });
-        pentagon.setAttribute('transform', "translate(" + x + ", " + y + ")");
-        (_a = pentagon.classList).add.apply(_a, __spread(RoughJsRenderer.toClassArray(classes)));
+        pentagon.setAttribute('transform', "translate(".concat(x, ", ").concat(y, ")"));
+        (_a = pentagon.classList).add.apply(_a, __spreadArray([], __read(RoughJsRenderer.toClassArray(classes)), false));
         this.svgNode.appendChild(pentagon);
         return RoughJsRenderer.boxToElement(pentagon.getBBox(), function () { return pentagon.remove(); });
     };
     RoughJsRenderer.prototype.size = function (width, height) {
-        this.svgNode.setAttribute('viewBox', "0 0 " + Math.ceil(width) + " " + Math.ceil(height));
+        this.svgNode.setAttribute('viewBox', "0 0 ".concat(Math.ceil(width), " ").concat(Math.ceil(height)));
     };
     RoughJsRenderer.prototype.background = function (color) {
         var bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
@@ -255,9 +262,9 @@ var RoughJsRenderer = /** @class */ (function (_super) {
                 xOffset = -bbox.width;
                 break;
             default:
-                throw new Error("Invalid alignment " + alignment);
+                throw new Error("Invalid alignment ".concat(alignment));
         }
-        (_a = txtElem.classList).add.apply(_a, __spread(RoughJsRenderer.toClassArray(classes)));
+        (_a = txtElem.classList).add.apply(_a, __spreadArray([], __read(RoughJsRenderer.toClassArray(classes)), false));
         txtElem.setAttributeNS(null, 'x', String(x + xOffset));
         txtElem.setAttributeNS(null, 'y', String(y + (plain ? 0 : bbox.height / 2)));
         return RoughJsRenderer.boxToElement(txtElem.getBBox(), txtElem.remove.bind(txtElem));
@@ -272,9 +279,9 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         };
     };
     RoughJsRenderer.roundedRectData = function (w, h, tlr, trr, brr, blr) {
-        return ("M 0 " + tlr + " A " + tlr + " " + tlr + " 0 0 1 " + tlr + " 0" +
-            (" L " + (w - trr) + " 0") +
-            (" A " + trr + " " + trr + " 0 0 1 " + w + " " + trr + " L " + w + " " + (h - brr) + " A " + brr + " " + brr + " 0 0 1 " + (w - brr) + " " + h + " L " + blr + " " + h + " A " + blr + " " + blr + " 0 0 1 0 " + (h - blr) + " Z"));
+        return ("M 0 ".concat(tlr, " A ").concat(tlr, " ").concat(tlr, " 0 0 1 ").concat(tlr, " 0") +
+            " L ".concat(w - trr, " 0") +
+            " A ".concat(trr, " ").concat(trr, " 0 0 1 ").concat(w, " ").concat(trr, " L ").concat(w, " ").concat(h - brr, " A ").concat(brr, " ").concat(brr, " 0 0 1 ").concat(w - brr, " ").concat(h, " L ").concat(blr, " ").concat(h, " A ").concat(blr, " ").concat(blr, " 0 0 1 0 ").concat(h - blr, " Z"));
     };
     RoughJsRenderer.toClassArray = function (classes) {
         if (!classes) {

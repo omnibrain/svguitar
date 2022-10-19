@@ -7,6 +7,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -39,15 +41,20 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
-var __spread = (this && this.__spread) || function () {
-    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
-    return ar;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SVGuitarChord = exports.ElementType = exports.Orientation = exports.ChordStyle = exports.Shape = exports.FretLabelPosition = exports.SILENT = exports.OPEN = void 0;
-var range_1 = require("./utils/range");
 var constants_1 = require("./constants");
 var renderer_1 = require("./renderer");
+var range_1 = require("./utils/range");
 /**
  * Value for an open string (O)
  */
@@ -165,7 +172,7 @@ var SVGuitarChord = /** @class */ (function () {
                         this.rendererInternal = new renderer_1.RoughJsRenderer(this.container);
                         break;
                     default:
-                        throw new Error(style + " is not a valid chord diagram style.");
+                        throw new Error("".concat(style, " is not a valid chord diagram style."));
                 }
             }
             return this.rendererInternal;
@@ -245,7 +252,7 @@ var SVGuitarChord = /** @class */ (function () {
         var text;
         tuning.forEach(function (tuning_, i) {
             if (i < strings) {
-                var classNames = [ElementType.TUNING, ElementType.TUNING + "-" + i];
+                var classNames = [ElementType.TUNING, "".concat(ElementType.TUNING, "-").concat(i)];
                 var _a = _this.coordinates(stringXPositions[i], y + padding), textX = _a.x, textY = _a.y;
                 var tuningText = _this.renderer.text(tuning_, textX, textY, tuningsFontSize, color, fontFamily, renderer_1.Alignment.MIDDLE, classNames, true);
                 if (tuning_) {
@@ -296,7 +303,7 @@ var SVGuitarChord = /** @class */ (function () {
         var stringXPositions = this.stringXPos();
         var endX = stringXPositions[stringXPositions.length - 1];
         var startX = stringXPositions[0];
-        var text = position + "fr";
+        var text = "".concat(position, "fr");
         var size = (_c = this.settings.fretLabelFontSize) !== null && _c !== void 0 ? _c : defaultSettings.fretLabelFontSize;
         var color = (_e = (_d = this.settings.fretLabelColor) !== null && _d !== void 0 ? _d : this.settings.color) !== null && _e !== void 0 ? _e : defaultSettings.color;
         var fingerSize = this.stringSpacing() * ((_f = this.settings.fingerSize) !== null && _f !== void 0 ? _f : defaultSettings.fingerSize);
@@ -384,7 +391,7 @@ var SVGuitarChord = /** @class */ (function () {
         var sidePadding = (_b = this.settings.sidePadding) !== null && _b !== void 0 ? _b : defaultSettings.sidePadding;
         var startX = constants_1.constants.width * sidePadding;
         var stringsSpacing = this.stringSpacing();
-        return range_1.range(strings).map(function (i) { return startX + stringsSpacing * i; });
+        return (0, range_1.range)(strings).map(function (i) { return startX + stringsSpacing * i; });
     };
     SVGuitarChord.prototype.stringSpacing = function () {
         var _a, _b;
@@ -405,7 +412,7 @@ var SVGuitarChord = /** @class */ (function () {
         var _a;
         var frets = (_a = this.settings.frets) !== null && _a !== void 0 ? _a : defaultSettings.frets;
         var fretSpacing = this.fretSpacing();
-        return range_1.range(frets, 1).map(function (i) { return startY + fretSpacing * i; });
+        return (0, range_1.range)(frets, 1).map(function (i) { return startY + fretSpacing * i; });
     };
     SVGuitarChord.prototype.toArrayIndex = function (stringIndex) {
         var _a;
@@ -448,13 +455,13 @@ var SVGuitarChord = /** @class */ (function () {
                 var textColor = (_e = (_d = fingerOptions.textColor) !== null && _d !== void 0 ? _d : _this.settings.color) !== null && _e !== void 0 ? _e : defaultSettings.color;
                 var textSize = (_f = _this.settings.fingerTextSize) !== null && _f !== void 0 ? _f : defaultSettings.fingerTextSize;
                 var fontFamily = (_g = _this.settings.fontFamily) !== null && _g !== void 0 ? _g : defaultSettings.fontFamily;
-                var classNames = [ElementType.STRING_TEXT, ElementType.STRING_TEXT + "-" + stringIndex];
+                var classNames = [ElementType.STRING_TEXT, "".concat(ElementType.STRING_TEXT, "-").concat(stringIndex)];
                 var _j = _this.coordinates(stringXPositions[stringIndex], y + padding + size / 2), textX = _j.x, textY = _j.y;
                 _this.renderer.text(fingerOptions.text, textX, textY, textSize, textColor, fontFamily, renderer_1.Alignment.MIDDLE, classNames, true);
             }
             if (value === exports.OPEN) {
                 // draw an O
-                var classNames = [ElementType.OPEN_STRING, ElementType.OPEN_STRING + "-" + stringIndex];
+                var classNames = [ElementType.OPEN_STRING, "".concat(ElementType.OPEN_STRING, "-").concat(stringIndex)];
                 var _k = _this.rectCoordinates(stringXPositions[stringIndex] - size / 2, y + padding, size, size), lineX1 = _k.x, lineY1 = _k.y;
                 _this.renderer.circle(lineX1, lineY1, size, effectiveStrokeWidth, effectiveStrokeColor, undefined, classNames);
             }
@@ -462,7 +469,7 @@ var SVGuitarChord = /** @class */ (function () {
                 // draw an X
                 var classNames = [
                     ElementType.SILENT_STRING,
-                    ElementType.SILENT_STRING + "-" + stringIndex,
+                    "".concat(ElementType.SILENT_STRING, "-").concat(stringIndex),
                 ];
                 var startX = stringXPositions[stringIndex] - size / 2;
                 var endX = startX + size;
@@ -501,14 +508,14 @@ var SVGuitarChord = /** @class */ (function () {
         var fingerTextSize = (_m = this.settings.fingerTextSize) !== null && _m !== void 0 ? _m : defaultSettings.fingerTextSize;
         // draw frets
         fretYPositions.forEach(function (fretY, i) {
-            var classNames = [ElementType.FRET, ElementType.FRET + "-" + i];
+            var classNames = [ElementType.FRET, "".concat(ElementType.FRET, "-").concat(i)];
             var _a = _this.coordinates(startX, fretY), lineX1 = _a.x, lineY1 = _a.y;
             var _b = _this.coordinates(endX, fretY), lineX2 = _b.x, lineY2 = _b.y;
             _this.renderer.line(lineX1, lineY1, lineX2, lineY2, strokeWidth, fretColor, classNames);
         });
         // draw strings
         stringXPositions.forEach(function (stringX, i) {
-            var classNames = [ElementType.STRING, ElementType.STRING + "-" + i];
+            var classNames = [ElementType.STRING, "".concat(ElementType.STRING, "-").concat(i)];
             var _a = _this.coordinates(stringX, y), lineX1 = _a.x, lineY1 = _a.y;
             var _b = _this.coordinates(stringX, y + height + strokeWidth / 2), lineX2 = _b.x, lineY2 = _b.y;
             _this.renderer.line(lineX1, lineY1, lineX2, lineY2, strokeWidth, fretColor, classNames);
@@ -522,17 +529,17 @@ var SVGuitarChord = /** @class */ (function () {
             var distance = Math.abs(toString - fromString) * stringSpacing;
             var barreChordStrokeColor = (_d = (_c = (_b = strokeColor !== null && strokeColor !== void 0 ? strokeColor : _this.settings.barreChordStrokeColor) !== null && _b !== void 0 ? _b : _this.settings.fingerColor) !== null && _c !== void 0 ? _c : _this.settings.color) !== null && _d !== void 0 ? _d : defaultSettings.color;
             var barreChordStrokeWidth = (_e = individualBarreChordStrokeWidth !== null && individualBarreChordStrokeWidth !== void 0 ? individualBarreChordStrokeWidth : _this.settings.barreChordStrokeWidth) !== null && _e !== void 0 ? _e : defaultSettings.barreChordStrokeWidth;
-            var classNames = __spread([
+            var classNames = __spreadArray([
                 ElementType.BARRE,
-                ElementType.BARRE + "-fret-" + (fret - 1)
-            ], (className ? [className] : []));
+                "".concat(ElementType.BARRE, "-fret-").concat(fret - 1)
+            ], __read((className ? [className] : [])), false);
             var barreWidth = distance + stringSpacing / 2;
             var barreHeight = fingerSize;
             var _f = _this.rectCoordinates(fromStringX - stringSpacing / 4, barreCenterY - fingerSize / 2, barreWidth, barreHeight), rectX = _f.x, rectY = _f.y, rectHeight = _f.height, rectWidth = _f.width;
             _this.renderer.rect(rectX, rectY, rectWidth, rectHeight, barreChordStrokeWidth, barreChordStrokeColor, classNames, color !== null && color !== void 0 ? color : fingerColor, fingerSize * barreChordRadius);
             // draw text on the barre chord
             if (text) {
-                var textClassNames = [ElementType.BARRE_TEXT, ElementType.BARRE_TEXT + "-" + fret];
+                var textClassNames = [ElementType.BARRE_TEXT, "".concat(ElementType.BARRE_TEXT, "-").concat(fret)];
                 var _g = _this.coordinates(fromStringX + distance / 2, barreCenterY), textX = _g.x, textY = _g.y;
                 _this.renderer.text(text, textX, textY, fingerTextSize, textColor !== null && textColor !== void 0 ? textColor : fingerTextColor, fontFamily, renderer_1.Alignment.MIDDLE, textClassNames, true);
             }
@@ -556,12 +563,12 @@ var SVGuitarChord = /** @class */ (function () {
             var fingerCenterX = startX + stringIndex * stringSpacing;
             var fingerCenterY = y + fretIndex * fretSpacing - fretSpacing / 2;
             var fingerOptions = SVGuitarChord.getFingerOptions(textOrOptions);
-            var classNames = __spread([
+            var classNames = __spreadArray([
                 ElementType.FINGER,
-                ElementType.FINGER + "-string-" + stringIndex,
-                ElementType.FINGER + "-fret-" + (fretIndex - 1),
-                ElementType.FINGER + "-string-" + stringIndex + "-fret-" + (fretIndex - 1)
-            ], (fingerOptions.className ? [fingerOptions.className] : []));
+                "".concat(ElementType.FINGER, "-string-").concat(stringIndex),
+                "".concat(ElementType.FINGER, "-fret-").concat(fretIndex - 1),
+                "".concat(ElementType.FINGER, "-string-").concat(stringIndex, "-fret-").concat(fretIndex - 1)
+            ], __read((fingerOptions.className ? [fingerOptions.className] : [])), false);
             // const { x: x0, y: y0 } = this.coordinates(fingerCenterX, fingerCenterY)
             _this.drawFinger(fingerCenterX, fingerCenterY, fingerSize, fingerColor, fingerTextSize, fontFamily, fingerOptions, classNames);
         });
@@ -575,7 +582,7 @@ var SVGuitarChord = /** @class */ (function () {
         var fingerStrokeWidth = (_j = (_h = fingerOptions.strokeWidth) !== null && _h !== void 0 ? _h : this.settings.fingerStrokeWidth) !== null && _j !== void 0 ? _j : defaultSettings.fingerStrokeWidth;
         var startX = x - size / 2;
         var startY = y - size / 2;
-        var classNamesWithShape = __spread(classNames, [ElementType.FINGER + "-" + shape]);
+        var classNamesWithShape = __spreadArray(__spreadArray([], __read(classNames), false), ["".concat(ElementType.FINGER, "-").concat(shape)], false);
         var _q = this.rectCoordinates(startX, startY, size, size), x0 = _q.x, y0 = _q.y;
         switch (shape) {
             case Shape.CIRCLE:
@@ -591,12 +598,12 @@ var SVGuitarChord = /** @class */ (function () {
                 this.renderer.pentagon(x0, y0, size, fingerStrokeWidth, fingerStrokeColor, (_o = fingerOptions.color) !== null && _o !== void 0 ? _o : color, classNamesWithShape);
                 break;
             default:
-                throw new Error("Invalid shape \"" + fingerOptions.shape + "\". Valid shapes are: " + Object.values(Shape)
-                    .map(function (val) { return "\"" + val + "\""; })
-                    .join(', ') + ".");
+                throw new Error("Invalid shape \"".concat(fingerOptions.shape, "\". Valid shapes are: ").concat(Object.values(Shape)
+                    .map(function (val) { return "\"".concat(val, "\""); })
+                    .join(', '), "."));
         }
         // draw text on the finger
-        var textClassNames = __spread(classNames, [ElementType.FINGER + "-text"]);
+        var textClassNames = __spreadArray(__spreadArray([], __read(classNames), false), ["".concat(ElementType.FINGER, "-text")], false);
         if (fingerOptions.text) {
             var _r = this.coordinates(x, y), textX = _r.x, textY = _r.y;
             this.renderer.text(fingerOptions.text, textX, textY, textSize, (_p = fingerOptions.textColor) !== null && _p !== void 0 ? _p : fingerTextColor, fontFamily, renderer_1.Alignment.MIDDLE, textClassNames, true);

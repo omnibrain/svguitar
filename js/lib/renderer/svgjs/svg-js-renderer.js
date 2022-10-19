@@ -7,6 +7,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -31,13 +33,13 @@ var SvgJsRenderer = /** @class */ (function (_super) {
         so I'm not going to care for now.
          */
         /* istanbul ignore else */
-        if (is_node_1.isNode()) {
+        if ((0, is_node_1.isNode)()) {
             // node (jest)
-            _this.svg = svg_js_1.SVG(container);
+            _this.svg = (0, svg_js_1.SVG)(container);
         }
         else {
             // browser
-            _this.svg = svg_js_1.SVG().addTo(container);
+            _this.svg = (0, svg_js_1.SVG)().addTo(container);
         }
         _this.svg.attr('preserveAspectRatio', 'xMidYMid meet').viewbox(0, 0, width, height);
         return _this;

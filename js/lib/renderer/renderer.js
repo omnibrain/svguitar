@@ -28,7 +28,7 @@ var Renderer = /** @class */ (function () {
         this.container = container;
     }
     Renderer.trianglePath = function (x, y, size) {
-        return "M" + (x + size / 2) + " " + y + " L" + (x + size) + " " + (y + size) + " L" + x + " " + (y + size);
+        return "M".concat(x + size / 2, " ").concat(y, " L").concat(x + size, " ").concat(y + size, " L").concat(x, " ").concat(y + size);
     };
     Renderer.ngonPath = function (x, y, size, edges) {
         var i;
@@ -46,9 +46,9 @@ var Renderer = /** @class */ (function () {
         }
         var lines = points.reduce(function (acc, _a) {
             var _b = __read(_a, 2), posX = _b[0], posY = _b[1];
-            return acc + " L" + posX + " " + posY;
+            return "".concat(acc, " L").concat(posX, " ").concat(posY);
         }, '');
-        return "M" + curX + " " + curY + " " + lines;
+        return "M".concat(curX, " ").concat(curY, " ").concat(lines);
     };
     Renderer.toClassName = function (classes) {
         if (!classes) {
