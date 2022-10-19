@@ -16,7 +16,7 @@ export declare type Barre = {
 };
 export declare type Chord = {
     /**
-     * The fingers (nuts)
+     * The fingers
      */
     fingers: Finger[];
     /**
@@ -123,31 +123,31 @@ export interface ChordSettings {
      */
     tuningsFontSize?: number;
     /**
-     * Size of a nut relative to the string spacing
+     * Size of a finger relative to the string spacing
      */
-    nutSize?: number;
+    fingerSize?: number;
     /**
-     * Color of a finger / nut
+     * Color of a finger
      */
-    nutColor?: string;
+    fingerColor?: string;
     /**
-     * The color of text inside nuts
+     * The color of text inside fingers or barres
      */
-    nutTextColor?: string;
+    fingerTextColor?: string;
     /**
-     * The size of text inside nuts
+     * The size of text inside fingers or barres
      */
-    nutTextSize?: number;
+    fingerTextSize?: number;
     /**
-     * stroke color of a nut. Defaults to the nut color if not set
+     * stroke color of a finger. Defaults to the finger color if not set
      */
-    nutStrokeColor?: string;
+    fingerStrokeColor?: string;
     /**
-     * stroke width of a nut
+     * stroke width of a finger or barre
      */
-    nutStrokeWidth?: number;
+    fingerStrokeWidth?: number;
     /**
-     * stroke color of a barre chord. Defaults to the nut color if not set
+     * stroke color of a barre chord. Defaults to the finger color if not set
      */
     barreChordStrokeColor?: string;
     /**
@@ -214,7 +214,7 @@ export interface ChordSettings {
      */
     fretColor?: string;
     /**
-     * Barre chord rectangle border radius relative to the nutSize (eg. 1 means completely round
+     * Barre chord rectangle border radius relative to the fingerSize (eg. 1 means completely round
      * edges, 0 means not rounded at all)
      */
     barreChordRadius?: number;
@@ -292,7 +292,7 @@ export declare class SVGuitarChord {
     private toArrayIndex;
     private drawEmptyStringIndicators;
     private drawGrid;
-    private drawNut;
+    private drawFinger;
     private drawTitle;
     clear(): void;
     /**

@@ -300,37 +300,37 @@ chart
     <span class="hljs-attr">tuningsFontSize</span>: <span class="hljs-number">28</span>,
 
     <span class="hljs-comment">/**
-     * Size of a nut relative to the string spacing
+     * Size of a finger or barre relative to the string spacing
      */</span>
-    <span class="hljs-attr">nutSize</span>: <span class="hljs-number">0.65</span>,
+    <span class="hljs-attr">fingerSize</span>: <span class="hljs-number">0.65</span>,
 
     <span class="hljs-comment">/**
-     * Color of a finger / nut
+     * Color of a finger or barre
      */</span>
-    <span class="hljs-attr">nutColor</span>: <span class="hljs-string">&#x27;#000&#x27;</span>,
+    <span class="hljs-attr">fingerColor</span>: <span class="hljs-string">&#x27;#000&#x27;</span>,
 
     <span class="hljs-comment">/**
-     * The color of text inside nuts
+     * The color of text inside fingers and barres
      */</span>
-    <span class="hljs-attr">nutTextColor</span>: <span class="hljs-string">&#x27;#FFF&#x27;</span>,
+    <span class="hljs-attr">fingerTextColor</span>: <span class="hljs-string">&#x27;#FFF&#x27;</span>,
 
     <span class="hljs-comment">/**
-     * The size of text inside nuts
+     * The size of text inside fingers and barres
      */</span>
-    <span class="hljs-attr">nutTextSize</span>: <span class="hljs-number">22</span>,
+    <span class="hljs-attr">fingerTextSize</span>: <span class="hljs-number">22</span>,
 
     <span class="hljs-comment">/**
-     * stroke color of a nut. Defaults to the nut color if not set
+     * stroke color of a finger or barre. Defaults to the finger color if not set
      */</span>
-    <span class="hljs-attr">nutStrokeColor</span>: <span class="hljs-string">&#x27;#000000&#x27;</span>,
+    <span class="hljs-attr">fingerStrokeColor</span>: <span class="hljs-string">&#x27;#000000&#x27;</span>,
 
     <span class="hljs-comment">/**
-     * stroke width of a nut
+     * stroke width of a finger or barre
      */</span>
-    <span class="hljs-attr">nutStrokeWidth</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">fingerStrokeWidth</span>: <span class="hljs-number">0</span>,
 
     <span class="hljs-comment">/**
-     * stroke color of a barre chord. Defaults to the nut color if not set
+     * stroke color of a barre chord. Defaults to the finger color if not set
      */</span>
     <span class="hljs-attr">barreChordStrokeColor</span>: <span class="hljs-string">&#x27;#000000&#x27;</span>,
 
@@ -383,7 +383,7 @@ chart
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
 
     <span class="hljs-comment">/**
-     * Barre chord rectangle border radius relative to the nutSize (eg. 1 means completely round endges, 0 means not rounded at all)
+     * Barre chord rectangle border radius relative to the fingerSize (eg. 1 means completely round endges, 0 means not rounded at all)
      */</span>
     <span class="hljs-attr">barreChordRadius</span>: <span class="hljs-number">0.25</span>,
 
@@ -553,7 +553,7 @@ chart
 				<div class="tsd-signature tsd-kind-icon">Any<wbr>Function<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/plugin.ts#L8">plugin.ts:8</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/plugin.ts#L8">plugin.ts:8</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -584,7 +584,7 @@ chart
 				<div class="tsd-signature tsd-kind-icon">Api<wbr>Extension<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/plugin.ts#L4">plugin.ts:4</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/plugin.ts#L4">plugin.ts:4</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -602,7 +602,7 @@ chart
 				<div class="tsd-signature tsd-kind-icon">Barre<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>className<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>color<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>fret<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>fromString<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>strokeColor<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>strokeWidth<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>text<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>textColor<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>toString<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L12">svguitar.ts:12</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L12">svguitar.ts:12</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -644,7 +644,7 @@ chart
 				<div class="tsd-signature tsd-kind-icon">Chord<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>barres<span class="tsd-signature-symbol">: </span><a href="globals.html#barre" class="tsd-signature-type">Barre</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>fingers<span class="tsd-signature-symbol">: </span><a href="globals.html#finger" class="tsd-signature-type">Finger</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>position<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>title<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L23">svguitar.ts:23</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L23">svguitar.ts:23</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -662,7 +662,7 @@ chart
 							<h5>fingers<span class="tsd-signature-symbol">: </span><a href="globals.html#finger" class="tsd-signature-type">Finger</a><span class="tsd-signature-symbol">[]</span></h5>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>The fingers (nuts)</p>
+									<p>The fingers</p>
 								</div>
 							</div>
 						</li>
@@ -691,7 +691,7 @@ chart
 				<div class="tsd-signature tsd-kind-icon">Constructor&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/plugin.ts#L6">plugin.ts:6</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/plugin.ts#L6">plugin.ts:6</a></li>
 					</ul>
 				</aside>
 				<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -712,7 +712,7 @@ chart
 				<div class="tsd-signature tsd-kind-icon">Finger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><a href="globals.html#openstring" class="tsd-signature-type">OpenString</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#silentstring" class="tsd-signature-type">SilentString</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/fingeroptions.html" class="tsd-signature-type">FingerOptions</a><span class="tsd-signature-symbol">]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L11">svguitar.ts:11</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L11">svguitar.ts:11</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -722,7 +722,7 @@ chart
 				<div class="tsd-signature tsd-kind-icon">Open<wbr>String<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">0</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L10">svguitar.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L10">svguitar.ts:10</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -732,7 +732,7 @@ chart
 				<div class="tsd-signature tsd-kind-icon">Return<wbr>Type<wbr>Of&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">AnyFunction</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">ReturnType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">AnyFunction</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">UnionToIntersection</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ReturnType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">never</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/plugin.ts#L20">plugin.ts:20</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/plugin.ts#L20">plugin.ts:20</a></li>
 					</ul>
 				</aside>
 				<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -748,7 +748,7 @@ chart
 				<div class="tsd-signature tsd-kind-icon">SVGuitar<wbr>Plugin<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>instance<span class="tsd-signature-symbol">: </span><a href="classes/svguitarchord.html" class="tsd-signature-type">SVGuitarChord</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="globals.html#apiextension" class="tsd-signature-type">ApiExtension</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/plugin.ts#L26">plugin.ts:26</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/plugin.ts#L26">plugin.ts:26</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -779,7 +779,7 @@ chart
 				<div class="tsd-signature tsd-kind-icon">Silent<wbr>String<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"x"</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L9">svguitar.ts:9</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L9">svguitar.ts:9</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -789,7 +789,7 @@ chart
 				<div class="tsd-signature tsd-kind-icon">Union<wbr>ToIntersection&lt;Union&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">Union</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-symbol">(</span>argument<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Union</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">never</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-symbol">(</span>argument<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">infer </span> Intersection<span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">Intersection</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">never</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/plugin.ts#L14">plugin.ts:14</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/plugin.ts#L14">plugin.ts:14</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -818,7 +818,7 @@ chart
 				<div class="tsd-signature tsd-kind-icon">FONT_<wbr>FAMLILY<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"Patrick Hand"</span><span class="tsd-signature-symbol"> = &quot;Patrick Hand&quot;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/renderer/roughjs/roughjs-renderer.ts#L21">renderer/roughjs/roughjs-renderer.ts:21</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/renderer/roughjs/roughjs-renderer.ts#L21">renderer/roughjs/roughjs-renderer.ts:21</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -836,7 +836,7 @@ chart
 				<div class="tsd-signature tsd-kind-icon">OPEN<span class="tsd-signature-symbol">:</span> <a href="globals.html#openstring" class="tsd-signature-type">OpenString</a><span class="tsd-signature-symbol"> = 0</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L56">svguitar.ts:56</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L56">svguitar.ts:56</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -851,7 +851,7 @@ chart
 				<div class="tsd-signature tsd-kind-icon">SILENT<span class="tsd-signature-symbol">:</span> <a href="globals.html#silentstring" class="tsd-signature-type">SilentString</a><span class="tsd-signature-symbol"> = &quot;x&quot;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L61">svguitar.ts:61</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L61">svguitar.ts:61</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -873,7 +873,7 @@ chart
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/utils/is-node.ts#L1">utils/is-node.ts:1</a></li>
+								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/utils/is-node.ts#L1">utils/is-node.ts:1</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -890,7 +890,7 @@ chart
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/utils/range.ts#L1">utils/range.ts:1</a></li>
+								<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/utils/range.ts#L1">utils/range.ts:1</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -915,7 +915,7 @@ chart
 				<div class="tsd-signature tsd-kind-icon">constants<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/constants.ts#L5">constants.ts:5</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/constants.ts#L5">constants.ts:5</a></li>
 					</ul>
 				</aside>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
@@ -924,7 +924,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">width<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 400</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/constants.ts#L9">constants.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/constants.ts#L9">constants.ts:9</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -940,7 +940,7 @@ chart
 				<div class="tsd-signature tsd-kind-icon">default<wbr>Settings<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L342">svguitar.ts:342</a></li>
+						<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L342">svguitar.ts:342</a></li>
 					</ul>
 				</aside>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
@@ -949,7 +949,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">barre<wbr>Chord<wbr>Radius<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0.25</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L364">svguitar.ts:364</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L364">svguitar.ts:364</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -959,7 +959,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">barre<wbr>Chord<wbr>Stroke<wbr>Width<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L355">svguitar.ts:355</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L355">svguitar.ts:355</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -969,7 +969,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;#000&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L359">svguitar.ts:359</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L359">svguitar.ts:359</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -979,7 +979,47 @@ chart
 					<div class="tsd-signature tsd-kind-icon">empty<wbr>String<wbr>Indicator<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0.6</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L360">svguitar.ts:360</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L360">svguitar.ts:360</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+					<a name="defaultsettings.fingersize" class="tsd-anchor"></a>
+					<h3>finger<wbr>Size</h3>
+					<div class="tsd-signature tsd-kind-icon">finger<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0.65</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L351">svguitar.ts:351</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+					<a name="defaultsettings.fingerstrokewidth" class="tsd-anchor"></a>
+					<h3>finger<wbr>Stroke<wbr>Width</h3>
+					<div class="tsd-signature tsd-kind-icon">finger<wbr>Stroke<wbr>Width<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L354">svguitar.ts:354</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+					<a name="defaultsettings.fingertextcolor" class="tsd-anchor"></a>
+					<h3>finger<wbr>Text<wbr>Color</h3>
+					<div class="tsd-signature tsd-kind-icon">finger<wbr>Text<wbr>Color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;#FFF&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L352">svguitar.ts:352</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+					<a name="defaultsettings.fingertextsize" class="tsd-anchor"></a>
+					<h3>finger<wbr>Text<wbr>Size</h3>
+					<div class="tsd-signature tsd-kind-icon">finger<wbr>Text<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 24</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L353">svguitar.ts:353</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -989,7 +1029,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">font<wbr>Family<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;Arial, &quot;Helvetica Neue&quot;, Helvetica, sans-serif&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L365">svguitar.ts:365</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L365">svguitar.ts:365</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -999,7 +1039,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">fret<wbr>Label<wbr>Font<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 38</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L349">svguitar.ts:349</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L349">svguitar.ts:349</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1009,7 +1049,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">fret<wbr>Label<wbr>Position<span class="tsd-signature-symbol">:</span> <a href="enums/fretlabelposition.html#right" class="tsd-signature-type">RIGHT</a><span class="tsd-signature-symbol"> = FretLabelPosition.RIGHT</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L350">svguitar.ts:350</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L350">svguitar.ts:350</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1019,7 +1059,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">fret<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 1.5</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L363">svguitar.ts:363</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L363">svguitar.ts:363</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1029,47 +1069,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">frets<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 5</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L345">svguitar.ts:345</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
-					<a name="defaultsettings.nutsize" class="tsd-anchor"></a>
-					<h3>nut<wbr>Size</h3>
-					<div class="tsd-signature tsd-kind-icon">nut<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0.65</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L351">svguitar.ts:351</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
-					<a name="defaultsettings.nutstrokewidth" class="tsd-anchor"></a>
-					<h3>nut<wbr>Stroke<wbr>Width</h3>
-					<div class="tsd-signature tsd-kind-icon">nut<wbr>Stroke<wbr>Width<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L354">svguitar.ts:354</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
-					<a name="defaultsettings.nuttextcolor" class="tsd-anchor"></a>
-					<h3>nut<wbr>Text<wbr>Color</h3>
-					<div class="tsd-signature tsd-kind-icon">nut<wbr>Text<wbr>Color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;#FFF&quot;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L352">svguitar.ts:352</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
-					<a name="defaultsettings.nuttextsize" class="tsd-anchor"></a>
-					<h3>nut<wbr>Text<wbr>Size</h3>
-					<div class="tsd-signature tsd-kind-icon">nut<wbr>Text<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 24</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L353">svguitar.ts:353</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L345">svguitar.ts:345</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1079,7 +1079,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">orientation<span class="tsd-signature-symbol">:</span> <a href="enums/orientation.html#vertical" class="tsd-signature-type">vertical</a><span class="tsd-signature-symbol"> = Orientation.vertical</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L367">svguitar.ts:367</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L367">svguitar.ts:367</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1089,7 +1089,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">position<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 1</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L346">svguitar.ts:346</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L346">svguitar.ts:346</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1099,7 +1099,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">shape<span class="tsd-signature-symbol">:</span> <a href="enums/shape.html#circle" class="tsd-signature-type">CIRCLE</a><span class="tsd-signature-symbol"> = Shape.CIRCLE</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L366">svguitar.ts:366</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L366">svguitar.ts:366</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1109,7 +1109,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">side<wbr>Padding<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0.2</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L356">svguitar.ts:356</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L356">svguitar.ts:356</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1119,7 +1119,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">strings<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 6</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L344">svguitar.ts:344</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L344">svguitar.ts:344</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1129,7 +1129,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">stroke<wbr>Width<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 2</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L361">svguitar.ts:361</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L361">svguitar.ts:361</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1139,7 +1139,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">style<span class="tsd-signature-symbol">:</span> <a href="enums/chordstyle.html#normal" class="tsd-signature-type">normal</a><span class="tsd-signature-symbol"> = ChordStyle.normal</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L343">svguitar.ts:343</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L343">svguitar.ts:343</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1149,7 +1149,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">title<wbr>Bottom<wbr>Margin<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L358">svguitar.ts:358</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L358">svguitar.ts:358</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1159,7 +1159,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">title<wbr>Font<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 48</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L357">svguitar.ts:357</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L357">svguitar.ts:357</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1169,7 +1169,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">top<wbr>Fret<wbr>Width<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 10</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L362">svguitar.ts:362</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L362">svguitar.ts:362</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1179,7 +1179,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">tuning<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">never</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L347">svguitar.ts:347</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L347">svguitar.ts:347</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1189,7 +1189,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">tunings<wbr>Font<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 28</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L348">svguitar.ts:348</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L348">svguitar.ts:348</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1199,7 +1199,7 @@ chart
 					<div class="tsd-signature tsd-kind-icon">watermark<wbr>Font<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 12</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/729b889/src/svguitar.ts#L368">svguitar.ts:368</a></li>
+							<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/b39a62d/src/svguitar.ts#L368">svguitar.ts:368</a></li>
 						</ul>
 					</aside>
 				</section>
