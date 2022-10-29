@@ -123,13 +123,14 @@ var defaultSettings = {
     color: '#000',
     emptyStringIndicatorSize: 0.6,
     strokeWidth: 2,
-    topFretWidth: 10,
+    nutWidth: 10,
     fretSize: 1.5,
     barreChordRadius: 0.25,
     fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
     shape: Shape.CIRCLE,
     orientation: Orientation.vertical,
     watermarkFontSize: 12,
+    noPosition: false,
 };
 var SVGuitarChord = /** @class */ (function () {
     function SVGuitarChord(container) {
@@ -295,20 +296,21 @@ var SVGuitarChord = /** @class */ (function () {
     };
     SVGuitarChord.prototype.drawPosition = function (y) {
         var _this = this;
-        var _a, _b, _c, _d, _e, _f, _g, _h;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         var position = (_b = (_a = this.chordInternal.position) !== null && _a !== void 0 ? _a : this.settings.position) !== null && _b !== void 0 ? _b : defaultSettings.position;
-        if (position <= 1) {
+        var noPosition = (_c = this.settings.noPosition) !== null && _c !== void 0 ? _c : defaultSettings.noPosition;
+        if (position <= 1 || noPosition) {
             return;
         }
         var stringXPositions = this.stringXPos();
         var endX = stringXPositions[stringXPositions.length - 1];
         var startX = stringXPositions[0];
         var text = "".concat(position, "fr");
-        var size = (_c = this.settings.fretLabelFontSize) !== null && _c !== void 0 ? _c : defaultSettings.fretLabelFontSize;
-        var color = (_e = (_d = this.settings.fretLabelColor) !== null && _d !== void 0 ? _d : this.settings.color) !== null && _e !== void 0 ? _e : defaultSettings.color;
-        var fingerSize = this.stringSpacing() * ((_f = this.settings.fingerSize) !== null && _f !== void 0 ? _f : defaultSettings.fingerSize);
-        var fontFamily = (_g = this.settings.fontFamily) !== null && _g !== void 0 ? _g : defaultSettings.fontFamily;
-        var fretLabelPosition = (_h = this.settings.fretLabelPosition) !== null && _h !== void 0 ? _h : defaultSettings.fretLabelPosition;
+        var size = (_d = this.settings.fretLabelFontSize) !== null && _d !== void 0 ? _d : defaultSettings.fretLabelFontSize;
+        var color = (_f = (_e = this.settings.fretLabelColor) !== null && _e !== void 0 ? _e : this.settings.color) !== null && _f !== void 0 ? _f : defaultSettings.color;
+        var fingerSize = this.stringSpacing() * ((_g = this.settings.fingerSize) !== null && _g !== void 0 ? _g : defaultSettings.fingerSize);
+        var fontFamily = (_h = this.settings.fontFamily) !== null && _h !== void 0 ? _h : defaultSettings.fontFamily;
+        var fretLabelPosition = (_j = this.settings.fretLabelPosition) !== null && _j !== void 0 ? _j : defaultSettings.fretLabelPosition;
         // add some padding relative to the string spacing. Also make sure the padding is at least
         // 1/2 fingerSize plus some padding to prevent the finger overlapping the position label.
         var padding = Math.max(this.stringSpacing() / 5, fingerSize / 2 + 5);
@@ -343,9 +345,9 @@ var SVGuitarChord = /** @class */ (function () {
             return;
         }
         // Horizontal orientation
-        var _j = fretLabelPosition === FretLabelPosition.RIGHT
+        var _k = fretLabelPosition === FretLabelPosition.RIGHT
             ? this.coordinates(endX + padding, y)
-            : this.coordinates(startX - padding, y), textX = _j.x, textY = _j.y;
+            : this.coordinates(startX - padding, y), textX = _k.x, textY = _k.y;
         this.renderer.text(text, textX, textY, size, color, fontFamily, renderer_1.Alignment.MIDDLE, className, true);
     };
     /**
@@ -365,23 +367,24 @@ var SVGuitarChord = /** @class */ (function () {
         }
     };
     SVGuitarChord.prototype.drawTopFret = function (y) {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
         var stringXpositions = this.stringXPos();
         var strokeWidth = (_a = this.settings.strokeWidth) !== null && _a !== void 0 ? _a : defaultSettings.strokeWidth;
-        var topFretWidth = (_b = this.settings.topFretWidth) !== null && _b !== void 0 ? _b : defaultSettings.topFretWidth;
+        var nutWidth = (_c = (_b = this.settings.topFretWidth) !== null && _b !== void 0 ? _b : this.settings.nutWidth) !== null && _c !== void 0 ? _c : defaultSettings.nutWidth;
         var startX = stringXpositions[0] - strokeWidth / 2;
         var endX = stringXpositions[stringXpositions.length - 1] + strokeWidth / 2;
-        var position = (_d = (_c = this.chordInternal.position) !== null && _c !== void 0 ? _c : this.settings.position) !== null && _d !== void 0 ? _d : defaultSettings.position;
-        var color = (_f = (_e = this.settings.fretColor) !== null && _e !== void 0 ? _e : this.settings.color) !== null && _f !== void 0 ? _f : defaultSettings.color;
+        var position = (_e = (_d = this.chordInternal.position) !== null && _d !== void 0 ? _d : this.settings.position) !== null && _e !== void 0 ? _e : defaultSettings.position;
+        var color = (_g = (_f = this.settings.fretColor) !== null && _f !== void 0 ? _f : this.settings.color) !== null && _g !== void 0 ? _g : defaultSettings.color;
+        var noPositon = (_h = this.settings.noPosition) !== null && _h !== void 0 ? _h : defaultSettings.noPosition;
         var fretSize;
-        if (position > 1) {
+        if (position > 1 || noPositon) {
             fretSize = strokeWidth;
         }
         else {
-            fretSize = topFretWidth;
+            fretSize = nutWidth;
         }
-        var _g = this.coordinates(startX, y + fretSize / 2), lineX1 = _g.x, lineY1 = _g.y;
-        var _h = this.coordinates(endX, y + fretSize / 2), lineX2 = _h.x, lineY2 = _h.y;
+        var _j = this.coordinates(startX, y + fretSize / 2), lineX1 = _j.x, lineY1 = _j.y;
+        var _k = this.coordinates(endX, y + fretSize / 2), lineX2 = _k.x, lineY2 = _k.y;
         this.renderer.line(lineX1, lineY1, lineX2, lineY2, fretSize, color, ['top-fret', 'fret-0']);
         return y + fretSize;
     };

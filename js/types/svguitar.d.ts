@@ -229,9 +229,20 @@ export interface ChordSettings {
      */
     strokeWidth?: number;
     /**
-     * The width of the top fret (only used if position is 1)
+     * The width of the nut (only used if position is 1)
+     */
+    nutWidth?: number;
+    /**
+     * The width of the nut (only used if position is 1). If `nutWidth` is set, this value will be ignored.
+     *
+     * @deprecated Use `nutWidth` instead. This will be removed in the next major version.
      */
     topFretWidth?: number;
+    /**
+     * If this is set to true, the fret (eg. 3fr) will not be shown. If the position is 1 the
+     * nut will have the same width as all other frets.
+     */
+    noPosition?: boolean;
     /**
      * When set to true the distance between the chord diagram and the top of the SVG stayes the same,
      * no matter if a title is defined or not.
