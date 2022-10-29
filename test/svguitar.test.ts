@@ -616,6 +616,37 @@ describe('SVGuitarChord', () => {
     saveSvg('position from chord', container.outerHTML)
   })
 
+  it('Should not render a nut if no position is true', () => {
+    svguitar
+      .configure({
+        title: 'No position',
+        noPosition: true,
+      })
+      .chord({
+        fingers: [],
+        barres: [],
+        position: 3,
+      })
+      .draw()
+
+    saveSvg('no position', container.outerHTML)
+  })
+
+  it('Should not render a nut if no position is true and position is 1', () => {
+    svguitar
+      .configure({
+        title: 'No nut',
+        noPosition: true,
+      })
+      .chord({
+        fingers: [],
+        barres: [],
+      })
+      .draw()
+
+    saveSvg('no position with position 1', container.outerHTML)
+  })
+
   it('Should render a very long title nicely', () => {
     svguitar
       .configure({

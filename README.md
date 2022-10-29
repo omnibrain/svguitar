@@ -265,9 +265,15 @@ new SVGuitarChord('#some-selector')
     strokeWidth: 2,
 
     /**
-     * The width of the top fret (only used if position is 1)
+     * The width of the nut (only used if position is 1)
      */
-    topFretWidth: 10,
+    nutWidth: 10,
+
+    /**
+     * If this is set to `true`, the starting fret (eg. 3fr) will not be shown. If the position is 1 the
+     * nut will have the same width as all other frets.
+     */
+    noPosition: false,
 
     /**
      * The color of the title (overrides color)

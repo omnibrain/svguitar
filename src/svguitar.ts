@@ -297,9 +297,22 @@ export interface ChordSettings {
   strokeWidth?: number
 
   /**
-   * The width of the top fret (only used if position is 1)
+   * The width of the nut (only used if position is 1)
+   */
+  nutWidth?: number
+
+  /**
+   * The width of the nut (only used if position is 1). If `nutWidth` is set, this value will be ignored.
+   *
+   * @deprecated Use `nutWidth` instead. This will be removed in the next major version.
    */
   topFretWidth?: number
+
+  /**
+   * If this is set to true, the fret (eg. 3fr) will not be shown. If the position is 1 the
+   * nut will have the same width as all other frets.
+   */
+  noPosition?: boolean
 
   /**
    * When set to true the distance between the chord diagram and the top of the SVG stayes the same,
@@ -352,13 +365,14 @@ interface RequiredChordSettings {
   color: string
   emptyStringIndicatorSize: number
   strokeWidth: number
-  topFretWidth: number
+  nutWidth: number
   fretSize: number
   barreChordRadius: number
   fontFamily: string
   shape: Shape
   orientation: Orientation
   watermarkFontSize: number
+  noPosition: boolean
 }
 
 const defaultSettings: RequiredChordSettings = {
@@ -381,13 +395,14 @@ const defaultSettings: RequiredChordSettings = {
   color: '#000',
   emptyStringIndicatorSize: 0.6,
   strokeWidth: 2,
-  topFretWidth: 10,
+  nutWidth: 10,
   fretSize: 1.5,
   barreChordRadius: 0.25,
   fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
   shape: Shape.CIRCLE,
   orientation: Orientation.vertical,
   watermarkFontSize: 12,
+  noPosition: false,
 }
 
 export class SVGuitarChord {
@@ -397,7 +412,7 @@ export class SVGuitarChord {
   static plugin<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     S extends Constructor<any> & { plugins: any[] },
-    T extends SVGuitarPlugin | SVGuitarPlugin[]
+    T extends SVGuitarPlugin | SVGuitarPlugin[],
   >(this: S, plugin: T) {
     const currentPlugins = this.plugins
 
@@ -608,7 +623,9 @@ export class SVGuitarChord {
   private drawPosition(y: number): void {
     const position =
       this.chordInternal.position ?? this.settings.position ?? defaultSettings.position
-    if (position <= 1) {
+    const noPosition = this.settings.noPosition ?? defaultSettings.noPosition
+
+    if (position <= 1 || noPosition) {
       return
     }
 
@@ -719,18 +736,20 @@ export class SVGuitarChord {
   private drawTopFret(y: number): number {
     const stringXpositions = this.stringXPos()
     const strokeWidth = this.settings.strokeWidth ?? defaultSettings.strokeWidth
-    const topFretWidth = this.settings.topFretWidth ?? defaultSettings.topFretWidth
+    const nutWidth =
+      this.settings.topFretWidth ?? this.settings.nutWidth ?? defaultSettings.nutWidth
     const startX = stringXpositions[0] - strokeWidth / 2
     const endX = stringXpositions[stringXpositions.length - 1] + strokeWidth / 2
     const position =
       this.chordInternal.position ?? this.settings.position ?? defaultSettings.position
     const color = this.settings.fretColor ?? this.settings.color ?? defaultSettings.color
+    const noPositon = this.settings.noPosition ?? defaultSettings.noPosition
 
     let fretSize: number
-    if (position > 1) {
+    if (position > 1 || noPositon) {
       fretSize = strokeWidth
     } else {
-      fretSize = topFretWidth
+      fretSize = nutWidth
     }
 
     const { x: lineX1, y: lineY1 } = this.coordinates(startX, y + fretSize / 2)
@@ -971,7 +990,12 @@ export class SVGuitarChord {
         const barreWidth = distance + stringSpacing / 2
         const barreHeight = fingerSize
 
-        const { x: rectX, y: rectY, height: rectHeight, width: rectWidth } = this.rectCoordinates(
+        const {
+          x: rectX,
+          y: rectY,
+          height: rectHeight,
+          width: rectWidth,
+        } = this.rectCoordinates(
           fromStringX - stringSpacing / 4,
           barreCenterY - fingerSize / 2,
           barreWidth,
