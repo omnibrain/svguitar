@@ -993,7 +993,7 @@ describe('SVGuitarChord', () => {
     saveSvg('with watermark horizontal', container.outerHTML)
   })
 
-  it.only('Should render a chart with an SVG title', () => {
+  it('Should render a chart with an SVG title', () => {
     svguitar
       .chord({
         fingers: [],
