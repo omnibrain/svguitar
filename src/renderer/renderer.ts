@@ -35,6 +35,8 @@ export abstract class Renderer {
 
   abstract background(color: string): void
 
+  abstract title(title: string): void
+
   abstract text(
     text: string,
     x: number,

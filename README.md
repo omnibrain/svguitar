@@ -327,6 +327,11 @@ new SVGuitarChord('#some-selector')
      * Font-family of the watermark (overrides fontFamily)
      */
     watermarkFontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+
+    /**
+     * The title of the SVG. This is not visible in the SVG, but can be used for accessibility.
+     */
+    svgTitle: 'Guitar chord diagram of F# minor',
   })
   .draw()
 ```

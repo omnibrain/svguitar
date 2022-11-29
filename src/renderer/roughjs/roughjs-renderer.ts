@@ -34,7 +34,7 @@ export class RoughJsRenderer extends Renderer {
     if (container instanceof HTMLElement) {
       this.containerNode = container
     } else {
-      this.containerNode = (container as unknown) as HTMLElement
+      this.containerNode = container as unknown as HTMLElement
       const node = document.querySelector<HTMLElement>(container)
 
       if (!node) {
@@ -99,6 +99,12 @@ export class RoughJsRenderer extends Renderer {
         })
       }
     })
+  }
+
+  title(title: string): void {
+    const titleEl = document.createElement('title')
+    titleEl.textContent = title
+    this.svgNode.appendChild(titleEl)
   }
 
   circle(

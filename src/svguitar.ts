@@ -339,6 +339,11 @@ export interface ChordSettings {
    * Font-family of the watermark (overrides fontFamily)
    */
   watermarkFontFamily?: string
+
+  /**
+   * The title of the SVG. This is not visible in the SVG, but can be used for accessibility.
+   */
+  svgTitle?: string
 }
 
 /**
@@ -481,6 +486,10 @@ export class SVGuitarChord {
   draw(): { width: number; height: number } {
     this.clear()
     this.drawBackground()
+
+    if (this.settings.svgTitle) {
+      this.renderer.title(this.settings.svgTitle)
+    }
 
     let y
 

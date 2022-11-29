@@ -30,6 +30,10 @@ export class SvgJsRenderer extends Renderer {
     this.svg.attr('preserveAspectRatio', 'xMidYMid meet').viewbox(0, 0, width, height)
   }
 
+  title(title: string): void {
+    this.svg.add(this.svg.element('title').words(title))
+  }
+
   line(
     fromX: number,
     fromY: number,

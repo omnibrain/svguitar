@@ -993,6 +993,21 @@ describe('SVGuitarChord', () => {
     saveSvg('with watermark horizontal', container.outerHTML)
   })
 
+  it.only('Should render a chart with an SVG title', () => {
+    svguitar
+      .chord({
+        fingers: [],
+        barres: [],
+      })
+      .configure({
+        title: 'SVG Title',
+        svgTitle: 'This is the SVG title',
+      })
+      .draw()
+
+    saveSvg('with svg title', container.outerHTML)
+  })
+
   test.each`
     setting          | value | valid
     ${'strings'}     | ${1}  | ${false}
