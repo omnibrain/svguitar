@@ -9,6 +9,8 @@
 
 JavaScript (TypeScript) library to create beautiful SVG guitar chord charts directly in the browser.
 
+To see this library in action check out [chordpic.com](https://chordpic.com), a free online chord diagram creator.
+
 **Demo**: https://omnibrain.github.io/svguitar/ [ [source](https://github.com/omnibrain/svguitar/blob/master/demo/index.html) ]
 
 **TypeScript API Documentation**: https://omnibrain.github.io/svguitar/docs/
