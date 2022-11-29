@@ -1209,7 +1209,7 @@ export class SVGuitarChord {
         remove()
 
         // try again with smaller font
-        return this.drawTitle(size * (constants.width / width))
+        return this.drawTitle(size * (constants.width / width) * 0.97)
       }
 
       if (!this.settings.title && this.settings.fixedDiagramPosition) {
