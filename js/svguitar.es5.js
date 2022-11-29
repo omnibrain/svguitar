@@ -8203,7 +8203,7 @@ var SVGuitarChord = /** @class */ (function () {
             if (x < -0.0001) {
                 remove_1();
                 // try again with smaller font
-                return this.drawTitle(size * (constants.width / width_1));
+                return this.drawTitle(size * (constants.width / width_1) * 0.97);
             }
             if (!this.settings.title && this.settings.fixedDiagramPosition) {
                 remove_1();
