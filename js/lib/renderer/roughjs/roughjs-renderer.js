@@ -122,6 +122,11 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             }
         });
     };
+    RoughJsRenderer.prototype.title = function (title) {
+        var titleEl = document.createElement('title');
+        titleEl.textContent = title;
+        this.svgNode.appendChild(titleEl);
+    };
     RoughJsRenderer.prototype.circle = function (x, y, diameter, strokeWidth, strokeColor, fill, classes) {
         var _a;
         var options = {

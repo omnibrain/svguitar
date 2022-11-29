@@ -3,6 +3,7 @@ import { Alignment, GraphcisElement, Renderer } from '../renderer';
 export declare class SvgJsRenderer extends Renderer {
     private svg;
     constructor(container: QuerySelector | HTMLElement);
+    title(title: string): void;
     line(fromX: number, fromY: number, toX: number, toY: number, strokeWidth: number, color: string): void;
     size(width: number, height: number): void;
     clear(): void;

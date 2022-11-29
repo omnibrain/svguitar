@@ -44,6 +44,9 @@ var SvgJsRenderer = /** @class */ (function (_super) {
         _this.svg.attr('preserveAspectRatio', 'xMidYMid meet').viewbox(0, 0, width, height);
         return _this;
     }
+    SvgJsRenderer.prototype.title = function (title) {
+        this.svg.add(this.svg.element('title').words(title));
+    };
     SvgJsRenderer.prototype.line = function (fromX, fromY, toX, toY, strokeWidth, color) {
         this.svg.line(fromX, fromY, toX, toY).stroke({ color: color, width: strokeWidth });
     };

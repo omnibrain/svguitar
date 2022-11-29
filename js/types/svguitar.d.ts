@@ -264,6 +264,10 @@ export interface ChordSettings {
      * Font-family of the watermark (overrides fontFamily)
      */
     watermarkFontFamily?: string;
+    /**
+     * The title of the SVG. This is not visible in the SVG, but can be used for accessibility.
+     */
+    svgTitle?: string;
 }
 export declare class SVGuitarChord {
     private container;

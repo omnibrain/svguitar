@@ -193,6 +193,11 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             }
         });
     };
+    RoughJsRenderer.prototype.title = function (title) {
+        var titleEl = document.createElement('title');
+        titleEl.textContent = title;
+        this.svgNode.appendChild(titleEl);
+    };
     RoughJsRenderer.prototype.circle = function (x, y, diameter, strokeWidth, strokeColor, fill, classes) {
         var _a;
         var options = {
@@ -7513,6 +7518,9 @@ var SvgJsRenderer = /** @class */ (function (_super) {
         _this.svg.attr('preserveAspectRatio', 'xMidYMid meet').viewbox(0, 0, width, height);
         return _this;
     }
+    SvgJsRenderer.prototype.title = function (title) {
+        this.svg.add(this.svg.element('title').words(title));
+    };
     SvgJsRenderer.prototype.line = function (fromX, fromY, toX, toY, strokeWidth, color) {
         this.svg.line(fromX, fromY, toX, toY).stroke({ color: color, width: strokeWidth });
     };
@@ -7775,6 +7783,9 @@ var SVGuitarChord = /** @class */ (function () {
         var _a;
         this.clear();
         this.drawBackground();
+        if (this.settings.svgTitle) {
+            this.renderer.title(this.settings.svgTitle);
+        }
         var y;
         y = this.drawTitle((_a = this.settings.titleFontSize) !== null && _a !== void 0 ? _a : defaultSettings.titleFontSize);
         y = this.drawEmptyStringIndicators(y);

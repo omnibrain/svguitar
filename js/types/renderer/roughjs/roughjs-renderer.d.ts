@@ -10,6 +10,7 @@ export declare class RoughJsRenderer extends Renderer {
      * encoded font into the SVG so that the font always looks correct.
      */
     private embedDefs;
+    title(title: string): void;
     circle(x: number, y: number, diameter: number, strokeWidth: number, strokeColor: string, fill?: string, classes?: string | string[]): GraphcisElement;
     clear(): void;
     remove(): void;

@@ -200,6 +200,9 @@ var SVGuitarChord = /** @class */ (function () {
         var _a;
         this.clear();
         this.drawBackground();
+        if (this.settings.svgTitle) {
+            this.renderer.title(this.settings.svgTitle);
+        }
         var y;
         y = this.drawTitle((_a = this.settings.titleFontSize) !== null && _a !== void 0 ? _a : defaultSettings.titleFontSize);
         y = this.drawEmptyStringIndicators(y);
