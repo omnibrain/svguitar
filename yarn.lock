@@ -8008,10 +8008,10 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-svgdom@^0.1.9:
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/svgdom/-/svgdom-0.1.10.tgz#4ce84403b548fe87c9f61365453f88c53a801bdf"
-  integrity sha512-MMx2owmn+V8xYc+29MWVEsKZi7ZGxvnV4U/QNyX+miSH4F+veOL7gFO86kKawIfx1K+CogSK9ZAtod7dsf8LSA==
+svgdom@^0.1.11:
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/svgdom/-/svgdom-0.1.11.tgz#b4de25d6f4a03d78ab5502cc0933979db2e3f9f9"
+  integrity sha512-MyThtYK3yhUUL4CBPv4lABPve5DqGSpv56HyglHiDbimYvO5DTYqKItG4Zovo1GR9vjtpzhusbZqVyRZ4QIhUQ==
   dependencies:
     fontkit "^1.8.1"
     image-size "^1.0.0"
