@@ -647,6 +647,17 @@ describe('SVGuitarChord', () => {
     saveSvg('no position with position 1', container.outerHTML)
   })
 
+  it('Should render a large title', () => {
+    svguitar
+    .configure({
+      title: 'A',
+      titleFontSize: 200,
+    })
+    .draw()
+
+    saveSvg('large title', container.outerHTML)
+  })
+
   it('Should render a very long title nicely', () => {
     svguitar
       .configure({
