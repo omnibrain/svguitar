@@ -47,7 +47,7 @@ Example chord charts:
 </script>
 ```
 
-Of course you can also add SVGuitar as a dependency to your project:
+Of course, you can also add SVGuitar as a dependency to your project:
 
 ```bash
 # Add the dependency to your project
@@ -55,6 +55,9 @@ npm install --save svguitar
 
 # or
 yarn add svguitar
+
+# or
+pnpm add svguitar
 ```
 
 And then import it in your project:
@@ -332,6 +335,52 @@ new SVGuitarChord('#some-selector')
      * The title of the SVG. This is not visible in the SVG, but can be used for accessibility.
      */
     svgTitle: 'Guitar chord diagram of F# minor',
+
+
+    /**
+     * The fret markers. See type docs for more options.
+     */
+    fretMarkers: [
+      2, 4, 6, 8, {
+        fret: 11,
+        double: true,
+      },
+    ],
+
+    /**
+     * The shape of the fret markets. Applies to all fret markets unless overridden
+     * on specific fret markers. Defaults to circles.
+     */
+    fretMarkerShape: 'circle',
+
+    /**
+     * The size of a fret marker. This is relative to the space between two strings, so
+     * a value of 1 means a fret marker spans from one string to another.
+     */
+    fretMarkerSize: 0.4,
+
+    /**
+     * The color of the fret markers.
+     */
+    fretMarkerColor: 'rgba(0, 0, 0, 0.2)',
+
+    /**
+     * The stroke color of the fret markers. By default, the fret markets have no border.
+     */
+    fretMarkerStrokeColor: '#000000',
+
+    /**
+     * The stroke width of the fret markers. By default, the fret markets have no border.
+     */
+    fretMarkerStrokeWidth: 0,
+
+    /**
+     * The distance between the double fret markers, relative to the width
+     * of the whole neck. E.g. 0.5 means the distance between the fret markers
+     * is equivalent to 0.5 times the width of the whole neck.
+     */
+    doubleFretMarkerDistance: 0.4
+
   })
   .draw()
 ```
