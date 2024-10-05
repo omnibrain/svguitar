@@ -7687,6 +7687,7 @@
         ElementType["TITLE"] = "title";
         ElementType["TUNING"] = "tuning";
         ElementType["FRET_POSITION"] = "fret-position";
+        ElementType["FRET_MARKER"] = "fret-marker";
         ElementType["STRING_TEXT"] = "string-text";
         ElementType["SILENT_STRING"] = "silent-string";
         ElementType["OPEN_STRING"] = "open-string";
@@ -7720,6 +7721,10 @@
         orientation: exports.Orientation.vertical,
         watermarkFontSize: 12,
         noPosition: false,
+        fretMarkerColor: 'rgba(0, 0, 0, 0.2)',
+        fretMarkerSize: 0.4,
+        doubleFretMarkerDistance: 0.4,
+        fretMarkerShape: exports.Shape.CIRCLE,
     };
     var SVGuitarChord = /** @class */ (function () {
         function SVGuitarChord(container) {
@@ -7830,18 +7835,23 @@
             if (typeof settings.strokeWidth !== 'undefined' && settings.strokeWidth < 0) {
                 throw new Error('Stroke width cannot be smaller than 0');
             }
+            if (typeof settings.doubleFretMarkerDistance !== 'undefined'
+                && settings.doubleFretMarkerDistance < 0
+                && settings.doubleFretMarkerDistance > 1) {
+                throw new Error('Double fret marker distance has to be a number between [0, 1]');
+            }
         };
         SVGuitarChord.prototype.drawTunings = function (y) {
             var _this = this;
-            var _a, _b, _c, _d, _e, _f;
+            var _a, _b, _c, _d, _e;
             // add some padding relative to the fret spacing
             var padding = this.fretSpacing() / 5;
             var stringXPositions = this.stringXPos();
-            var strings = (_a = this.settings.strings) !== null && _a !== void 0 ? _a : defaultSettings.strings;
-            var color = (_c = (_b = this.settings.tuningsColor) !== null && _b !== void 0 ? _b : this.settings.color) !== null && _c !== void 0 ? _c : defaultSettings.color;
-            var tuning = (_d = this.settings.tuning) !== null && _d !== void 0 ? _d : defaultSettings.tuning;
-            var fontFamily = (_e = this.settings.fontFamily) !== null && _e !== void 0 ? _e : defaultSettings.fontFamily;
-            var tuningsFontSize = (_f = this.settings.tuningsFontSize) !== null && _f !== void 0 ? _f : defaultSettings.tuningsFontSize;
+            var strings = this.numStrings();
+            var color = (_b = (_a = this.settings.tuningsColor) !== null && _a !== void 0 ? _a : this.settings.color) !== null && _b !== void 0 ? _b : defaultSettings.color;
+            var tuning = (_c = this.settings.tuning) !== null && _c !== void 0 ? _c : defaultSettings.tuning;
+            var fontFamily = (_d = this.settings.fontFamily) !== null && _d !== void 0 ? _d : defaultSettings.fontFamily;
+            var tuningsFontSize = (_e = this.settings.tuningsFontSize) !== null && _e !== void 0 ? _e : defaultSettings.tuningsFontSize;
             var text;
             tuning.forEach(function (tuning_, i) {
                 if (i < strings) {
@@ -7981,17 +7991,21 @@
             return y + fretSize;
         };
         SVGuitarChord.prototype.stringXPos = function () {
-            var _a, _b;
-            var strings = (_a = this.settings.strings) !== null && _a !== void 0 ? _a : defaultSettings.strings;
-            var sidePadding = (_b = this.settings.sidePadding) !== null && _b !== void 0 ? _b : defaultSettings.sidePadding;
+            var _a;
+            var strings = this.numStrings();
+            var sidePadding = (_a = this.settings.sidePadding) !== null && _a !== void 0 ? _a : defaultSettings.sidePadding;
             var startX = constants.width * sidePadding;
             var stringsSpacing = this.stringSpacing();
             return range(strings).map(function (i) { return startX + stringsSpacing * i; });
         };
+        SVGuitarChord.prototype.numStrings = function () {
+            var _a;
+            return (_a = this.settings.strings) !== null && _a !== void 0 ? _a : defaultSettings.strings;
+        };
         SVGuitarChord.prototype.stringSpacing = function () {
-            var _a, _b;
+            var _a;
             var sidePadding = (_a = this.settings.sidePadding) !== null && _a !== void 0 ? _a : defaultSettings.sidePadding;
-            var strings = (_b = this.settings.strings) !== null && _b !== void 0 ? _b : defaultSettings.strings;
+            var strings = this.numStrings();
             var startX = constants.width * sidePadding;
             var endX = constants.width - startX;
             var width = endX - startX;
@@ -8010,8 +8024,7 @@
             return range(frets, 1).map(function (i) { return startY + fretSpacing * i; });
         };
         SVGuitarChord.prototype.toArrayIndex = function (stringIndex) {
-            var _a;
-            var strings = (_a = this.settings.strings) !== null && _a !== void 0 ? _a : defaultSettings.strings;
+            var strings = this.numStrings();
             return Math.abs(stringIndex - strings);
         };
         SVGuitarChord.prototype.drawEmptyStringIndicators = function (y) {
@@ -8082,10 +8095,10 @@
         };
         SVGuitarChord.prototype.drawGrid = function (y) {
             var _this = this;
-            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
             var frets = (_a = this.settings.frets) !== null && _a !== void 0 ? _a : defaultSettings.frets;
             var fretSize = (_b = this.settings.fretSize) !== null && _b !== void 0 ? _b : defaultSettings.fretSize;
-            var relativefingerSize = (_c = this.settings.fingerSize) !== null && _c !== void 0 ? _c : defaultSettings.fingerSize;
+            var relativeFingerSize = (_c = this.settings.fingerSize) !== null && _c !== void 0 ? _c : defaultSettings.fingerSize;
             var stringXPositions = this.stringXPos();
             var fretYPositions = this.fretLinesYPos(y);
             var stringSpacing = this.stringSpacing();
@@ -8093,7 +8106,7 @@
             var height = fretSpacing * frets;
             var startX = stringXPositions[0];
             var endX = stringXPositions[stringXPositions.length - 1];
-            var fingerSize = relativefingerSize * stringSpacing;
+            var fingerSize = relativeFingerSize * stringSpacing;
             var fingerColor = (_e = (_d = this.settings.fingerColor) !== null && _d !== void 0 ? _d : this.settings.color) !== null && _e !== void 0 ? _e : defaultSettings.color;
             var fretColor = (_g = (_f = this.settings.fretColor) !== null && _f !== void 0 ? _f : this.settings.color) !== null && _g !== void 0 ? _g : defaultSettings.color;
             var barreChordRadius = (_h = this.settings.barreChordRadius) !== null && _h !== void 0 ? _h : defaultSettings.barreChordRadius;
@@ -8164,13 +8177,52 @@
                     "".concat(exports.ElementType.FINGER, "-fret-").concat(fretIndex - 1),
                     "".concat(exports.ElementType.FINGER, "-string-").concat(stringIndex, "-fret-").concat(fretIndex - 1)
                 ], __read((fingerOptions.className ? [fingerOptions.className] : [])), false);
-                // const { x: x0, y: y0 } = this.coordinates(fingerCenterX, fingerCenterY)
                 _this.drawFinger(fingerCenterX, fingerCenterY, fingerSize, fingerColor, fingerTextSize, fontFamily, fingerOptions, classNames);
+            });
+            (_o = this.settings.fretMarkers) === null || _o === void 0 ? void 0 : _o.forEach(function (fretMarker) {
+                var _a, _b, _c, _d, _e;
+                var fretMarkerOptions = (typeof fretMarker == 'number' ? {
+                    fret: fretMarker,
+                } : fretMarker);
+                var fretMarkerIndex = fretMarkerOptions.fret;
+                var fretMarkerCenterX = constants.width / 2;
+                var fretMarkerCenterY = y + (fretMarkerIndex + 1) * fretSpacing - fretSpacing / 2;
+                var fretMarkerSize = (_a = _this.settings.fretMarkerSize) !== null && _a !== void 0 ? _a : defaultSettings.fretMarkerSize;
+                var fretMarkerColor = (_b = _this.settings.fretMarkerColor) !== null && _b !== void 0 ? _b : defaultSettings.fretMarkerColor;
+                var classNames = __spreadArray([
+                    exports.ElementType.FRET_MARKER,
+                    "".concat(exports.ElementType.FRET_MARKER, "-fret-").concat(fretMarkerIndex)
+                ], __read(((_c = fretMarkerOptions.className) !== null && _c !== void 0 ? _c : [])), false);
+                if ('double' in fretMarkerOptions) {
+                    _this.stringSpacing();
+                    var doubleFretMarkerDistance = (_e = (_d = fretMarkerOptions.distance) !== null && _d !== void 0 ? _d : _this.settings.doubleFretMarkerDistance) !== null && _e !== void 0 ? _e : defaultSettings.doubleFretMarkerDistance;
+                    var neckWidth = (_this.numStrings() - 1) * _this.stringSpacing();
+                    var fretMarkerDistanceFromCenter = neckWidth * doubleFretMarkerDistance / 2;
+                    _this.drawFretMarker(fretMarkerCenterX - fretMarkerDistanceFromCenter, fretMarkerCenterY, fretMarkerSize, fretMarkerColor, fretMarker, classNames);
+                    _this.drawFretMarker(fretMarkerCenterX + fretMarkerDistanceFromCenter, fretMarkerCenterY, fretMarkerSize, fretMarkerColor, fretMarker, classNames);
+                }
+                else {
+                    _this.drawFretMarker(fretMarkerCenterX, fretMarkerCenterY, fretMarkerSize, fretMarkerColor, fretMarker, classNames);
+                }
             });
             return y + height;
         };
+        SVGuitarChord.prototype.drawFretMarker = function (x, y, size, color, fretMarketOptions, classNames) {
+            var _a, _b, _c, _d, _e, _f, _g, _h;
+            var markerOptions = typeof fretMarketOptions === 'number' ? { fret: fretMarketOptions } : fretMarketOptions;
+            var shape = (_a = markerOptions.shape) !== null && _a !== void 0 ? _a : defaultSettings.fretMarkerShape;
+            var fretMarkerColor = (_c = (_b = markerOptions.color) !== null && _b !== void 0 ? _b : this.settings.fretMarkerColor) !== null && _c !== void 0 ? _c : defaultSettings.fretMarkerColor;
+            var fretMarkerStrokeColor = (_e = (_d = markerOptions.strokeColor) !== null && _d !== void 0 ? _d : this.settings.fretMarkerStrokeColor) !== null && _e !== void 0 ? _e : color;
+            var fretMarkerStrokeWidth = (_g = (_f = markerOptions.strokeWidth) !== null && _f !== void 0 ? _f : this.settings.fretMarkerStrokeWidth) !== null && _g !== void 0 ? _g : 0;
+            var fretMarkerSize = this.stringSpacing() * ((_h = markerOptions.size) !== null && _h !== void 0 ? _h : size);
+            var startX = x - fretMarkerSize / 2;
+            var startY = y - fretMarkerSize / 2;
+            var classNamesWithShape = __spreadArray(__spreadArray([], __read(classNames), false), ["".concat(exports.ElementType.FRET_MARKER, "-").concat(shape)], false);
+            var _j = this.rectCoordinates(startX, startY, fretMarkerSize, fretMarkerSize), x0 = _j.x, y0 = _j.y;
+            this.drawShape(shape, x0, y0, fretMarkerSize, fretMarkerStrokeWidth, fretMarkerStrokeColor, fretMarkerColor !== null && fretMarkerColor !== void 0 ? fretMarkerColor : color, classNamesWithShape);
+        };
         SVGuitarChord.prototype.drawFinger = function (x, y, size, color, textSize, fontFamily, fingerOptions, classNames) {
-            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
+            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
             var shape = (_a = fingerOptions.shape) !== null && _a !== void 0 ? _a : defaultSettings.shape;
             var fingerTextColor = (_c = (_b = fingerOptions.textColor) !== null && _b !== void 0 ? _b : this.settings.fingerTextColor) !== null && _c !== void 0 ? _c : defaultSettings.fingerTextColor;
             var fingerStrokeColor = (_g = (_f = (_e = (_d = fingerOptions.strokeColor) !== null && _d !== void 0 ? _d : this.settings.fingerStrokeColor) !== null && _e !== void 0 ? _e : this.settings.fingerColor) !== null && _f !== void 0 ? _f : this.settings.color) !== null && _g !== void 0 ? _g : defaultSettings.color;
@@ -8178,30 +8230,33 @@
             var startX = x - size / 2;
             var startY = y - size / 2;
             var classNamesWithShape = __spreadArray(__spreadArray([], __read(classNames), false), ["".concat(exports.ElementType.FINGER, "-").concat(shape)], false);
-            var _q = this.rectCoordinates(startX, startY, size, size), x0 = _q.x, y0 = _q.y;
-            switch (shape) {
-                case exports.Shape.CIRCLE:
-                    this.renderer.circle(x0, y0, size, fingerStrokeWidth, fingerStrokeColor, (_k = fingerOptions.color) !== null && _k !== void 0 ? _k : color, classNamesWithShape);
-                    break;
-                case exports.Shape.SQUARE:
-                    this.renderer.rect(x0, y0, size, size, fingerStrokeWidth, fingerStrokeColor, classNamesWithShape, (_l = fingerOptions.color) !== null && _l !== void 0 ? _l : color);
-                    break;
-                case exports.Shape.TRIANGLE:
-                    this.renderer.triangle(x0, y0, size, fingerStrokeWidth, fingerStrokeColor, classNamesWithShape, (_m = fingerOptions.color) !== null && _m !== void 0 ? _m : color);
-                    break;
-                case exports.Shape.PENTAGON:
-                    this.renderer.pentagon(x0, y0, size, fingerStrokeWidth, fingerStrokeColor, (_o = fingerOptions.color) !== null && _o !== void 0 ? _o : color, classNamesWithShape);
-                    break;
-                default:
-                    throw new Error("Invalid shape \"".concat(fingerOptions.shape, "\". Valid shapes are: ").concat(Object.values(exports.Shape)
-                        .map(function (val) { return "\"".concat(val, "\""); })
-                        .join(', '), "."));
-            }
+            var _m = this.rectCoordinates(startX, startY, size, size), x0 = _m.x, y0 = _m.y;
+            this.drawShape(shape, x0, y0, size, fingerStrokeWidth, fingerStrokeColor, (_k = fingerOptions.color) !== null && _k !== void 0 ? _k : color, classNamesWithShape);
             // draw text on the finger
             var textClassNames = __spreadArray(__spreadArray([], __read(classNames), false), ["".concat(exports.ElementType.FINGER, "-text")], false);
             if (fingerOptions.text) {
-                var _r = this.coordinates(x, y), textX = _r.x, textY = _r.y;
-                this.renderer.text(fingerOptions.text, textX, textY, textSize, (_p = fingerOptions.textColor) !== null && _p !== void 0 ? _p : fingerTextColor, fontFamily, Alignment.MIDDLE, textClassNames, true);
+                var _o = this.coordinates(x, y), textX = _o.x, textY = _o.y;
+                this.renderer.text(fingerOptions.text, textX, textY, textSize, (_l = fingerOptions.textColor) !== null && _l !== void 0 ? _l : fingerTextColor, fontFamily, Alignment.MIDDLE, textClassNames, true);
+            }
+        };
+        SVGuitarChord.prototype.drawShape = function (shape, x, y, size, strokeWidth, strokeColor, fillColor, classNames) {
+            switch (shape) {
+                case exports.Shape.CIRCLE:
+                    this.renderer.circle(x, y, size, strokeWidth, strokeColor, fillColor, classNames);
+                    break;
+                case exports.Shape.SQUARE:
+                    this.renderer.rect(x, y, size, size, strokeWidth, strokeColor, classNames, fillColor);
+                    break;
+                case exports.Shape.TRIANGLE:
+                    this.renderer.triangle(x, y, size, strokeWidth, strokeColor, classNames, fillColor);
+                    break;
+                case exports.Shape.PENTAGON:
+                    this.renderer.pentagon(x, y, size, strokeWidth, strokeColor, fillColor, classNames);
+                    break;
+                default:
+                    throw new Error("Invalid shape \"".concat(shape, "\". Valid shapes are: ").concat(Object.values(exports.Shape)
+                        .map(function (val) { return "\"".concat(val, "\""); })
+                        .join(', '), "."));
             }
         };
         SVGuitarChord.prototype.drawTitle = function (size) {
