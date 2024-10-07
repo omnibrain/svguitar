@@ -1118,6 +1118,24 @@ describe('SVGuitarChord', () => {
 
     saveSvg('fret markers horizontal', container.outerHTML)
   })
+  it('Should remove all fret markers', () => {
+    svguitar
+    .chord({
+      fingers: [
+      ],
+      barres: [
+      ],
+    })
+    .configure({
+      showFretMarkers: false,
+      fretMarkers: [
+        2, 4, 6,
+      ],
+    })
+    .draw()
+
+    saveSvg('hide fret markers', container.outerHTML)
+  })
 
   test.each`
     setting          | value | valid

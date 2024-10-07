@@ -201,6 +201,12 @@ export interface ChordSettings {
   fretMarkers?: FretMarker[]
 
   /**
+   * Flag to show or disable all fret markers globally. This is just for convenience.
+   * The fret markers can also be removed by not setting the {@link fretMarkers} property.
+   */
+  showFretMarkers?: boolean,
+
+  /**
    * The {@link Shape} of the fret markets. Applies to all fret markets unless overridden
    * on specific fret markers.
    */
@@ -470,6 +476,7 @@ interface RequiredChordSettings {
   orientation: Orientation
   watermarkFontSize: number
   noPosition: boolean
+  showFretMarkers: boolean,
   fretMarkerSize: number,
   fretMarkerShape: Shape,
   fretMarkerColor: string,
@@ -508,6 +515,7 @@ const defaultSettings: RequiredChordSettings = {
   fretMarkerSize: 0.4,
   doubleFretMarkerDistance: 0.4,
   fretMarkerShape: Shape.CIRCLE,
+  showFretMarkers: true,
 }
 
 export class SVGuitarChord {
@@ -1190,7 +1198,8 @@ export class SVGuitarChord {
         )
       })
 
-    this.settings.fretMarkers
+    if (this.settings.showFretMarkers ?? defaultSettings.showFretMarkers) {
+      this.settings.fretMarkers
       ?.forEach((fretMarker) => {
         const fretMarkerOptions = (typeof fretMarker == 'number' ? {
           fret: fretMarker,
@@ -1242,6 +1251,7 @@ export class SVGuitarChord {
           )
         }
       });
+    }
 
     return y + height
   }
