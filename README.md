@@ -348,6 +348,12 @@ new SVGuitarChord('#some-selector')
     ],
 
     /**
+     * Flag to show or disable all fret markers globally. This is just for convenience.
+     * The fret markers can also be removed by not setting the fretMarkers property.
+     */
+    showFretMarkers: true,
+
+    /**
      * The shape of the fret markets. Applies to all fret markets unless overridden
      * on specific fret markers. Defaults to circles.
      */
@@ -380,7 +386,7 @@ new SVGuitarChord('#some-selector')
      * is equivalent to 0.5 times the width of the whole neck.
      */
     doubleFretMarkerDistance: 0.4
-
+    
   })
   .draw()
 ```
