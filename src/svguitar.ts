@@ -1209,7 +1209,7 @@ export class SVGuitarChord {
           fret: fretMarker,
         } : fretMarker) as DoubleFretMarker | SingleFretMarker
 
-        if (fretMarkerOptions.fret > this.numFrets()) {
+        if (fretMarkerOptions.fret >= this.numFrets()) {
           // don't draw fret markers outside the chord diagram
           return;
         }
