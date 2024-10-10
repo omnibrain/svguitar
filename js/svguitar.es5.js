@@ -7719,6 +7719,7 @@ var defaultSettings = {
     fretMarkerSize: 0.4,
     doubleFretMarkerDistance: 0.4,
     fretMarkerShape: Shape.CIRCLE,
+    showFretMarkers: true,
 };
 var SVGuitarChord = /** @class */ (function () {
     function SVGuitarChord(container) {
@@ -7863,7 +7864,7 @@ var SVGuitarChord = /** @class */ (function () {
         return y;
     };
     SVGuitarChord.prototype.drawWatermark = function (y) {
-        var _a, _b, _c, _d, _e, _f, _g;
+        var _a, _b, _c, _d, _e, _f;
         if (!this.settings.watermark) {
             return y;
         }
@@ -7883,7 +7884,7 @@ var SVGuitarChord = /** @class */ (function () {
         }
         else {
             var lastFret = y;
-            var firstFret = y - ((_g = this.settings.frets) !== null && _g !== void 0 ? _g : defaultSettings.frets) * this.fretSpacing();
+            var firstFret = y - (this.numFrets()) * this.fretSpacing();
             textX = firstFret + (lastFret - firstFret) / 2;
             textY = this.y(startX, 0) + padding;
         }
@@ -7996,6 +7997,10 @@ var SVGuitarChord = /** @class */ (function () {
         var _a;
         return (_a = this.settings.strings) !== null && _a !== void 0 ? _a : defaultSettings.strings;
     };
+    SVGuitarChord.prototype.numFrets = function () {
+        var _a;
+        return (_a = this.settings.frets) !== null && _a !== void 0 ? _a : defaultSettings.frets;
+    };
     SVGuitarChord.prototype.stringSpacing = function () {
         var _a;
         var sidePadding = (_a = this.settings.sidePadding) !== null && _a !== void 0 ? _a : defaultSettings.sidePadding;
@@ -8012,8 +8017,7 @@ var SVGuitarChord = /** @class */ (function () {
         return stringSpacing * fretSize;
     };
     SVGuitarChord.prototype.fretLinesYPos = function (startY) {
-        var _a;
-        var frets = (_a = this.settings.frets) !== null && _a !== void 0 ? _a : defaultSettings.frets;
+        var frets = this.numFrets();
         var fretSpacing = this.fretSpacing();
         return range(frets, 1).map(function (i) { return startY + fretSpacing * i; });
     };
@@ -8090,9 +8094,9 @@ var SVGuitarChord = /** @class */ (function () {
     SVGuitarChord.prototype.drawGrid = function (y) {
         var _this = this;
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
-        var frets = (_a = this.settings.frets) !== null && _a !== void 0 ? _a : defaultSettings.frets;
-        var fretSize = (_b = this.settings.fretSize) !== null && _b !== void 0 ? _b : defaultSettings.fretSize;
-        var relativeFingerSize = (_c = this.settings.fingerSize) !== null && _c !== void 0 ? _c : defaultSettings.fingerSize;
+        var frets = this.numFrets();
+        var fretSize = (_a = this.settings.fretSize) !== null && _a !== void 0 ? _a : defaultSettings.fretSize;
+        var relativeFingerSize = (_b = this.settings.fingerSize) !== null && _b !== void 0 ? _b : defaultSettings.fingerSize;
         var stringXPositions = this.stringXPos();
         var fretYPositions = this.fretLinesYPos(y);
         var stringSpacing = this.stringSpacing();
@@ -8101,13 +8105,13 @@ var SVGuitarChord = /** @class */ (function () {
         var startX = stringXPositions[0];
         var endX = stringXPositions[stringXPositions.length - 1];
         var fingerSize = relativeFingerSize * stringSpacing;
-        var fingerColor = (_e = (_d = this.settings.fingerColor) !== null && _d !== void 0 ? _d : this.settings.color) !== null && _e !== void 0 ? _e : defaultSettings.color;
-        var fretColor = (_g = (_f = this.settings.fretColor) !== null && _f !== void 0 ? _f : this.settings.color) !== null && _g !== void 0 ? _g : defaultSettings.color;
-        var barreChordRadius = (_h = this.settings.barreChordRadius) !== null && _h !== void 0 ? _h : defaultSettings.barreChordRadius;
-        var strokeWidth = (_j = this.settings.strokeWidth) !== null && _j !== void 0 ? _j : defaultSettings.strokeWidth;
-        var fontFamily = (_k = this.settings.fontFamily) !== null && _k !== void 0 ? _k : defaultSettings.fontFamily;
-        var fingerTextColor = (_l = this.settings.fingerTextColor) !== null && _l !== void 0 ? _l : defaultSettings.fingerTextColor;
-        var fingerTextSize = (_m = this.settings.fingerTextSize) !== null && _m !== void 0 ? _m : defaultSettings.fingerTextSize;
+        var fingerColor = (_d = (_c = this.settings.fingerColor) !== null && _c !== void 0 ? _c : this.settings.color) !== null && _d !== void 0 ? _d : defaultSettings.color;
+        var fretColor = (_f = (_e = this.settings.fretColor) !== null && _e !== void 0 ? _e : this.settings.color) !== null && _f !== void 0 ? _f : defaultSettings.color;
+        var barreChordRadius = (_g = this.settings.barreChordRadius) !== null && _g !== void 0 ? _g : defaultSettings.barreChordRadius;
+        var strokeWidth = (_h = this.settings.strokeWidth) !== null && _h !== void 0 ? _h : defaultSettings.strokeWidth;
+        var fontFamily = (_j = this.settings.fontFamily) !== null && _j !== void 0 ? _j : defaultSettings.fontFamily;
+        var fingerTextColor = (_k = this.settings.fingerTextColor) !== null && _k !== void 0 ? _k : defaultSettings.fingerTextColor;
+        var fingerTextSize = (_l = this.settings.fingerTextSize) !== null && _l !== void 0 ? _l : defaultSettings.fingerTextSize;
         // draw frets
         fretYPositions.forEach(function (fretY, i) {
             var classNames = [ElementType.FRET, "".concat(ElementType.FRET, "-").concat(i)];
@@ -8173,32 +8177,38 @@ var SVGuitarChord = /** @class */ (function () {
             ], __read((fingerOptions.className ? [fingerOptions.className] : [])), false);
             _this.drawFinger(fingerCenterX, fingerCenterY, fingerSize, fingerColor, fingerTextSize, fontFamily, fingerOptions, classNames);
         });
-        (_o = this.settings.fretMarkers) === null || _o === void 0 ? void 0 : _o.forEach(function (fretMarker) {
-            var _a, _b, _c, _d, _e;
-            var fretMarkerOptions = (typeof fretMarker == 'number' ? {
-                fret: fretMarker,
-            } : fretMarker);
-            var fretMarkerIndex = fretMarkerOptions.fret;
-            var fretMarkerCenterX = constants.width / 2;
-            var fretMarkerCenterY = y + (fretMarkerIndex + 1) * fretSpacing - fretSpacing / 2;
-            var fretMarkerSize = (_a = _this.settings.fretMarkerSize) !== null && _a !== void 0 ? _a : defaultSettings.fretMarkerSize;
-            var fretMarkerColor = (_b = _this.settings.fretMarkerColor) !== null && _b !== void 0 ? _b : defaultSettings.fretMarkerColor;
-            var classNames = __spreadArray([
-                ElementType.FRET_MARKER,
-                "".concat(ElementType.FRET_MARKER, "-fret-").concat(fretMarkerIndex)
-            ], __read(((_c = fretMarkerOptions.className) !== null && _c !== void 0 ? _c : [])), false);
-            if ('double' in fretMarkerOptions) {
-                _this.stringSpacing();
-                var doubleFretMarkerDistance = (_e = (_d = fretMarkerOptions.distance) !== null && _d !== void 0 ? _d : _this.settings.doubleFretMarkerDistance) !== null && _e !== void 0 ? _e : defaultSettings.doubleFretMarkerDistance;
-                var neckWidth = (_this.numStrings() - 1) * _this.stringSpacing();
-                var fretMarkerDistanceFromCenter = neckWidth * doubleFretMarkerDistance / 2;
-                _this.drawFretMarker(fretMarkerCenterX - fretMarkerDistanceFromCenter, fretMarkerCenterY, fretMarkerSize, fretMarkerColor, fretMarker, classNames);
-                _this.drawFretMarker(fretMarkerCenterX + fretMarkerDistanceFromCenter, fretMarkerCenterY, fretMarkerSize, fretMarkerColor, fretMarker, classNames);
-            }
-            else {
-                _this.drawFretMarker(fretMarkerCenterX, fretMarkerCenterY, fretMarkerSize, fretMarkerColor, fretMarker, classNames);
-            }
-        });
+        if ((_m = this.settings.showFretMarkers) !== null && _m !== void 0 ? _m : defaultSettings.showFretMarkers) {
+            (_o = this.settings.fretMarkers) === null || _o === void 0 ? void 0 : _o.forEach(function (fretMarker) {
+                var _a, _b, _c, _d, _e;
+                var fretMarkerOptions = (typeof fretMarker == 'number' ? {
+                    fret: fretMarker,
+                } : fretMarker);
+                if (fretMarkerOptions.fret > _this.numFrets()) {
+                    // don't draw fret markers outside the chord diagram
+                    return;
+                }
+                var fretMarkerIndex = fretMarkerOptions.fret;
+                var fretMarkerCenterX = constants.width / 2;
+                var fretMarkerCenterY = y + (fretMarkerIndex + 1) * fretSpacing - fretSpacing / 2;
+                var fretMarkerSize = (_a = _this.settings.fretMarkerSize) !== null && _a !== void 0 ? _a : defaultSettings.fretMarkerSize;
+                var fretMarkerColor = (_b = _this.settings.fretMarkerColor) !== null && _b !== void 0 ? _b : defaultSettings.fretMarkerColor;
+                var classNames = __spreadArray([
+                    ElementType.FRET_MARKER,
+                    "".concat(ElementType.FRET_MARKER, "-fret-").concat(fretMarkerIndex)
+                ], __read(((_c = fretMarkerOptions.className) !== null && _c !== void 0 ? _c : [])), false);
+                if ('double' in fretMarkerOptions) {
+                    _this.stringSpacing();
+                    var doubleFretMarkerDistance = (_e = (_d = fretMarkerOptions.distance) !== null && _d !== void 0 ? _d : _this.settings.doubleFretMarkerDistance) !== null && _e !== void 0 ? _e : defaultSettings.doubleFretMarkerDistance;
+                    var neckWidth = (_this.numStrings() - 1) * _this.stringSpacing();
+                    var fretMarkerDistanceFromCenter = neckWidth * doubleFretMarkerDistance / 2;
+                    _this.drawFretMarker(fretMarkerCenterX - fretMarkerDistanceFromCenter, fretMarkerCenterY, fretMarkerSize, fretMarkerColor, fretMarker, classNames);
+                    _this.drawFretMarker(fretMarkerCenterX + fretMarkerDistanceFromCenter, fretMarkerCenterY, fretMarkerSize, fretMarkerColor, fretMarker, classNames);
+                }
+                else {
+                    _this.drawFretMarker(fretMarkerCenterX, fretMarkerCenterY, fretMarkerSize, fretMarkerColor, fretMarker, classNames);
+                }
+            });
+        }
         return y + height;
     };
     SVGuitarChord.prototype.drawFretMarker = function (x, y, size, color, fretMarketOptions, classNames) {

@@ -152,6 +152,11 @@ export interface ChordSettings {
      */
     fretMarkers?: FretMarker[];
     /**
+     * Flag to show or disable all fret markers globally. This is just for convenience.
+     * The fret markers can also be removed by not setting the {@link fretMarkers} property.
+     */
+    showFretMarkers?: boolean;
+    /**
      * The {@link Shape} of the fret markets. Applies to all fret markets unless overridden
      * on specific fret markers.
      */
@@ -380,6 +385,7 @@ export declare class SVGuitarChord {
     private drawTopFret;
     private stringXPos;
     private numStrings;
+    private numFrets;
     private stringSpacing;
     private fretSpacing;
     private fretLinesYPos;
