@@ -8189,7 +8189,7 @@
                     var fretMarkerOptions = (typeof fretMarker == 'number' ? {
                         fret: fretMarker,
                     } : fretMarker);
-                    if (fretMarkerOptions.fret > _this.numFrets()) {
+                    if (fretMarkerOptions.fret >= _this.numFrets()) {
                         // don't draw fret markers outside the chord diagram
                         return;
                     }
