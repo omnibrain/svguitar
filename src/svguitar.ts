@@ -725,7 +725,7 @@ export class SVGuitarChord {
       textY = y + padding
     } else {
       const lastFret = y
-      const firstFret = y - (this.settings.frets ?? defaultSettings.frets) * this.fretSpacing()
+      const firstFret = y - (this.numFrets()) * this.fretSpacing()
       textX = firstFret + (lastFret - firstFret) / 2
       textY = this.y(startX, 0) + padding
     }
@@ -897,6 +897,10 @@ export class SVGuitarChord {
     return this.settings.strings ?? defaultSettings.strings
   }
 
+  private numFrets() {
+    return this.settings.frets ?? defaultSettings.frets
+  }
+
   private stringSpacing(): number {
     const sidePadding = this.settings.sidePadding ?? defaultSettings.sidePadding
     const strings = this.numStrings()
@@ -915,7 +919,7 @@ export class SVGuitarChord {
   }
 
   private fretLinesYPos(startY: number): number[] {
-    const frets = this.settings.frets ?? defaultSettings.frets
+    const frets = this.numFrets()
     const fretSpacing = this.fretSpacing()
 
     return range(frets, 1).map((i) => startY + fretSpacing * i)
@@ -1041,7 +1045,7 @@ export class SVGuitarChord {
   }
 
   private drawGrid(y: number): number {
-    const frets = this.settings.frets ?? defaultSettings.frets
+    const frets = this.numFrets()
     const fretSize = this.settings.fretSize ?? defaultSettings.fretSize
     const relativeFingerSize = this.settings.fingerSize ?? defaultSettings.fingerSize
     const stringXPositions = this.stringXPos()
@@ -1204,6 +1208,11 @@ export class SVGuitarChord {
         const fretMarkerOptions = (typeof fretMarker == 'number' ? {
           fret: fretMarker,
         } : fretMarker) as DoubleFretMarker | SingleFretMarker
+
+        if (fretMarkerOptions.fret > this.numFrets()) {
+          // don't draw fret markers outside the chord diagram
+          return;
+        }
 
         const fretMarkerIndex = fretMarkerOptions.fret
         const fretMarkerCenterX = constants.width / 2
