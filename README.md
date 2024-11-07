@@ -93,14 +93,16 @@ new SVGuitarChord('#some-selector')
   .chord({
     // array of [string, fret, text | options]
     fingers: [
-      // finger at string 1, fret 2, with text '2'
-      [1, 2, '2'],
+      // finger at string 2, fret 2, with text '2'
+      [2, 2, '2'],
 
-      // finger at string 2, fret 3, with text '3', colored red and has class '.red'
-      [2, 3, { text: '3', color: '#F00', className: 'red' }],
+      // finger at string 3, fret 3, with text '4', colored red and has class 'red'
+      [3, 3, { text: '4', color: '#F00', className: 'red' }],
 
-      // finger is triangle shaped
-      [3, 3, { shape: 'triangle' }],
+      // finger at string 4, fret 3, with text '3', triangle shaped
+      [4, 3, { text: '3', shape: 'triangle' }],
+
+      // an 'x' above string 6 denotes it isn't played
       [6, 'x'],
     ],
 
@@ -121,7 +123,7 @@ new SVGuitarChord('#some-selector')
     title: 'F# minor',
 
     // position (defaults to 1)
-    position: 2,
+    position: 9,
   })
   .configure({
     // Customizations (all optional, defaults shown)
