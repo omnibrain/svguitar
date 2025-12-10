@@ -163,7 +163,7 @@ export abstract class Renderer {
         cyOuter = y - height
 
         cxInner = cxOuter
-        cyInner = yStart - (height * 2) * t
+        cyInner = yStart - height * 2 * t
         break
       }
 
@@ -176,7 +176,7 @@ export abstract class Renderer {
         cxOuter = x - width
         cyOuter = y + height / 2
 
-        cxInner = xStart - (width * 2) * t
+        cxInner = xStart - width * 2 * t
         cyInner = cyOuter
         break
       }

@@ -104,21 +104,21 @@ export interface SingleFretMarker {
    * Position of the fret marker. Starts at 0.
    * Position of 0 means between fret 0 and 1.
    */
-  fret: number,
+  fret: number
 
   /**
    * The color of the fret marker.
    */
-  color?: string,
+  color?: string
 
   /**
    * The stroke color of the fret marker.
    */
-  strokeColor?: string,
+  strokeColor?: string
   /**
    * The stroke color of the fret marker.
    */
-  strokeWidth?: number,
+  strokeWidth?: number
 
   /**
    * Shape of the fret marker. Defaults to {@link Shape.CIRCLE}
@@ -200,7 +200,7 @@ export interface ChordSettings {
   /**
    * The number of frets
    */
-  frets?: number,
+  frets?: number
 
   /**
    * The fret markers
@@ -211,34 +211,34 @@ export interface ChordSettings {
    * Flag to show or disable all fret markers globally. This is just for convenience.
    * The fret markers can also be removed by not setting the {@link fretMarkers} property.
    */
-  showFretMarkers?: boolean,
+  showFretMarkers?: boolean
 
   /**
    * The {@link Shape} of the fret markets. Applies to all fret markets unless overridden
    * on specific fret markers.
    */
-  fretMarkerShape?: Shape,
+  fretMarkerShape?: Shape
 
   /**
    * The size of a fret marker. This is relative to the space between two strings, so
    * a value of 1 means a fret marker spans from one string to another.
    */
-  fretMarkerSize?: number,
+  fretMarkerSize?: number
 
   /**
    * The color of the fret markers.
    */
-  fretMarkerColor?: string,
+  fretMarkerColor?: string
 
   /**
    * The stroke color of the fret markers. By default, the fret markets have no border.
    */
-  fretMarkerStrokeColor?: string,
+  fretMarkerStrokeColor?: string
 
   /**
    * The stroke width of the fret markers. By default, the fret markets have no border.
    */
-  fretMarkerStrokeWidth?: number,
+  fretMarkerStrokeWidth?: number
 
   /**
    * The distance between the double fret markers, relative to the width
@@ -307,13 +307,12 @@ export interface ChordSettings {
    * style of barre chords. Can be either 'rectangle' (default) or 'arc'.
    * Can be changed for each barre individually as well with the `style` option.
    */
-  barreChordStyle?: BarreChordStyle,
+  barreChordStyle?: BarreChordStyle
 
   /**
    * stroke color of a barre chord. Defaults to the finger color if not set
    */
   barreChordStrokeColor?: string
-
 
   /**
    * stroke width of a barre chord
@@ -491,11 +490,11 @@ interface RequiredChordSettings {
   orientation: Orientation
   watermarkFontSize: number
   noPosition: boolean
-  showFretMarkers: boolean,
-  fretMarkerSize: number,
-  fretMarkerShape: Shape,
-  fretMarkerColor: string,
-  doubleFretMarkerDistance: number,
+  showFretMarkers: boolean
+  fretMarkerSize: number
+  fretMarkerShape: Shape
+  fretMarkerColor: string
+  doubleFretMarkerDistance: number
 }
 
 const defaultSettings: RequiredChordSettings = {
@@ -666,9 +665,10 @@ export class SVGuitarChord {
       throw new Error('Stroke width cannot be smaller than 0')
     }
 
-    if (typeof settings.doubleFretMarkerDistance !== 'undefined'
-      && settings.doubleFretMarkerDistance < 0
-      && settings.doubleFretMarkerDistance > 1
+    if (
+      typeof settings.doubleFretMarkerDistance !== 'undefined' &&
+      settings.doubleFretMarkerDistance < 0 &&
+      settings.doubleFretMarkerDistance > 1
     ) {
       throw new Error('Double fret marker distance has to be a number between [0, 1]')
     }
@@ -741,7 +741,7 @@ export class SVGuitarChord {
       textY = y + padding
     } else {
       const lastFret = y
-      const firstFret = y - (this.numFrets()) * this.fretSpacing()
+      const firstFret = y - this.numFrets() * this.fretSpacing()
       textX = firstFret + (lastFret - firstFret) / 2
       textY = this.y(startX, 0) + padding
     }
@@ -878,8 +878,7 @@ export class SVGuitarChord {
     const position =
       this.chordInternal.position ?? this.settings.position ?? defaultSettings.position
     const noPositon = this.settings.noPosition ?? defaultSettings.noPosition
-    const nutWidth =
-      this.settings.nutWidth ?? this.settings.nutWidth ?? defaultSettings.nutWidth
+    const nutWidth = this.settings.nutWidth ?? this.settings.nutWidth ?? defaultSettings.nutWidth
 
     return position > 1 || noPositon ? strokeWidth : nutWidth
   }
@@ -1078,8 +1077,9 @@ export class SVGuitarChord {
     // add space for the arc barre chord between the title and the diagram
     // in case there are no empty string indicators
     const barreChordStyle = this.settings.barreChordStyle ?? defaultSettings.barreChordStyle
-    const addSpaceForArcBarreChord = this.chordInternal.barres.some((barre) => barre.fret === 1)
-      && ((this.chordInternal.barres[0]?.style ?? barreChordStyle) === BarreChordStyle.ARC)
+    const addSpaceForArcBarreChord =
+      this.chordInternal.barres.some((barre) => barre.fret === 1) &&
+      (this.chordInternal.barres[0]?.style ?? barreChordStyle) === BarreChordStyle.ARC
     const barreChordSpace = addSpaceForArcBarreChord ? this.arcBarHeight() : 0
 
     return y + padding + barreChordSpace
@@ -1155,7 +1155,8 @@ export class SVGuitarChord {
           this.settings.barreChordStrokeWidth ??
           defaultSettings.barreChordStrokeWidth
 
-        const barreChordStyle = style ?? this.settings.barreChordStyle ?? defaultSettings.barreChordStyle
+        const barreChordStyle =
+          style ?? this.settings.barreChordStyle ?? defaultSettings.barreChordStyle
 
         const classNames = [
           ElementType.BARRE,
@@ -1195,19 +1196,14 @@ export class SVGuitarChord {
           const barreHeight = this.arcBarHeight()
 
           const fretStroke = fret === 1 ? this.topFretSize() : 0
-          const barreYStart = barreCenterY - (fretSpacing / 2) - barreHeight - fretStroke
+          const barreYStart = barreCenterY - fretSpacing / 2 - barreHeight - fretStroke
 
           const {
             x: rectX,
             y: rectY,
             height: rectHeight,
             width: rectWidth,
-          } = this.rectCoordinates(
-            fromStringX,
-            barreYStart,
-            barreWidth,
-            barreHeight,
-          )
+          } = this.rectCoordinates(fromStringX, barreYStart, barreWidth, barreHeight)
 
           this.renderer.arc(
             rectX,
@@ -1281,15 +1277,18 @@ export class SVGuitarChord {
       })
 
     if (this.settings.showFretMarkers ?? defaultSettings.showFretMarkers) {
-      this.settings.fretMarkers
-      ?.forEach((fretMarker) => {
-        const fretMarkerOptions = (typeof fretMarker == 'number' ? {
-          fret: fretMarker,
-        } : fretMarker) as DoubleFretMarker | SingleFretMarker
+      this.settings.fretMarkers?.forEach((fretMarker) => {
+        const fretMarkerOptions = (
+          typeof fretMarker == 'number'
+            ? {
+                fret: fretMarker,
+              }
+            : fretMarker
+        ) as DoubleFretMarker | SingleFretMarker
 
         if (fretMarkerOptions.fret >= this.numFrets()) {
           // don't draw fret markers outside the chord diagram
-          return;
+          return
         }
 
         const fretMarkerIndex = fretMarkerOptions.fret
@@ -1306,10 +1305,13 @@ export class SVGuitarChord {
 
         if ('double' in fretMarkerOptions) {
           this.stringSpacing()
-          const doubleFretMarkerDistance = fretMarkerOptions.distance ?? this.settings.doubleFretMarkerDistance ?? defaultSettings.doubleFretMarkerDistance
+          const doubleFretMarkerDistance =
+            fretMarkerOptions.distance ??
+            this.settings.doubleFretMarkerDistance ??
+            defaultSettings.doubleFretMarkerDistance
 
-          const neckWidth = (this.numStrings() - 1) * this.stringSpacing();
-          const fretMarkerDistanceFromCenter = neckWidth * doubleFretMarkerDistance / 2
+          const neckWidth = (this.numStrings() - 1) * this.stringSpacing()
+          const fretMarkerDistanceFromCenter = (neckWidth * doubleFretMarkerDistance) / 2
 
           this.drawFretMarker(
             fretMarkerCenterX - fretMarkerDistanceFromCenter,
@@ -1317,7 +1319,7 @@ export class SVGuitarChord {
             fretMarkerSize,
             fretMarkerColor,
             fretMarker,
-            classNames
+            classNames,
           )
           this.drawFretMarker(
             fretMarkerCenterX + fretMarkerDistanceFromCenter,
@@ -1325,7 +1327,7 @@ export class SVGuitarChord {
             fretMarkerSize,
             fretMarkerColor,
             fretMarker,
-            classNames
+            classNames,
           )
         } else {
           this.drawFretMarker(
@@ -1334,10 +1336,10 @@ export class SVGuitarChord {
             fretMarkerSize,
             fretMarkerColor,
             fretMarker,
-            classNames
+            classNames,
           )
         }
-      });
+      })
     }
 
     return y + height
@@ -1351,12 +1353,16 @@ export class SVGuitarChord {
     fretMarketOptions: FretMarker,
     classNames: string[],
   ) {
-    const markerOptions = typeof fretMarketOptions === 'number' ? {fret: fretMarketOptions} : fretMarketOptions
+    const markerOptions =
+      typeof fretMarketOptions === 'number' ? { fret: fretMarketOptions } : fretMarketOptions
 
     const shape = markerOptions.shape ?? defaultSettings.fretMarkerShape
-    const fretMarkerColor = markerOptions.color ?? this.settings.fretMarkerColor ?? defaultSettings.fretMarkerColor
-    const fretMarkerStrokeColor = markerOptions.strokeColor ?? this.settings.fretMarkerStrokeColor ?? color
-    const fretMarkerStrokeWidth = markerOptions.strokeWidth ?? this.settings.fretMarkerStrokeWidth ?? 0
+    const fretMarkerColor =
+      markerOptions.color ?? this.settings.fretMarkerColor ?? defaultSettings.fretMarkerColor
+    const fretMarkerStrokeColor =
+      markerOptions.strokeColor ?? this.settings.fretMarkerStrokeColor ?? color
+    const fretMarkerStrokeWidth =
+      markerOptions.strokeWidth ?? this.settings.fretMarkerStrokeWidth ?? 0
 
     const fretMarkerSize = this.stringSpacing() * (markerOptions.size ?? size)
     const startX = x - fretMarkerSize / 2
@@ -1374,9 +1380,8 @@ export class SVGuitarChord {
       fretMarkerStrokeWidth,
       fretMarkerStrokeColor,
       fretMarkerColor ?? color,
-      classNamesWithShape
+      classNamesWithShape,
     )
-
   }
 
   private drawFinger(
@@ -1417,7 +1422,7 @@ export class SVGuitarChord {
       fingerStrokeWidth,
       fingerStrokeColor,
       fingerOptions.color ?? color,
-      classNamesWithShape
+      classNamesWithShape,
     )
 
     // draw text on the finger
@@ -1447,59 +1452,26 @@ export class SVGuitarChord {
     strokeWidth: number,
     strokeColor: string,
     fillColor: string,
-    classNames: string[]
+    classNames: string[],
   ) {
     switch (shape) {
       case Shape.CIRCLE:
-        this.renderer.circle(
-          x,
-          y,
-          size,
-          strokeWidth,
-          strokeColor,
-          fillColor,
-          classNames,
-        )
+        this.renderer.circle(x, y, size, strokeWidth, strokeColor, fillColor, classNames)
         break
       case Shape.SQUARE:
-        this.renderer.rect(
-          x,
-          y,
-          size,
-          size,
-          strokeWidth,
-          strokeColor,
-          classNames,
-          fillColor,
-        )
+        this.renderer.rect(x, y, size, size, strokeWidth, strokeColor, classNames, fillColor)
         break
       case Shape.TRIANGLE:
-        this.renderer.triangle(
-          x,
-          y,
-          size,
-          strokeWidth,
-          strokeColor,
-          classNames,
-          fillColor,
-        )
+        this.renderer.triangle(x, y, size, strokeWidth, strokeColor, classNames, fillColor)
         break
       case Shape.PENTAGON:
-        this.renderer.pentagon(
-          x,
-          y,
-          size,
-          strokeWidth,
-          strokeColor,
-          fillColor,
-          classNames,
-        )
+        this.renderer.pentagon(x, y, size, strokeWidth, strokeColor, fillColor, classNames)
         break
       default:
         throw new Error(
           `Invalid shape "${shape}". Valid shapes are: ${Object.values(Shape)
-          .map((val) => `"${val}"`)
-          .join(', ')}.`,
+            .map((val) => `"${val}"`)
+            .join(', ')}.`,
         )
     }
   }
@@ -1706,5 +1678,4 @@ export class SVGuitarChord {
   private get orientation(): Orientation {
     return this.settings.orientation ?? defaultSettings.orientation
   }
-
 }

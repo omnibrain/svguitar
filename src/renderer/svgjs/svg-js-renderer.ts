@@ -10,7 +10,7 @@ export class SvgJsRenderer extends Renderer {
     super(container)
 
     // initialize the SVG
-    const {width} = constants
+    const { width } = constants
     const height = 0
 
     /*
@@ -42,7 +42,7 @@ export class SvgJsRenderer extends Renderer {
     strokeWidth: number,
     color: string,
   ): void {
-    this.svg.line(fromX, fromY, toX, toY).stroke({color, width: strokeWidth})
+    this.svg.line(fromX, fromY, toX, toY).stroke({ color, width: strokeWidth })
   }
 
   size(width: number, height: number): void {
@@ -77,30 +77,30 @@ export class SvgJsRenderer extends Renderer {
     if (plain) {
       // create a text element centered at x,y. No SVG.js magic.
       element = this.svg
-      .plain(text)
-      .attr({
-        x,
-        y,
-      })
-      .font({
-        family: fontFamily,
-        size: fontSize,
-        anchor: alignment,
-        'dominant-baseline': 'central',
-      })
-      .fill(color)
-      .addClass(Renderer.toClassName(classes))
+        .plain(text)
+        .attr({
+          x,
+          y,
+        })
+        .font({
+          family: fontFamily,
+          size: fontSize,
+          anchor: alignment,
+          'dominant-baseline': 'central',
+        })
+        .fill(color)
+        .addClass(Renderer.toClassName(classes))
     } else {
       element = this.svg
-      .text(text)
-      .move(x, y)
-      .font({
-        family: fontFamily,
-        size: fontSize,
-        anchor: alignment,
-      })
-      .fill(color)
-      .addClass(Renderer.toClassName(classes))
+        .text(text)
+        .move(x, y)
+        .font({
+          family: fontFamily,
+          size: fontSize,
+          anchor: alignment,
+        })
+        .fill(color)
+        .addClass(Renderer.toClassName(classes))
     }
 
     return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
@@ -116,14 +116,14 @@ export class SvgJsRenderer extends Renderer {
     classes?: string | string[],
   ): GraphcisElement {
     const element = this.svg
-    .circle(diameter)
-    .move(x, y)
-    .fill(fill || 'none')
-    .stroke({
-      color: strokeColor,
-      width: strokeWidth,
-    })
-    .addClass(Renderer.toClassName(classes))
+      .circle(diameter)
+      .move(x, y)
+      .fill(fill || 'none')
+      .stroke({
+        color: strokeColor,
+        width: strokeWidth,
+      })
+      .addClass(Renderer.toClassName(classes))
 
     return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
   }
@@ -140,15 +140,15 @@ export class SvgJsRenderer extends Renderer {
     radius?: number,
   ): GraphcisElement {
     const element = this.svg
-    .rect(width, height)
-    .move(x, y)
-    .fill(fill || 'none')
-    .stroke({
-      width: strokeWidth,
-      color: strokeColor,
-    })
-    .radius(radius || 0)
-    .addClass(Renderer.toClassName(classes))
+      .rect(width, height)
+      .move(x, y)
+      .fill(fill || 'none')
+      .stroke({
+        width: strokeWidth,
+        color: strokeColor,
+      })
+      .radius(radius || 0)
+      .addClass(Renderer.toClassName(classes))
 
     return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
   }
@@ -163,14 +163,14 @@ export class SvgJsRenderer extends Renderer {
     fill?: string | undefined,
   ): GraphcisElement {
     const element = this.svg
-    .path(Renderer.trianglePath(x, y, size))
-    .move(x, y)
-    .fill(fill || 'none')
-    .stroke({
-      width: strokeWidth,
-      color: strokeColor,
-    })
-    .addClass(Renderer.toClassName(classes))
+      .path(Renderer.trianglePath(x, y, size))
+      .move(x, y)
+      .fill(fill || 'none')
+      .stroke({
+        width: strokeWidth,
+        color: strokeColor,
+      })
+      .addClass(Renderer.toClassName(classes))
 
     return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
   }
@@ -198,14 +198,14 @@ export class SvgJsRenderer extends Renderer {
     classes?: string | string[],
   ) {
     const element = this.svg
-    .path(Renderer.ngonPath(x, y, size, edges))
-    .move(x, y)
-    .fill(fill || 'none')
-    .stroke({
-      width: strokeWidth,
-      color: strokeColor,
-    })
-    .addClass(Renderer.toClassName(classes))
+      .path(Renderer.ngonPath(x, y, size, edges))
+      .move(x, y)
+      .fill(fill || 'none')
+      .stroke({
+        width: strokeWidth,
+        color: strokeColor,
+      })
+      .addClass(Renderer.toClassName(classes))
 
     return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
   }
@@ -220,29 +220,30 @@ export class SvgJsRenderer extends Renderer {
     }
   }
 
-  arc(x: number,
-      y: number,
-      width: number,
-      height: number,
-      direction: ArcDirection,
-      strokeWidth: number,
-      strokeColor: string,
-      classes?: string | string[],
-      fill?: string,
+  arc(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    direction: ArcDirection,
+    strokeWidth: number,
+    strokeColor: string,
+    classes?: string | string[],
+    fill?: string,
   ): GraphcisElement {
     const path = Renderer.arcBarrePath(x, y, width, height, direction)
 
     const element = this.svg
-    .path(path)
-    .stroke({
-      width: strokeWidth,
-      color: strokeColor,
-      linecap: 'round',
-    })
-    .fill({
-      color: fill,
-    })
-    .addClass(Renderer.toClassName(classes))
+      .path(path)
+      .stroke({
+        width: strokeWidth,
+        color: strokeColor,
+        linecap: 'round',
+      })
+      .fill({
+        color: fill,
+      })
+      .addClass(Renderer.toClassName(classes))
 
     // this.rect(x, y, width, height, strokeWidth, strokeColor, classes, 'rgba(0, 0, 0, 0.2)') // TODO: remove rectangle
 
