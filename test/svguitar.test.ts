@@ -1,4 +1,10 @@
-import { FretLabelPosition, Orientation, Shape, SVGuitarChord } from '../src/svguitar'
+import {
+  BarreChordStyle,
+  FretLabelPosition,
+  Orientation,
+  Shape,
+  SVGuitarChord,
+} from '../src/svguitar'
 import { saveSvg, setUpSvgDom } from './testutils'
 
 const document = setUpSvgDom()
@@ -146,6 +152,117 @@ describe('SVGuitarChord', () => {
     .draw()
 
     saveSvg('finger over barre', container.outerHTML)
+  })
+
+  it('Should render barre chords as arcs', () => {
+    svguitar
+    .chord({
+      fingers: [
+        [3, 1],
+        [1, 1],
+        [4, 3],
+        [1, 3],
+        [5, 5],
+        [1, 5],
+      ], barres: [
+        {
+          fromString: 3,
+          toString: 1,
+          fret: 1,
+        },
+        {
+          fromString: 4,
+          toString: 1,
+          fret: 3,
+        },
+        {
+          fromString: 5,
+          toString: 1,
+          fret: 5,
+        },
+      ],
+    })
+    .configure({
+      strings: 5,
+      frets: 6,
+      title: 'Arc Barre Chords',
+      barreChordStyle: BarreChordStyle.ARC,
+    })
+    .draw()
+
+    saveSvg('arc barre chords', container.outerHTML)
+  })
+
+  it('Should render barre chords as arcs vertically', () => {
+    svguitar
+    .chord({
+      fingers: [
+        [3, 1],
+        [1, 1],
+        [4, 3],
+        [1, 3],
+        [5, 5],
+        [1, 5],
+      ], barres: [
+        {
+          fromString: 3,
+          toString: 1,
+          fret: 1,
+        },
+        {
+          fromString: 4,
+          toString: 1,
+          fret: 3,
+        },
+        {
+          fromString: 5,
+          toString: 1,
+          fret: 5,
+        },
+      ],
+    })
+    .configure({
+      strings: 5,
+      frets: 6,
+      title: 'Vertical Arc Barre Chords',
+      barreChordStyle: BarreChordStyle.ARC,
+      orientation: Orientation.horizontal,
+    })
+    .draw()
+
+    saveSvg('arc barre chords vertical', container.outerHTML)
+  })
+
+  it('Should set barre chord style on individual barre chord', () => {
+    svguitar
+    .chord({
+      fingers: [
+        [3, 1],
+        [1, 1],
+        [4, 3],
+        [1, 3],
+      ], barres: [
+        {
+          fromString: 3,
+          toString: 1,
+          fret: 1,
+          style: BarreChordStyle.ARC
+        },
+        {
+          fromString: 4,
+          toString: 1,
+          fret: 3,
+        },
+      ],
+    })
+    .configure({
+      strings: 5,
+      frets: 6,
+      title: 'Mixed Box and Arc Barre Chords',
+    })
+    .draw()
+
+    saveSvg('arc and box barre chords', container.outerHTML)
   })
 
   it('Should render text on the fingers', () => {
@@ -1122,10 +1239,8 @@ describe('SVGuitarChord', () => {
   it('Should remove all fret markers', () => {
     svguitar
     .chord({
-      fingers: [
-      ],
-      barres: [
-      ],
+      fingers: [],
+      barres: [],
     })
     .configure({
       showFretMarkers: false,

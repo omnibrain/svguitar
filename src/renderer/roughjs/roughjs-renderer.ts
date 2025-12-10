@@ -5,12 +5,12 @@ that there is no SVG implementation for JSDOM. If that changes at some point thi
 tested just like the svg.js implementation
  */
 
-import { QuerySelector } from '@svgdotjs/svg.js'
+import { Array, DOMRect, QuerySelector } from '@svgdotjs/svg.js'
 import { RoughSVG } from 'roughjs/bin/svg'
 import rough from 'roughjs'
 import { Options } from 'roughjs/bin/core'
 import defs from './defs'
-import { Alignment, GraphcisElement, Renderer } from '../renderer'
+import { Alignment, ArcDirection, GraphcisElement, Renderer } from '../renderer'
 
 /**
  * Currently the font is hard-coded to 'Patrick Hand' when using the handdrawn chord diagram style.
@@ -223,6 +223,32 @@ export class RoughJsRenderer extends Renderer {
     return RoughJsRenderer.boxToElement(rect.getBBox(), () => rect.remove())
   }
 
+
+  arc(x: number,
+      y: number,
+      width: number,
+      height: number,
+      direction: ArcDirection,
+      strokeWidth: number,
+      strokeColor: string,
+      classes?: string | string[],
+      fill?: string,
+  ): GraphcisElement {
+    const path = Renderer.arcBarrePath(x, y, width, height, direction)
+
+    const arc = this.rc.path(path, {
+      fill: fill || 'none',
+      fillWeight: 2.5,
+      stroke: strokeColor || fill || 'none',
+      roughness: 1.5,
+    })
+
+    arc.classList.add(...RoughJsRenderer.toClassArray(classes))
+    this.svgNode.appendChild(arc)
+
+    return RoughJsRenderer.boxToElement(arc.getBBox(), () => arc.remove())
+  }
+
   triangle(
     x: number,
     y: number,
@@ -337,11 +363,12 @@ export class RoughJsRenderer extends Renderer {
   }
 
   private static boxToElement(box: DOMRect, remove: () => void): GraphcisElement {
+
     return {
-      width: box.width,
-      height: box.height,
-      x: box.x,
-      y: box.y,
+      width: box.width ?? 0,
+      height: box.height ?? 0,
+      x: box.x ?? 0,
+      y: box.y ?? 0,
       remove,
     }
   }
@@ -370,6 +397,7 @@ export class RoughJsRenderer extends Renderer {
 
     return Renderer.toClassName(classes).split(' ')
   }
+
 }
 
 export default RoughJsRenderer
