@@ -223,16 +223,16 @@ export class RoughJsRenderer extends Renderer {
     return RoughJsRenderer.boxToElement(rect.getBBox(), () => rect.remove())
   }
 
-
-  arc(x: number,
-      y: number,
-      width: number,
-      height: number,
-      direction: ArcDirection,
-      strokeWidth: number,
-      strokeColor: string,
-      classes?: string | string[],
-      fill?: string,
+  arc(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    direction: ArcDirection,
+    strokeWidth: number,
+    strokeColor: string,
+    classes?: string | string[],
+    fill?: string,
   ): GraphcisElement {
     const path = Renderer.arcBarrePath(x, y, width, height, direction)
 
@@ -363,7 +363,6 @@ export class RoughJsRenderer extends Renderer {
   }
 
   private static boxToElement(box: DOMRect, remove: () => void): GraphcisElement {
-
     return {
       width: box.width ?? 0,
       height: box.height ?? 0,
@@ -397,7 +396,6 @@ export class RoughJsRenderer extends Renderer {
 
     return Renderer.toClassName(classes).split(' ')
   }
-
 }
 
 export default RoughJsRenderer
