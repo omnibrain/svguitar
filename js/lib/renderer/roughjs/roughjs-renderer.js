@@ -47,6 +47,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RoughJsRenderer = void 0;
+var svg_js_1 = require("@svgdotjs/svg.js");
 var roughjs_1 = require("roughjs");
 var defs_1 = require("./defs");
 var renderer_1 = require("../renderer");
@@ -115,7 +116,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             // typescript is complaining when I access content.firstChild.children, therefore this ugly workaround.
             var defsToAdd = (_c = (_b = (_a = template.content.firstChild) === null || _a === void 0 ? void 0 : _a.firstChild) === null || _b === void 0 ? void 0 : _b.parentElement) === null || _c === void 0 ? void 0 : _c.children;
             if (defsToAdd) {
-                Array.from(defsToAdd).forEach(function (def) {
+                svg_js_1.Array.from(defsToAdd).forEach(function (def) {
                     def.setAttribute('data-svguitar-def', 'true');
                     currentDefs === null || currentDefs === void 0 ? void 0 : currentDefs.appendChild(def);
                 });
@@ -202,6 +203,19 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         this.svgNode.appendChild(rect2);
         return RoughJsRenderer.boxToElement(rect.getBBox(), function () { return rect.remove(); });
     };
+    RoughJsRenderer.prototype.arc = function (x, y, width, height, direction, strokeWidth, strokeColor, classes, fill) {
+        var _a;
+        var path = renderer_1.Renderer.arcBarrePath(x, y, width, height, direction);
+        var arc = this.rc.path(path, {
+            fill: fill || 'none',
+            fillWeight: 2.5,
+            stroke: strokeColor || fill || 'none',
+            roughness: 1.5,
+        });
+        (_a = arc.classList).add.apply(_a, __spreadArray([], __read(RoughJsRenderer.toClassArray(classes)), false));
+        this.svgNode.appendChild(arc);
+        return RoughJsRenderer.boxToElement(arc.getBBox(), function () { return arc.remove(); });
+    };
     RoughJsRenderer.prototype.triangle = function (x, y, size, strokeWidth, strokeColor, classes, fill) {
         var _a;
         var triangle = this.rc.path(renderer_1.Renderer.trianglePath(0, 0, size), {
@@ -275,11 +289,12 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         return RoughJsRenderer.boxToElement(txtElem.getBBox(), txtElem.remove.bind(txtElem));
     };
     RoughJsRenderer.boxToElement = function (box, remove) {
+        var _a, _b, _c, _d;
         return {
-            width: box.width,
-            height: box.height,
-            x: box.x,
-            y: box.y,
+            width: (_a = box.width) !== null && _a !== void 0 ? _a : 0,
+            height: (_b = box.height) !== null && _b !== void 0 ? _b : 0,
+            x: (_c = box.x) !== null && _c !== void 0 ? _c : 0,
+            y: (_d = box.y) !== null && _d !== void 0 ? _d : 0,
             remove: remove,
         };
     };

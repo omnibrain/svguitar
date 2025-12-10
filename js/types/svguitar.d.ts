@@ -5,10 +5,15 @@ export type { Constructor, ReturnTypeOf, SVGuitarPlugin, Renderer, Alignment, Gr
 export declare type SilentString = 'x';
 export declare type OpenString = 0;
 export declare type Finger = [number, number | OpenString | SilentString, (string | FingerOptions)?];
+export declare enum BarreChordStyle {
+    RECTANGLE = "rectangle",
+    ARC = "arc"
+}
 export declare type Barre = {
     fromString: number;
     toString: number;
     fret: number;
+    style?: BarreChordStyle;
     text?: string;
     color?: string;
     textColor?: string;
@@ -230,6 +235,11 @@ export interface ChordSettings {
      */
     fingerStrokeWidth?: number;
     /**
+     * style of barre chords. Can be either 'rectangle' (default) or 'arc'.
+     * Can be changed for each barre individually as well with the `style` option.
+     */
+    barreChordStyle?: BarreChordStyle;
+    /**
      * stroke color of a barre chord. Defaults to the finger color if not set
      */
     barreChordStrokeColor?: string;
@@ -325,7 +335,7 @@ export interface ChordSettings {
      */
     noPosition?: boolean;
     /**
-     * When set to true the distance between the chord diagram and the top of the SVG stayes the same,
+     * When set to true the distance between the chord diagram and the top of the SVG stays the same,
      * no matter if a title is defined or not.
      */
     fixedDiagramPosition?: boolean;
@@ -382,11 +392,15 @@ export declare class SVGuitarChord {
      */
     private drawTopEdges;
     private drawBackground;
+    private topFretSize;
     private drawTopFret;
     private stringXPos;
     private numStrings;
     private numFrets;
     private stringSpacing;
+    private fingerSize;
+    private arcBarHeight;
+    private strokeWidth;
     private fretSpacing;
     private fretLinesYPos;
     private toArrayIndex;

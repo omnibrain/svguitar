@@ -1,5 +1,5 @@
 import { QuerySelector } from '@svgdotjs/svg.js';
-import { Alignment, GraphcisElement, Renderer } from '../renderer';
+import { Alignment, ArcDirection, GraphcisElement, Renderer } from '../renderer';
 export declare class SvgJsRenderer extends Renderer {
     private svg;
     constructor(container: QuerySelector | HTMLElement);
@@ -16,5 +16,6 @@ export declare class SvgJsRenderer extends Renderer {
     pentagon(x: number, y: number, size: number, strokeWidth: number, strokeColor: string, fill: string, classes?: string | string[]): GraphcisElement;
     private ngon;
     private static boxToElement;
+    arc(x: number, y: number, width: number, height: number, direction: ArcDirection, strokeWidth: number, strokeColor: string, classes?: string | string[], fill?: string): GraphcisElement;
 }
 export default SvgJsRenderer;

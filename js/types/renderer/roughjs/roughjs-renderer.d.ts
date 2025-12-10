@@ -1,5 +1,5 @@
 import { QuerySelector } from '@svgdotjs/svg.js';
-import { Alignment, GraphcisElement, Renderer } from '../renderer';
+import { Alignment, ArcDirection, GraphcisElement, Renderer } from '../renderer';
 export declare class RoughJsRenderer extends Renderer {
     private rc;
     private containerNode;
@@ -16,6 +16,7 @@ export declare class RoughJsRenderer extends Renderer {
     remove(): void;
     line(x1: number, y1: number, x2: number, y2: number, strokeWidth: number, color: string, classes?: string | string[]): void;
     rect(x: number, y: number, width: number, height: number, strokeWidth: number, strokeColor: string, classes?: string | string[], fill?: string, radius?: number): GraphcisElement;
+    arc(x: number, y: number, width: number, height: number, direction: ArcDirection, strokeWidth: number, strokeColor: string, classes?: string | string[], fill?: string): GraphcisElement;
     triangle(x: number, y: number, size: number, strokeWidth: number, strokeColor: string, classes?: string | string[], fill?: string | undefined): GraphcisElement;
     pentagon(x: number, y: number, size: number, strokeWidth: number, strokeColor: string, fill?: string, classes?: string | string[], spikes?: number): GraphcisElement;
     size(width: number, height: number): void;

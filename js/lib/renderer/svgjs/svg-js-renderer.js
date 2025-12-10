@@ -156,6 +156,22 @@ var SvgJsRenderer = /** @class */ (function (_super) {
             remove: remove,
         };
     };
+    SvgJsRenderer.prototype.arc = function (x, y, width, height, direction, strokeWidth, strokeColor, classes, fill) {
+        var path = renderer_1.Renderer.arcBarrePath(x, y, width, height, direction);
+        var element = this.svg
+            .path(path)
+            .stroke({
+            width: strokeWidth,
+            color: strokeColor,
+            linecap: 'round',
+        })
+            .fill({
+            color: fill,
+        })
+            .addClass(renderer_1.Renderer.toClassName(classes));
+        // this.rect(x, y, width, height, strokeWidth, strokeColor, classes, 'rgba(0, 0, 0, 0.2)') // TODO: remove rectangle
+        return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element));
+    };
     return SvgJsRenderer;
 }(renderer_1.Renderer));
 exports.SvgJsRenderer = SvgJsRenderer;
