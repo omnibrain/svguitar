@@ -72,7 +72,7 @@ var Renderer = /** @class */ (function () {
                 cxOuter = x + width / 2;
                 cyOuter = y - height;
                 cxInner = cxOuter;
-                cyInner = yStart - (height * 2) * t;
+                cyInner = yStart - height * 2 * t;
                 break;
             }
             case ArcDirection.LEFT: {
@@ -82,7 +82,7 @@ var Renderer = /** @class */ (function () {
                 yEnd = y + height;
                 cxOuter = x - width;
                 cyOuter = y + height / 2;
-                cxInner = xStart - (width * 2) * t;
+                cxInner = xStart - width * 2 * t;
                 cyInner = cyOuter;
                 break;
             }

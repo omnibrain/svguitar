@@ -7254,7 +7254,7 @@ var Renderer = /** @class */ (function () {
                 cxOuter = x + width / 2;
                 cyOuter = y - height;
                 cxInner = cxOuter;
-                cyInner = yStart - (height * 2) * t;
+                cyInner = yStart - height * 2 * t;
                 break;
             }
             case ArcDirection.LEFT: {
@@ -7264,7 +7264,7 @@ var Renderer = /** @class */ (function () {
                 yEnd = y + height;
                 cxOuter = x - width;
                 cyOuter = y + height / 2;
-                cxInner = xStart - (width * 2) * t;
+                cxInner = xStart - width * 2 * t;
                 cyInner = cyOuter;
                 break;
             }
@@ -7910,9 +7910,9 @@ var SVGuitarChord = /** @class */ (function () {
         if (typeof settings.strokeWidth !== 'undefined' && settings.strokeWidth < 0) {
             throw new Error('Stroke width cannot be smaller than 0');
         }
-        if (typeof settings.doubleFretMarkerDistance !== 'undefined'
-            && settings.doubleFretMarkerDistance < 0
-            && settings.doubleFretMarkerDistance > 1) {
+        if (typeof settings.doubleFretMarkerDistance !== 'undefined' &&
+            settings.doubleFretMarkerDistance < 0 &&
+            settings.doubleFretMarkerDistance > 1) {
             throw new Error('Double fret marker distance has to be a number between [0, 1]');
         }
     };
@@ -7964,7 +7964,7 @@ var SVGuitarChord = /** @class */ (function () {
         }
         else {
             var lastFret = y;
-            var firstFret = y - (this.numFrets()) * this.fretSpacing();
+            var firstFret = y - this.numFrets() * this.fretSpacing();
             textX = firstFret + (lastFret - firstFret) / 2;
             textY = this.y(startX, 0) + padding;
         }
@@ -8186,8 +8186,8 @@ var SVGuitarChord = /** @class */ (function () {
         // add space for the arc barre chord between the title and the diagram
         // in case there are no empty string indicators
         var barreChordStyle = (_d = this.settings.barreChordStyle) !== null && _d !== void 0 ? _d : defaultSettings.barreChordStyle;
-        var addSpaceForArcBarreChord = this.chordInternal.barres.some(function (barre) { return barre.fret === 1; })
-            && (((_f = (_e = this.chordInternal.barres[0]) === null || _e === void 0 ? void 0 : _e.style) !== null && _f !== void 0 ? _f : barreChordStyle) === BarreChordStyle.ARC);
+        var addSpaceForArcBarreChord = this.chordInternal.barres.some(function (barre) { return barre.fret === 1; }) &&
+            ((_f = (_e = this.chordInternal.barres[0]) === null || _e === void 0 ? void 0 : _e.style) !== null && _f !== void 0 ? _f : barreChordStyle) === BarreChordStyle.ARC;
         var barreChordSpace = addSpaceForArcBarreChord ? this.arcBarHeight() : 0;
         return y + padding + barreChordSpace;
     };
@@ -8250,7 +8250,7 @@ var SVGuitarChord = /** @class */ (function () {
                 var barreWidth = distance;
                 var barreHeight = _this.arcBarHeight();
                 var fretStroke = fret === 1 ? _this.topFretSize() : 0;
-                var barreYStart = barreCenterY - (fretSpacing / 2) - barreHeight - fretStroke;
+                var barreYStart = barreCenterY - fretSpacing / 2 - barreHeight - fretStroke;
                 var _j = _this.rectCoordinates(fromStringX, barreYStart, barreWidth, barreHeight), rectX = _j.x, rectY = _j.y, rectHeight = _j.height, rectWidth = _j.width;
                 _this.renderer.arc(rectX, rectY, rectWidth, rectHeight, _this.orientation == Orientation.horizontal ? ArcDirection.LEFT : ArcDirection.UP, barreChordStrokeWidth, barreChordStrokeColor, classNames, color !== null && color !== void 0 ? color : fingerColor);
             }
@@ -8294,9 +8294,11 @@ var SVGuitarChord = /** @class */ (function () {
         if ((_l = this.settings.showFretMarkers) !== null && _l !== void 0 ? _l : defaultSettings.showFretMarkers) {
             (_m = this.settings.fretMarkers) === null || _m === void 0 ? void 0 : _m.forEach(function (fretMarker) {
                 var _a, _b, _c, _d, _e;
-                var fretMarkerOptions = (typeof fretMarker == 'number' ? {
-                    fret: fretMarker,
-                } : fretMarker);
+                var fretMarkerOptions = (typeof fretMarker == 'number'
+                    ? {
+                        fret: fretMarker,
+                    }
+                    : fretMarker);
                 if (fretMarkerOptions.fret >= _this.numFrets()) {
                     // don't draw fret markers outside the chord diagram
                     return;
@@ -8314,7 +8316,7 @@ var SVGuitarChord = /** @class */ (function () {
                     _this.stringSpacing();
                     var doubleFretMarkerDistance = (_e = (_d = fretMarkerOptions.distance) !== null && _d !== void 0 ? _d : _this.settings.doubleFretMarkerDistance) !== null && _e !== void 0 ? _e : defaultSettings.doubleFretMarkerDistance;
                     var neckWidth = (_this.numStrings() - 1) * _this.stringSpacing();
-                    var fretMarkerDistanceFromCenter = neckWidth * doubleFretMarkerDistance / 2;
+                    var fretMarkerDistanceFromCenter = (neckWidth * doubleFretMarkerDistance) / 2;
                     _this.drawFretMarker(fretMarkerCenterX - fretMarkerDistanceFromCenter, fretMarkerCenterY, fretMarkerSize, fretMarkerColor, fretMarker, classNames);
                     _this.drawFretMarker(fretMarkerCenterX + fretMarkerDistanceFromCenter, fretMarkerCenterY, fretMarkerSize, fretMarkerColor, fretMarker, classNames);
                 }
