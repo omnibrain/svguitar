@@ -412,5 +412,6 @@ Here are some projects that use `svguitar`:
 - [Chordpress Wordpress Plugin - ChordPro Text Formatter](https://wordpress.org/plugins/chordpress/)
 - [Harmonote - Find chords for your favorite songs](https://harmonote.com/)
 - [Guide Tones Practice - A technique to learn Jazz chords quickly](https://www.onlinemusictools.com/guide-tones/)
+- [Lyric Writing Assistant](https://reprahkcin.github.io/lyric-writing-assistant/)
 
 Are you using SVGuitar? Create an issue to get your project listed here! Or simply create a pull request with your project added.
