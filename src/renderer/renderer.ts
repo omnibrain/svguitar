@@ -6,6 +6,11 @@ export enum Alignment {
   RIGHT = 'right',
 }
 
+export enum ArcDirection {
+  UP = 'up',
+  LEFT = 'left',
+}
+
 export interface GraphcisElement {
   width: number
   height: number
@@ -71,6 +76,18 @@ export abstract class Renderer {
     radius?: number,
   ): GraphcisElement
 
+  abstract arc(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    direction: ArcDirection,
+    strokeWidth: number,
+    strokeColor: string,
+    classes?: string | string[],
+    fill?: string,
+  ): GraphcisElement
+
   abstract triangle(
     x: number,
     y: number,
@@ -117,6 +134,60 @@ export abstract class Renderer {
     const lines = points.reduce((acc, [posX, posY]) => `${acc} L${posX} ${posY}`, '')
 
     return `M${curX} ${curY} ${lines}`
+  }
+
+  protected static arcBarrePath(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    direction: ArcDirection,
+  ): string {
+    // arc thickness (0-1): higher means thicker
+    const thickness = 0.35
+    const t = Math.max(0, Math.min(1, 1 - thickness))
+
+    let xStart: number, yStart: number
+    let xEnd: number, yEnd: number
+    let cxOuter: number, cyOuter: number
+    let cxInner: number, cyInner: number
+
+    switch (direction) {
+      case ArcDirection.UP: {
+        xStart = x
+        yStart = y + height
+        xEnd = x + width
+        yEnd = y + height
+
+        cxOuter = x + width / 2
+        cyOuter = y - height
+
+        cxInner = cxOuter
+        cyInner = yStart - (height * 2) * t
+        break
+      }
+
+      case ArcDirection.LEFT: {
+        xStart = x + width
+        yStart = y
+        xEnd = x + width
+        yEnd = y + height
+
+        cxOuter = x - width
+        cyOuter = y + height / 2
+
+        cxInner = xStart - (width * 2) * t
+        cyInner = cyOuter
+        break
+      }
+    }
+
+    return [
+      `M ${xStart} ${yStart}`,
+      `Q ${cxOuter} ${cyOuter} ${xEnd} ${yEnd}`,
+      `Q ${cxInner} ${cyInner} ${xStart} ${yStart}`,
+      `Z`,
+    ].join(' ')
   }
 
   protected static toClassName(classes?: string | string[]): string {

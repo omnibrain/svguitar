@@ -116,6 +116,7 @@ new SVGuitarChord('#some-selector')
         color: '#0F0',
         textColor: '#F00',
         className: 'my-barre-chord',
+        style: 'rectangle' // use 'arc' for an arc
       },
     ],
 
@@ -202,6 +203,11 @@ new SVGuitarChord('#some-selector')
      * stroke width of a finger or barre
      */
     fingerStrokeWidth: 0,
+
+    /**
+     * style of barre chords. Can be either 'rectangle' (default) or 'arc'.
+     */
+    barreChordStyle: 'rectangle',
 
     /**
      * stroke color of a barre chord. Defaults to the finger color if not set

@@ -11,6 +11,7 @@ import {
 } from './plugin'
 import { Alignment, GraphcisElement, Renderer, RoughJsRenderer, SvgJsRenderer } from './renderer'
 import { range } from './utils/range'
+import { ArcDirection } from './renderer/renderer'
 
 // export types for Typedoc
 export type {
@@ -31,10 +32,15 @@ export type {
 export type SilentString = 'x'
 export type OpenString = 0
 export type Finger = [number, number | OpenString | SilentString, (string | FingerOptions)?]
+export enum BarreChordStyle {
+  RECTANGLE = 'rectangle',
+  ARC = 'arc',
+}
 export type Barre = {
   fromString: number
   toString: number
   fret: number
+  style?: BarreChordStyle
   text?: string
   color?: string
   textColor?: string
@@ -42,6 +48,7 @@ export type Barre = {
   strokeColor?: string
   className?: string
 }
+
 export type Chord = {
   /**
    * The fingers
@@ -297,9 +304,16 @@ export interface ChordSettings {
   fingerStrokeWidth?: number
 
   /**
+   * style of barre chords. Can be either 'rectangle' (default) or 'arc'.
+   * Can be changed for each barre individually as well with the `style` option.
+   */
+  barreChordStyle?: BarreChordStyle,
+
+  /**
    * stroke color of a barre chord. Defaults to the finger color if not set
    */
   barreChordStrokeColor?: string
+
 
   /**
    * stroke width of a barre chord
@@ -413,7 +427,7 @@ export interface ChordSettings {
   noPosition?: boolean
 
   /**
-   * When set to true the distance between the chord diagram and the top of the SVG stayes the same,
+   * When set to true the distance between the chord diagram and the top of the SVG stays the same,
    * no matter if a title is defined or not.
    */
   fixedDiagramPosition?: boolean
@@ -461,6 +475,7 @@ interface RequiredChordSettings {
   fingerTextColor: string
   fingerTextSize: number
   fingerStrokeWidth: number
+  barreChordStyle: BarreChordStyle
   barreChordStrokeWidth: number
   sidePadding: number
   titleFontSize: number
@@ -496,6 +511,7 @@ const defaultSettings: RequiredChordSettings = {
   fingerTextColor: '#FFF',
   fingerTextSize: 24,
   fingerStrokeWidth: 0,
+  barreChordStyle: BarreChordStyle.RECTANGLE,
   barreChordStrokeWidth: 0,
   sidePadding: 0.2,
   titleFontSize: 48,
@@ -857,24 +873,25 @@ export class SVGuitarChord {
     }
   }
 
-  private drawTopFret(y: number): number {
-    const stringXpositions = this.stringXPos()
-    const strokeWidth = this.settings.strokeWidth ?? defaultSettings.strokeWidth
-    const nutWidth =
-      this.settings.topFretWidth ?? this.settings.nutWidth ?? defaultSettings.nutWidth
-    const startX = stringXpositions[0] - strokeWidth / 2
-    const endX = stringXpositions[stringXpositions.length - 1] + strokeWidth / 2
+  private topFretSize() {
+    const strokeWidth = this.strokeWidth()
     const position =
       this.chordInternal.position ?? this.settings.position ?? defaultSettings.position
-    const color = this.settings.fretColor ?? this.settings.color ?? defaultSettings.color
     const noPositon = this.settings.noPosition ?? defaultSettings.noPosition
+    const nutWidth =
+      this.settings.nutWidth ?? this.settings.nutWidth ?? defaultSettings.nutWidth
 
-    let fretSize: number
-    if (position > 1 || noPositon) {
-      fretSize = strokeWidth
-    } else {
-      fretSize = nutWidth
-    }
+    return position > 1 || noPositon ? strokeWidth : nutWidth
+  }
+
+  private drawTopFret(y: number): number {
+    const strokeWidth = this.strokeWidth()
+    const stringXpositions = this.stringXPos()
+    const startX = stringXpositions[0] - strokeWidth / 2
+    const endX = stringXpositions[stringXpositions.length - 1] + strokeWidth / 2
+    const color = this.settings.fretColor ?? this.settings.color ?? defaultSettings.color
+
+    const fretSize = this.topFretSize()
 
     const { x: lineX1, y: lineY1 } = this.coordinates(startX, y + fretSize / 2)
     const { x: lineX2, y: lineY2 } = this.coordinates(endX, y + fretSize / 2)
@@ -909,6 +926,19 @@ export class SVGuitarChord {
     const width = endX - startX
 
     return width / (strings - 1)
+  }
+
+  private fingerSize() {
+    const relativeFingerSize = this.settings.fingerSize ?? defaultSettings.fingerSize
+    return relativeFingerSize * this.stringSpacing()
+  }
+
+  private arcBarHeight() {
+    return this.fingerSize() / 1.5
+  }
+
+  private strokeWidth() {
+    return this.settings.strokeWidth ?? defaultSettings.strokeWidth
   }
 
   private fretSpacing(): number {
@@ -1041,7 +1071,18 @@ export class SVGuitarChord {
         }
       })
 
-    return hasEmpty || this.settings.fixedDiagramPosition ? y + size + 2 * padding : y + padding
+    if (hasEmpty || this.settings.fixedDiagramPosition) {
+      return y + size + 2 * padding
+    }
+
+    // add space for the arc barre chord between the title and the diagram
+    // in case there are no empty string indicators
+    const barreChordStyle = this.settings.barreChordStyle ?? defaultSettings.barreChordStyle
+    const addSpaceForArcBarreChord = this.chordInternal.barres.some((barre) => barre.fret === 1)
+      && ((this.chordInternal.barres[0]?.style ?? barreChordStyle) === BarreChordStyle.ARC)
+    const barreChordSpace = addSpaceForArcBarreChord ? this.arcBarHeight() : 0
+
+    return y + padding + barreChordSpace
   }
 
   private drawGrid(y: number): number {
@@ -1061,7 +1102,7 @@ export class SVGuitarChord {
     const fingerColor = this.settings.fingerColor ?? this.settings.color ?? defaultSettings.color
     const fretColor = this.settings.fretColor ?? this.settings.color ?? defaultSettings.color
     const barreChordRadius = this.settings.barreChordRadius ?? defaultSettings.barreChordRadius
-    const strokeWidth = this.settings.strokeWidth ?? defaultSettings.strokeWidth
+    const strokeWidth = this.strokeWidth()
     const fontFamily = this.settings.fontFamily ?? defaultSettings.fontFamily
     const fingerTextColor = this.settings.fingerTextColor ?? defaultSettings.fingerTextColor
     const fingerTextSize = this.settings.fingerTextSize ?? defaultSettings.fingerTextSize
@@ -1091,6 +1132,7 @@ export class SVGuitarChord {
         fret,
         fromString,
         toString,
+        style,
         text,
         color,
         textColor,
@@ -1113,38 +1155,74 @@ export class SVGuitarChord {
           this.settings.barreChordStrokeWidth ??
           defaultSettings.barreChordStrokeWidth
 
+        const barreChordStyle = style ?? this.settings.barreChordStyle ?? defaultSettings.barreChordStyle
+
         const classNames = [
           ElementType.BARRE,
+          `${ElementType.BARRE}-${barreChordStyle}`,
           `${ElementType.BARRE}-fret-${fret - 1}`,
           ...(className ? [className] : []),
         ]
 
-        const barreWidth = distance + stringSpacing / 2
-        const barreHeight = fingerSize
+        if (barreChordStyle == BarreChordStyle.RECTANGLE) {
+          const barreWidth = distance + stringSpacing / 2
 
-        const {
-          x: rectX,
-          y: rectY,
-          height: rectHeight,
-          width: rectWidth,
-        } = this.rectCoordinates(
-          fromStringX - stringSpacing / 4,
-          barreCenterY - fingerSize / 2,
-          barreWidth,
-          barreHeight,
-        )
+          const {
+            x: rectX,
+            y: rectY,
+            height: rectHeight,
+            width: rectWidth,
+          } = this.rectCoordinates(
+            fromStringX - stringSpacing / 4,
+            barreCenterY - fingerSize / 2,
+            barreWidth,
+            fingerSize, // height
+          )
 
-        this.renderer.rect(
-          rectX,
-          rectY,
-          rectWidth,
-          rectHeight,
-          barreChordStrokeWidth,
-          barreChordStrokeColor,
-          classNames,
-          color ?? fingerColor,
-          fingerSize * barreChordRadius,
-        )
+          this.renderer.rect(
+            rectX,
+            rectY,
+            rectWidth,
+            rectHeight,
+            barreChordStrokeWidth,
+            barreChordStrokeColor,
+            classNames,
+            'black' ?? color ?? fingerColor,
+            fingerSize * barreChordRadius,
+          )
+        } else if (barreChordStyle == BarreChordStyle.ARC) {
+          const barreWidth = distance
+          const barreHeight = this.arcBarHeight()
+
+          const fretStroke = fret === 1 ? this.topFretSize() : 0
+          const barreYStart = barreCenterY - (fretSpacing / 2) - barreHeight - fretStroke
+
+          const {
+            x: rectX,
+            y: rectY,
+            height: rectHeight,
+            width: rectWidth,
+          } = this.rectCoordinates(
+            fromStringX,
+            barreYStart,
+            barreWidth,
+            barreHeight,
+          )
+
+          this.renderer.arc(
+            rectX,
+            rectY,
+            rectWidth,
+            rectHeight,
+            this.orientation == Orientation.horizontal ? ArcDirection.LEFT : ArcDirection.UP,
+            barreChordStrokeWidth,
+            barreChordStrokeColor,
+            classNames,
+            color ?? fingerColor,
+          )
+        } else {
+          throw new Error(`Invalid barre chord style ${this.settings.barreChordStyle}`)
+        }
 
         // draw text on the barre chord
         if (text) {
@@ -1628,4 +1706,5 @@ export class SVGuitarChord {
   private get orientation(): Orientation {
     return this.settings.orientation ?? defaultSettings.orientation
   }
+
 }
