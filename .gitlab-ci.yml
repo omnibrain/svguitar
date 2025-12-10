@@ -1,4 +1,4 @@
-image: node:16
+image: node:24
 
 before_script:
   - yarn install --cache-folder .yarn
