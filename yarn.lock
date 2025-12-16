@@ -3985,6 +3985,11 @@ growly@^1.3.0:
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
   integrity sha512-+xGQY0YyAWCnqy7Cd++hc2JqMYzlm0dG30Jd0beaA64sROr8C4nt8Yc9V5Ro3avlSUDTN0ulqP/VBKi1/lLygw==
 
+hachure-fill@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/hachure-fill/-/hachure-fill-0.4.0.tgz#5684c5268261cb7ea71f11e49696fb7b12a8a5aa"
+  integrity sha512-adAAzV4vgE5BBkeimtSPMkTARn6XFoV8vhel4C4S/B+cC7XNZGXyU3Fb2zNBz0PgYHkLLWWSL0CRSSnC+Xcw5g==
+
 handlebars@^4.7.7:
   version "4.7.7"
   resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.7.tgz#9ce33416aad02dbd6c8fafa8240d5d98004945a1"
@@ -7413,11 +7418,12 @@ rollup@^2.0.0:
   optionalDependencies:
     fsevents "~2.3.2"
 
-roughjs@^4.5.2:
-  version "4.5.2"
-  resolved "https://registry.yarnpkg.com/roughjs/-/roughjs-4.5.2.tgz#aab644dcb41e9a75826c8bd5a5b0a859095f2f10"
-  integrity sha512-2xSlLDKdsWyFxrveYWk9YQ/Y9UfK38EAMRNkYkMqYBJvPX8abCa9PN0x3w02H8Oa6/0bcZICJU+U95VumPqseg==
+roughjs@^4.6.1:
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/roughjs/-/roughjs-4.6.2.tgz#9716fd7921e1ca04bd389c849fa79a5916a87309"
+  integrity sha512-FKQYHxDlymPhw45vz/I7Wvn8Ru3UMopoeOOkf/VgzP4aNGKtgdX0uW+5k/YFb7HBfQg+go44ek34DG+HFJbVJg==
   dependencies:
+    hachure-fill "^0.4.0"
     path-data-parser "^0.1.0"
     points-on-curve "^0.2.0"
     points-on-path "^0.2.1"
