@@ -814,7 +814,7 @@ export class SVGuitarChord {
         } else {
           const svgText = this.renderer.text(
             text,
-            1 / sizeMultiplier + startX - padding,
+            startX - padding,
             y,
             size * sizeMultiplier,
             color,

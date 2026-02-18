@@ -85,7 +85,7 @@ export class SvgJsRenderer extends Renderer {
         .font({
           family: fontFamily,
           size: fontSize,
-          anchor: alignment,
+          anchor: alignment === Alignment.RIGHT ? 'end' : alignment,
           'dominant-baseline': 'central',
         })
         .fill(color)
@@ -97,7 +97,7 @@ export class SvgJsRenderer extends Renderer {
         .font({
           family: fontFamily,
           size: fontSize,
-          anchor: alignment,
+          anchor: alignment === Alignment.RIGHT ? 'end' : alignment,
         })
         .fill(color)
         .addClass(Renderer.toClassName(classes))
