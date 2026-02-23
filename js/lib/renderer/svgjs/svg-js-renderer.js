@@ -75,7 +75,7 @@ var SvgJsRenderer = /** @class */ (function (_super) {
                 .font({
                 family: fontFamily,
                 size: fontSize,
-                anchor: alignment,
+                anchor: alignment === renderer_1.Alignment.RIGHT ? 'end' : alignment,
                 'dominant-baseline': 'central',
             })
                 .fill(color)
@@ -88,7 +88,7 @@ var SvgJsRenderer = /** @class */ (function (_super) {
                 .font({
                 family: fontFamily,
                 size: fontSize,
-                anchor: alignment,
+                anchor: alignment === renderer_1.Alignment.RIGHT ? 'end' : alignment,
             })
                 .fill(color)
                 .addClass(renderer_1.Renderer.toClassName(classes));

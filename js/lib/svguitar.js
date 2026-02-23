@@ -354,7 +354,7 @@ var SVGuitarChord = /** @class */ (function () {
                     }
                 }
                 else {
-                    var svgText = _this.renderer.text(text, 1 / sizeMultiplier + startX - padding, y, size * sizeMultiplier, color, fontFamily, renderer_1.Alignment.RIGHT, className);
+                    var svgText = _this.renderer.text(text, startX - padding, y, size * sizeMultiplier, color, fontFamily, renderer_1.Alignment.RIGHT, className);
                     var x = svgText.x;
                     if (x < 0) {
                         svgText.remove();

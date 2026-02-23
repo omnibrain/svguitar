@@ -7607,7 +7607,7 @@ var SvgJsRenderer = /** @class */ (function (_super) {
                 .font({
                 family: fontFamily,
                 size: fontSize,
-                anchor: alignment,
+                anchor: alignment === Alignment.RIGHT ? 'end' : alignment,
                 'dominant-baseline': 'central',
             })
                 .fill(color)
@@ -7620,7 +7620,7 @@ var SvgJsRenderer = /** @class */ (function (_super) {
                 .font({
                 family: fontFamily,
                 size: fontSize,
-                anchor: alignment,
+                anchor: alignment === Alignment.RIGHT ? 'end' : alignment,
             })
                 .fill(color)
                 .addClass(Renderer.toClassName(classes));
@@ -8010,7 +8010,7 @@ var SVGuitarChord = /** @class */ (function () {
                     }
                 }
                 else {
-                    var svgText = _this.renderer.text(text, 1 / sizeMultiplier + startX - padding, y, size * sizeMultiplier, color, fontFamily, Alignment.RIGHT, className);
+                    var svgText = _this.renderer.text(text, startX - padding, y, size * sizeMultiplier, color, fontFamily, Alignment.RIGHT, className);
                     var x = svgText.x;
                     if (x < 0) {
                         svgText.remove();
