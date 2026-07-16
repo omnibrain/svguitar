@@ -68,14 +68,19 @@ var SvgJsRenderer = /** @class */ (function (_super) {
                 .addClass(renderer_1.Renderer.toClassName(classes));
         }
         else {
+            // the font must be set before positioning because the vertical position is
+            // derived from the text's bounding box, which changes with the font settings.
+            // x is set as a raw attribute so that text-anchor aligns the text around it,
+            // while y() places the top of the bounding box at the given position.
             element = this.svg
                 .text(text)
-                .move(x, y)
                 .font({
                 family: fontFamily,
                 size: fontSize,
                 anchor: alignment === renderer_1.Alignment.RIGHT ? 'end' : alignment,
             })
+                .ax(String(x));
+            element.y(y)
                 .fill(color)
                 .addClass(renderer_1.Renderer.toClassName(classes));
         }
