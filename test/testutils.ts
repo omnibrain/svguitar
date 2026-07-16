@@ -4,6 +4,8 @@ import { join } from 'path'
 // constants
 export const svgOutputDir = './test-renders'
 
+let svgJsParserWarmedUp = false
+
 export function setUpSvgDom(): Document {
   const svgdom = require('svgdom')
   svgdom
@@ -15,9 +17,21 @@ export function setUpSvgDom(): Document {
     // when the font is used the first time
     .preloadFonts()
 
+  const { registerWindow, PathArray } = require('@svgdotjs/svg.js')
+
+  // svg.js lazily creates a hidden helper <svg> element for measurements and
+  // caches it in module scope, attached to whichever document is registered at
+  // that moment. Trigger its creation once against a throwaway document so it
+  // doesn't end up in the rendered output of a test.
+  if (!svgJsParserWarmedUp) {
+    const throwawayWindow = svgdom.createSVGWindow()
+    registerWindow(throwawayWindow, throwawayWindow.document)
+    new PathArray('M0 0').bbox()
+    svgJsParserWarmedUp = true
+  }
+
   const window = svgdom.createSVGWindow()
 
-  const { registerWindow } = require('@svgdotjs/svg.js')
   registerWindow(window, window.document)
 
   return window.document

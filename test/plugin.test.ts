@@ -1,13 +1,13 @@
 import { SVGuitarChord } from '../src/svguitar'
 import { setUpSvgDom } from './testutils'
 
-const document = setUpSvgDom()
-
 describe('SVGuitarChord Plugin', () => {
   let container: HTMLElement
 
   beforeEach(() => {
-    container = document.documentElement
+    // create a fresh DOM for every test so that each test renders into its own,
+    // empty container
+    container = setUpSvgDom().documentElement
   })
 
   test('should apply a basic plugin', () => {

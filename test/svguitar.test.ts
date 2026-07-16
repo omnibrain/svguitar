@@ -7,14 +7,14 @@ import {
 } from '../src/svguitar'
 import { saveSvg, setUpSvgDom } from './testutils'
 
-const document = setUpSvgDom()
-
 describe('SVGuitarChord', () => {
   let container: HTMLElement
   let svguitar: SVGuitarChord
 
   beforeEach(() => {
-    container = document.documentElement
+    // create a fresh DOM for every test so that each test renders into its own,
+    // empty container
+    container = setUpSvgDom().documentElement
     svguitar = new SVGuitarChord(container)
   })
 
