@@ -1,7 +1,6 @@
 import { Box, Container, QuerySelector, SVG } from '@svgdotjs/svg.js'
 import { Alignment, ArcDirection, GraphcisElement, Renderer } from '../renderer'
 import { constants } from '../../constants'
-import { isNode } from '../../utils/is-node'
 
 export class SvgJsRenderer extends Renderer {
   private svg: Container
@@ -13,19 +12,7 @@ export class SvgJsRenderer extends Renderer {
     const { width } = constants
     const height = 0
 
-    /*
-    For some reason the container needs to be initiated differently with svgdom (node) and
-    and in the browser. Might be a bug in either svg.js or svgdom. But this workaround works fine
-    so I'm not going to care for now.
-     */
-    /* istanbul ignore else */
-    if (isNode()) {
-      // node (jest)
-      this.svg = SVG(container) as Container
-    } else {
-      // browser
-      this.svg = SVG().addTo(container)
-    }
+    this.svg = SVG().addTo(container)
 
     this.svg.attr('preserveAspectRatio', 'xMidYMid meet').viewbox(0, 0, width, height)
   }

@@ -133,7 +133,7 @@ export abstract class Renderer {
 
     const lines = points.reduce((acc, [posX, posY]) => `${acc} L${posX} ${posY}`, '')
 
-    return `M${curX} ${curY} ${lines}`
+    return `M${curX} ${curY}${lines}`
   }
 
   protected static arcBarrePath(
