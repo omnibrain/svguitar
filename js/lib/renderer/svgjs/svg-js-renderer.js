@@ -19,7 +19,6 @@ exports.SvgJsRenderer = void 0;
 var svg_js_1 = require("@svgdotjs/svg.js");
 var renderer_1 = require("../renderer");
 var constants_1 = require("../../constants");
-var is_node_1 = require("../../utils/is-node");
 var SvgJsRenderer = /** @class */ (function (_super) {
     __extends(SvgJsRenderer, _super);
     function SvgJsRenderer(container) {
@@ -27,20 +26,7 @@ var SvgJsRenderer = /** @class */ (function (_super) {
         // initialize the SVG
         var width = constants_1.constants.width;
         var height = 0;
-        /*
-        For some reason the container needs to be initiated differently with svgdom (node) and
-        and in the browser. Might be a bug in either svg.js or svgdom. But this workaround works fine
-        so I'm not going to care for now.
-         */
-        /* istanbul ignore else */
-        if ((0, is_node_1.isNode)()) {
-            // node (jest)
-            _this.svg = (0, svg_js_1.SVG)(container);
-        }
-        else {
-            // browser
-            _this.svg = (0, svg_js_1.SVG)().addTo(container);
-        }
+        _this.svg = (0, svg_js_1.SVG)().addTo(container);
         _this.svg.attr('preserveAspectRatio', 'xMidYMid meet').viewbox(0, 0, width, height);
         return _this;
     }

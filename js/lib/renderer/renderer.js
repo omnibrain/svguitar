@@ -53,7 +53,7 @@ var Renderer = /** @class */ (function () {
             var _b = __read(_a, 2), posX = _b[0], posY = _b[1];
             return "".concat(acc, " L").concat(posX, " ").concat(posY);
         }, '');
-        return "M".concat(curX, " ").concat(curY, " ").concat(lines);
+        return "M".concat(curX, " ").concat(curY).concat(lines);
     };
     Renderer.arcBarrePath = function (x, y, width, height, direction) {
         // arc thickness (0-1): higher means thicker
