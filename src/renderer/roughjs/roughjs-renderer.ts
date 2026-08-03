@@ -1,9 +1,4 @@
 /* istanbul ignore file */
-/*
-Unfortunately this roughjs implementation can't be tested with jsdom at the moment. The problem is
-that there is no SVG implementation for JSDOM. If that changes at some point this class can be
-tested just like the svg.js implementation
- */
 
 import { Array, DOMRect, QuerySelector } from '@svgdotjs/svg.js'
 import { RoughSVG } from 'roughjs/bin/svg'
@@ -25,16 +20,15 @@ export class RoughJsRenderer extends Renderer {
 
   private containerNode: HTMLElement
 
+  private doc: Document
+
   private svgNode: SVGSVGElement
 
   constructor(container: QuerySelector | HTMLElement) {
     super(container)
 
     // initialize the container
-    if (container instanceof HTMLElement) {
-      this.containerNode = container
-    } else {
-      this.containerNode = container as unknown as HTMLElement
+    if (typeof container === 'string') {
       const node = document.querySelector<HTMLElement>(container)
 
       if (!node) {
@@ -42,10 +36,17 @@ export class RoughJsRenderer extends Renderer {
       }
 
       this.containerNode = node
+    } else {
+      this.containerNode = container
     }
 
+    // Use the container's own document instead of the global `document` so this renderer also
+    // works in environments (e.g. server-side rendering with svgdom) where there is no global
+    // `document`, only the one associated with the container node.
+    this.doc = this.containerNode.ownerDocument
+
     // create an empty SVG element
-    this.svgNode = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    this.svgNode = this.doc.createElementNS('http://www.w3.org/2000/svg', 'svg')
     this.svgNode.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
     this.svgNode.setAttribute('version', '1.1')
     this.svgNode.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
@@ -66,43 +67,36 @@ export class RoughJsRenderer extends Renderer {
    * encoded font into the SVG so that the font always looks correct.
    */
   private embedDefs() {
-    /*
-    Embed the base64 encoded font. This is done in a timeout because roughjs also creates defs which will simply overwrite existing defs.
-    By putting this in a timeout we make sure that the style tag is added after roughjs finished rendering.
-    ATTENTION: This will only work as long as we're synchronously rendering the diagram! If we ever switch to asynchronous rendering a different
-    solution must be found.
-    */
-    setTimeout(() => {
-      // check if defs were already added
-      if (this.svgNode.querySelector('defs [data-svguitar-def]')) {
-        return
-      }
+    // check if defs were already added
+    if (this.svgNode.querySelector('defs [data-svguitar-def]')) {
+      return
+    }
 
-      let currentDefs = this.svgNode.querySelector('defs')
+    let currentDefs = this.svgNode.querySelector('defs')
 
-      if (!currentDefs) {
-        currentDefs = document.createElementNS('http://www.w3.org/2000/svg', 'defs')
-        this.svgNode.prepend(currentDefs)
-      }
+    if (!currentDefs) {
+      currentDefs = this.doc.createElementNS('http://www.w3.org/2000/svg', 'defs')
+      this.svgNode.prepend(currentDefs)
+    }
 
-      // create dom nodes from HTML string
-      const template = document.createElement('template')
-      template.innerHTML = defs.trim()
+    // create dom nodes from HTML string. A plain container element (rather than a <template>) is
+    // used here since svgdom, which renders diagrams server-side (e.g. in tests), doesn't implement
+    // HTMLTemplateElement's `.content`.
+    const container = this.doc.createElement('div')
+    container.innerHTML = defs.trim()
 
-      // typescript is complaining when I access content.firstChild.children, therefore this ugly workaround.
-      const defsToAdd = template.content.firstChild?.firstChild?.parentElement?.children
+    const defsToAdd = container.querySelector('defs')?.children
 
-      if (defsToAdd) {
-        Array.from(defsToAdd).forEach((def) => {
-          def.setAttribute('data-svguitar-def', 'true')
-          currentDefs?.appendChild(def)
-        })
-      }
-    })
+    if (defsToAdd) {
+      Array.from(defsToAdd).forEach((def) => {
+        def.setAttribute('data-svguitar-def', 'true')
+        currentDefs?.appendChild(def)
+      })
+    }
   }
 
   title(title: string): void {
-    const titleEl = document.createElement('title')
+    const titleEl = this.doc.createElement('title')
     titleEl.textContent = title
     this.svgNode.appendChild(titleEl)
   }
@@ -128,7 +122,7 @@ export class RoughJsRenderer extends Renderer {
     }
 
     const circle = this.rc.circle(x + diameter / 2, y + diameter / 2, diameter, options)
-    circle.classList.add(...RoughJsRenderer.toClassArray(classes))
+    RoughJsRenderer.addClasses(circle, classes)
 
     this.svgNode.appendChild(circle)
 
@@ -171,7 +165,7 @@ export class RoughJsRenderer extends Renderer {
         stroke: color,
       })
 
-      line.classList.add(...RoughJsRenderer.toClassArray(classes))
+      RoughJsRenderer.addClasses(line, classes)
       this.svgNode.appendChild(line)
     }
   }
@@ -215,8 +209,8 @@ export class RoughJsRenderer extends Renderer {
       roughness: 1.5,
     })
     rect.setAttribute('transform', `translate(${x}, ${y})`)
-    rect.classList.add(...RoughJsRenderer.toClassArray(classes))
-    rect2.classList.add(...RoughJsRenderer.toClassArray(classes))
+    RoughJsRenderer.addClasses(rect, classes)
+    RoughJsRenderer.addClasses(rect2, classes)
     this.svgNode.appendChild(rect)
     this.svgNode.appendChild(rect2)
 
@@ -243,7 +237,7 @@ export class RoughJsRenderer extends Renderer {
       roughness: 1.5,
     })
 
-    arc.classList.add(...RoughJsRenderer.toClassArray(classes))
+    RoughJsRenderer.addClasses(arc, classes)
     this.svgNode.appendChild(arc)
 
     return RoughJsRenderer.boxToElement(arc.getBBox(), () => arc.remove())
@@ -265,7 +259,7 @@ export class RoughJsRenderer extends Renderer {
       roughness: 1.5,
     })
     triangle.setAttribute('transform', `translate(${x}, ${y})`)
-    triangle.classList.add(...RoughJsRenderer.toClassArray(classes))
+    RoughJsRenderer.addClasses(triangle, classes)
     this.svgNode.appendChild(triangle)
 
     return RoughJsRenderer.boxToElement(triangle.getBBox(), () => triangle.remove())
@@ -288,7 +282,7 @@ export class RoughJsRenderer extends Renderer {
       roughness: 1.5,
     })
     pentagon.setAttribute('transform', `translate(${x}, ${y})`)
-    pentagon.classList.add(...RoughJsRenderer.toClassArray(classes))
+    RoughJsRenderer.addClasses(pentagon, classes)
     this.svgNode.appendChild(pentagon)
 
     return RoughJsRenderer.boxToElement(pentagon.getBBox(), () => pentagon.remove())
@@ -299,7 +293,7 @@ export class RoughJsRenderer extends Renderer {
   }
 
   background(color: string): void {
-    const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+    const bg = this.doc.createElementNS('http://www.w3.org/2000/svg', 'rect')
 
     bg.setAttributeNS(null, 'width', '100%')
     bg.setAttributeNS(null, 'height', '100%')
@@ -320,7 +314,7 @@ export class RoughJsRenderer extends Renderer {
     plain?: boolean,
   ): GraphcisElement {
     // Place the SVG namespace in a variable to easily reference it.
-    const txtElem = document.createElementNS('http://www.w3.org/2000/svg', 'text')
+    const txtElem = this.doc.createElementNS('http://www.w3.org/2000/svg', 'text')
 
     txtElem.setAttributeNS(null, 'x', String(x))
     txtElem.setAttributeNS(null, 'y', String(y))
@@ -333,7 +327,7 @@ export class RoughJsRenderer extends Renderer {
       txtElem.setAttributeNS(null, 'dominant-baseline', 'central')
     }
 
-    txtElem.appendChild(document.createTextNode(text))
+    txtElem.appendChild(this.doc.createTextNode(text))
 
     this.svgNode.appendChild(txtElem)
 
@@ -355,7 +349,7 @@ export class RoughJsRenderer extends Renderer {
         throw new Error(`Invalid alignment ${alignment}`)
     }
 
-    txtElem.classList.add(...RoughJsRenderer.toClassArray(classes))
+    RoughJsRenderer.addClasses(txtElem, classes)
     txtElem.setAttributeNS(null, 'x', String(x + xOffset))
     txtElem.setAttributeNS(null, 'y', String(y + (plain ? 0 : bbox.height / 2)))
 
@@ -395,6 +389,25 @@ export class RoughJsRenderer extends Renderer {
     }
 
     return Renderer.toClassName(classes).split(' ')
+  }
+
+  /**
+   * Adds classes to an SVG element via the "class" attribute rather than the classList API, since
+   * classList isn't implemented by svgdom (used to render server-side / in tests).
+   */
+  private static addClasses(element: Element, classes?: string | string[]): void {
+    const classArray = RoughJsRenderer.toClassArray(classes)
+
+    if (classArray.length === 0) {
+      return
+    }
+
+    const existingClasses = element.getAttribute('class')
+    const mergedClasses = existingClasses
+      ? `${existingClasses} ${classArray.join(' ')}`
+      : classArray.join(' ')
+
+    element.setAttribute('class', mergedClasses)
   }
 }
 
