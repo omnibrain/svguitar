@@ -26,6 +26,7 @@ export type {
   ApiExtension,
   AnyFunction,
   UnionToIntersection,
+  ArcDirection,
 }
 
 // Chord diagram input types (compatible with Vexchords input, see https://github.com/0xfe/vexchords)

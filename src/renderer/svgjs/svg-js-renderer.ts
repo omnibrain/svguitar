@@ -90,9 +90,7 @@ export class SvgJsRenderer extends Renderer {
           anchor: alignment === Alignment.RIGHT ? 'end' : alignment,
         })
         .ax(String(x))
-      element.y(y)
-        .fill(color)
-        .addClass(Renderer.toClassName(classes))
+      element.y(y).fill(color).addClass(Renderer.toClassName(classes))
     }
 
     return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
