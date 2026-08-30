@@ -13,7 +13,8 @@
   "module": "dist/svguitar.es5.js",
   "typings": "dist/types/svguitar.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "fonts/OpenSans-Regular.ttf"
   ],
   "author": "Raphael Voellmy <r.voellmy@gmail.com>",
   "repository": {

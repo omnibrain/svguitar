@@ -20,7 +20,7 @@ export interface GraphcisElement {
 }
 
 export abstract class Renderer {
-  protected constructor(protected container: QuerySelector | HTMLElement) {}
+  protected constructor(protected container?: QuerySelector | HTMLElement) {}
 
   abstract line(
     x1: number,
@@ -37,6 +37,13 @@ export abstract class Renderer {
   abstract clear(): void
 
   abstract remove(): void
+
+  /**
+   * Serialize the current state of the diagram to an SVG string. The returned string is a
+   * standalone `<svg>` document (including the `xmlns` attribute) and can be written to a file
+   * or used without ever attaching it to the DOM.
+   */
+  abstract toSvgString(): string
 
   abstract background(color: string): void
 

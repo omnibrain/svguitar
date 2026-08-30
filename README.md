@@ -78,6 +78,67 @@ chart
   .draw()
 ```
 
+## Rendering without a browser (Node.js)
+
+SVGuitar can render chord charts to a plain SVG string without a DOM, which is useful for
+generating `.svg` files from a script. Pass no container to the constructor, call `draw()`, and
+then read the result with `toSvg()`.
+
+Under the hood SVGuitar uses [svg.js](https://svgjs.dev), which needs a global `window`/`document`
+to be registered. In Node this is provided by [`svgdom`](https://github.com/svgdotjs/svgdom)
+(already a dependency of SVGuitar). You need to register it once before rendering. Text layout
+depends on real font metrics, so a font also has to be provided — SVGuitar ships
+`OpenSans-Regular.ttf` for this purpose, but you can use any TTF.
+
+```javascript
+const fs = require('fs')
+const path = require('path')
+const { registerWindow } = require('@svgdotjs/svg.js')
+const svgdom = require('svgdom')
+const { SVGuitarChord } = require('svguitar')
+
+// point svgdom at a font and register a headless window (do this once)
+const fontDir = path.dirname(require.resolve('svguitar/fonts/OpenSans-Regular.ttf'))
+svgdom
+  .setFontDir(fontDir)
+  .setFontFamilyMappings({
+    // map every family your charts use to an available font file
+    Arial: 'OpenSans-Regular.ttf',
+    'Open Sans': 'OpenSans-Regular.ttf',
+  })
+  .preloadFonts()
+
+const window = svgdom.createSVGWindow()
+registerWindow(window, window.document)
+
+// render without a container
+const chart = new SVGuitarChord()
+chart
+  .configure({ title: 'Fm' })
+  .chord({
+    fingers: [
+      [6, 1],
+      [5, 3],
+      [4, 3],
+      [3, 1],
+      [2, 1],
+      [1, 1],
+    ],
+    barres: [{ fromString: 6, toString: 1, fret: 1 }],
+    position: 1,
+  })
+  .draw()
+
+fs.writeFileSync('Fm.svg', chart.toSvg())
+```
+
+Notes:
+
+- Metrics come from the bundled Open Sans, not the browser default (Arial), so text sizing is
+  close but not pixel-identical. Provide your own font mapping for exact results.
+- `toSvg()` also works in the browser, with or without a container.
+- The `handdrawn` style is **not** supported in headless mode yet (it still requires a DOM).
+
 ## Usage
 
 The SVG charts are highly customizable.

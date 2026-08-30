@@ -1,5 +1,6 @@
 import {
   BarreChordStyle,
+  ChordStyle,
   FretLabelPosition,
   Orientation,
   Shape,
@@ -1287,5 +1288,62 @@ describe('SVGuitarChord', () => {
     } else {
       expect(() => svguitar.configure({ [setting]: value })).toThrow()
     }
+  })
+
+  describe('SVG string export', () => {
+    it('Should return the rendered diagram as an SVG string via toSvg()', () => {
+      svguitar
+        .chord({
+          fingers: [
+            [1, 2, '1'],
+            [2, 1, '2'],
+            [3, 3, '3'],
+          ],
+          barres: [],
+        })
+        .configure({ title: 'Foo' })
+        .draw()
+
+      const svg = svguitar.toSvg()
+
+      expect(typeof svg).toBe('string')
+      expect(svg).toMatch(/^<svg/)
+      expect(svg).toContain('xmlns="http://www.w3.org/2000/svg"')
+      expect(svg).toContain('class="title"')
+      expect(svg).toContain('</svg>')
+    })
+
+    it('Should render and export without a container (headless mode)', () => {
+      const headless = new SVGuitarChord()
+
+      const dimensions = headless
+        .chord({
+          fingers: [
+            [1, 2, '1'],
+            [2, 1, '2'],
+          ],
+          barres: [{ fromString: 5, toString: 1, fret: 1 }],
+        })
+        .configure({ title: 'Headless', tuning: ['E', 'A', 'D', 'G', 'B', 'E'] })
+        .draw()
+
+      expect(dimensions.width).toBeGreaterThan(0)
+      expect(dimensions.height).toBeGreaterThan(0)
+
+      const svg = headless.toSvg()
+
+      expect(svg).toMatch(/^<svg/)
+      expect(svg).toContain('xmlns="http://www.w3.org/2000/svg"')
+      expect(svg).toContain('class="title"')
+      expect(svg).toContain('Headless')
+
+      saveSvg('headless chord', svg)
+    })
+
+    it('Should not support the handdrawn style without a container', () => {
+      const headless = new SVGuitarChord()
+
+      expect(() => headless.configure({ style: ChordStyle.handdrawn }).draw()).toThrow(/headless/i)
+    })
   })
 })

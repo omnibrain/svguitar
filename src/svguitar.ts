@@ -557,7 +557,14 @@ export class SVGuitarChord {
 
   private chordInternal: Chord = { fingers: [], barres: [] }
 
-  constructor(private container: QuerySelector | HTMLElement) {
+  /**
+   * @param container The element into which the chord diagram is rendered. This can either be a
+   * CSS selector or a DOM element. If omitted, the diagram is rendered detached from the DOM and
+   * can be exported as a string with {@link toSvg}. This is useful for generating SVG files in a
+   * Node.js script without a browser. Note that the detached mode is only supported for the
+   * default (`normal`) chord diagram style.
+   */
+  constructor(private container?: QuerySelector | HTMLElement) {
     // apply plugins
     // https://stackoverflow.com/a/16345172
     const classConstructor = this.constructor as typeof SVGuitarChord
@@ -1549,6 +1556,17 @@ export class SVGuitarChord {
     }
 
     return width + titleBottomMargin
+  }
+
+  /**
+   * Export the current chord diagram as an SVG string. Call this after {@link draw}.
+   *
+   * The returned string is a standalone `<svg>` document (including the `xmlns` attribute), so it
+   * can be written directly to a `.svg` file. This works both in the browser and in a headless
+   * environment (see the constructor documentation).
+   */
+  toSvg(): string {
+    return this.renderer.toSvgString()
   }
 
   clear(): void {
