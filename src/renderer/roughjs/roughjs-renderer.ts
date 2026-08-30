@@ -27,8 +27,15 @@ export class RoughJsRenderer extends Renderer {
 
   private svgNode: SVGSVGElement
 
-  constructor(container: QuerySelector | HTMLElement) {
+  constructor(container?: QuerySelector | HTMLElement) {
     super(container)
+
+    if (!container) {
+      throw new Error(
+        'The handdrawn chord diagram style requires a container element and is not supported ' +
+          'in headless mode yet. Use the default style to render without a DOM.',
+      )
+    }
 
     // initialize the container
     if (container instanceof HTMLElement) {
@@ -148,6 +155,16 @@ export class RoughJsRenderer extends Renderer {
 
   remove(): void {
     this.svgNode.remove()
+  }
+
+  toSvgString(): string {
+    const svg = this.svgNode.outerHTML
+
+    if (svg.includes('xmlns=')) {
+      return svg
+    }
+
+    return svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"')
   }
 
   line(

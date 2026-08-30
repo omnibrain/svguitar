@@ -5,14 +5,18 @@ import { constants } from '../../constants'
 export class SvgJsRenderer extends Renderer {
   private svg: Container
 
-  constructor(container: QuerySelector | HTMLElement) {
+  constructor(container?: QuerySelector | HTMLElement) {
     super(container)
 
     // initialize the SVG
     const { width } = constants
     const height = 0
 
-    this.svg = SVG().addTo(container)
+    // When no container is given the SVG is kept detached from the DOM. It can still be rendered
+    // and then exported via `toSvgString()`. This is the "headless" use case (e.g. generating SVG
+    // files in a Node.js script). Text measurement still works because svg.js uses its own
+    // internal helper element for that.
+    this.svg = container ? SVG().addTo(container) : SVG()
 
     this.svg.attr('preserveAspectRatio', 'xMidYMid meet').viewbox(0, 0, width, height)
   }
@@ -42,6 +46,19 @@ export class SvgJsRenderer extends Renderer {
 
   remove(): void {
     this.svg.remove()
+  }
+
+  toSvgString(): string {
+    const svg = this.svg.svg()
+
+    // svg.js only adds the `xmlns` attribute automatically when the SVG is attached to a real
+    // document. For the detached / headless case we add it here so the result is a valid
+    // standalone SVG document.
+    if (svg.includes('xmlns=')) {
+      return svg
+    }
+
+    return svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"')
   }
 
   background(color: string): void {
