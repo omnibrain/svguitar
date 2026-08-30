@@ -1,4 +1,3 @@
-import { QuerySelector } from '@svgdotjs/svg.js';
 import { AnyFunction, ApiExtension, Constructor, ReturnTypeOf, SVGuitarPlugin, UnionToIntersection } from './plugin';
 import { Alignment, GraphcisElement, Renderer, RoughJsRenderer, SvgJsRenderer } from './renderer';
 export type { Constructor, ReturnTypeOf, SVGuitarPlugin, Renderer, Alignment, GraphcisElement, RoughJsRenderer, SvgJsRenderer, ApiExtension, AnyFunction, UnionToIntersection, };
@@ -361,7 +360,7 @@ export interface ChordSettings {
     svgTitle?: string;
 }
 export declare class SVGuitarChord {
-    private container;
+    private container?;
     static plugins: SVGuitarPlugin[];
     static plugin<S extends Constructor<any> & {
         plugins: any[];
@@ -374,7 +373,14 @@ export declare class SVGuitarChord {
     private rendererInternal?;
     private settings;
     private chordInternal;
-    constructor(container: QuerySelector | HTMLElement);
+    /**
+     * @param container The element into which the chord diagram is rendered. This can either be a
+     * CSS selector or a DOM element. If omitted, the diagram is rendered detached from the DOM and
+     * can be exported as a string with {@link toSvg}. This is useful for generating SVG files in a
+     * Node.js script without a browser. Note that the detached mode is only supported for the
+     * default (`normal`) chord diagram style.
+     */
+    constructor(container?: string | HTMLElement | undefined);
     private get renderer();
     configure(settings: ChordSettings): SVGuitarChord;
     chord(chord: Chord): SVGuitarChord;
@@ -410,6 +416,14 @@ export declare class SVGuitarChord {
     private drawFinger;
     private drawShape;
     private drawTitle;
+    /**
+     * Export the current chord diagram as an SVG string. Call this after {@link draw}.
+     *
+     * The returned string is a standalone `<svg>` document (including the `xmlns` attribute), so it
+     * can be written directly to a `.svg` file. This works both in the browser and in a headless
+     * environment (see the constructor documentation).
+     */
+    toSvg(): string;
     clear(): void;
     /**
      * Completely remove the diagram from the DOM

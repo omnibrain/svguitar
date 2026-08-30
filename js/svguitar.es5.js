@@ -7899,6 +7899,10 @@ var RoughJsRenderer = /** @class */ (function (_super) {
     __extends(RoughJsRenderer, _super);
     function RoughJsRenderer(container) {
         var _this = _super.call(this, container) || this;
+        if (!container) {
+            throw new Error('The handdrawn chord diagram style requires a container element and is not supported ' +
+                'in headless mode yet. Use the default style to render without a DOM.');
+        }
         // initialize the container
         if (container instanceof HTMLElement) {
             _this.containerNode = container;
@@ -7992,6 +7996,13 @@ var RoughJsRenderer = /** @class */ (function (_super) {
     };
     RoughJsRenderer.prototype.remove = function () {
         this.svgNode.remove();
+    };
+    RoughJsRenderer.prototype.toSvgString = function () {
+        var svg = this.svgNode.outerHTML;
+        if (svg.includes('xmlns=')) {
+            return svg;
+        }
+        return svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
     };
     RoughJsRenderer.prototype.line = function (x1, y1, x2, y2, strokeWidth, color, classes) {
         var _a;
@@ -8156,7 +8167,11 @@ var SvgJsRenderer = /** @class */ (function (_super) {
         // initialize the SVG
         var width = constants.width;
         var height = 0;
-        _this.svg = SVG().addTo(container);
+        // When no container is given the SVG is kept detached from the DOM. It can still be rendered
+        // and then exported via `toSvgString()`. This is the "headless" use case (e.g. generating SVG
+        // files in a Node.js script). Text measurement still works because svg.js uses its own
+        // internal helper element for that.
+        _this.svg = container ? SVG().addTo(container) : SVG();
         _this.svg.attr('preserveAspectRatio', 'xMidYMid meet').viewbox(0, 0, width, height);
         return _this;
     }
@@ -8174,6 +8189,16 @@ var SvgJsRenderer = /** @class */ (function (_super) {
     };
     SvgJsRenderer.prototype.remove = function () {
         this.svg.remove();
+    };
+    SvgJsRenderer.prototype.toSvgString = function () {
+        var svg = this.svg.svg();
+        // svg.js only adds the `xmlns` attribute automatically when the SVG is attached to a real
+        // document. For the detached / headless case we add it here so the result is a valid
+        // standalone SVG document.
+        if (svg.includes('xmlns=')) {
+            return svg;
+        }
+        return svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
     };
     SvgJsRenderer.prototype.background = function (color) {
         this.svg.rect().size('100%', '100%').fill(color);
@@ -8391,6 +8416,13 @@ var defaultSettings = {
     showFretMarkers: true,
 };
 var SVGuitarChord = /** @class */ (function () {
+    /**
+     * @param container The element into which the chord diagram is rendered. This can either be a
+     * CSS selector or a DOM element. If omitted, the diagram is rendered detached from the DOM and
+     * can be exported as a string with {@link toSvg}. This is useful for generating SVG files in a
+     * Node.js script without a browser. Note that the detached mode is only supported for the
+     * default (`normal`) chord diagram style.
+     */
     function SVGuitarChord(container) {
         var _this = this;
         this.container = container;
@@ -9000,6 +9032,16 @@ var SVGuitarChord = /** @class */ (function () {
             remove();
         }
         return width + titleBottomMargin;
+    };
+    /**
+     * Export the current chord diagram as an SVG string. Call this after {@link draw}.
+     *
+     * The returned string is a standalone `<svg>` document (including the `xmlns` attribute), so it
+     * can be written directly to a `.svg` file. This works both in the browser and in a headless
+     * environment (see the constructor documentation).
+     */
+    SVGuitarChord.prototype.toSvg = function () {
+        return this.renderer.toSvgString();
     };
     SVGuitarChord.prototype.clear = function () {
         this.renderer.clear();

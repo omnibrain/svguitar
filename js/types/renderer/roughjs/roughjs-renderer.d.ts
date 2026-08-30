@@ -4,7 +4,7 @@ export declare class RoughJsRenderer extends Renderer {
     private rc;
     private containerNode;
     private svgNode;
-    constructor(container: QuerySelector | HTMLElement);
+    constructor(container?: QuerySelector | HTMLElement);
     /**
      * This will embed all defs defined in the defs.html file. Specifically this is used to embed the base64
      * encoded font into the SVG so that the font always looks correct.
@@ -14,6 +14,7 @@ export declare class RoughJsRenderer extends Renderer {
     circle(x: number, y: number, diameter: number, strokeWidth: number, strokeColor: string, fill?: string, classes?: string | string[]): GraphcisElement;
     clear(): void;
     remove(): void;
+    toSvgString(): string;
     line(x1: number, y1: number, x2: number, y2: number, strokeWidth: number, color: string, classes?: string | string[]): void;
     rect(x: number, y: number, width: number, height: number, strokeWidth: number, strokeColor: string, classes?: string | string[], fill?: string, radius?: number): GraphcisElement;
     arc(x: number, y: number, width: number, height: number, direction: ArcDirection, strokeWidth: number, strokeColor: string, classes?: string | string[], fill?: string): GraphcisElement;

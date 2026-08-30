@@ -1,4 +1,3 @@
-import { QuerySelector } from '@svgdotjs/svg.js';
 export declare enum Alignment {
     LEFT = "left",
     MIDDLE = "middle",
@@ -16,12 +15,18 @@ export interface GraphcisElement {
     remove: () => void;
 }
 export declare abstract class Renderer {
-    protected container: QuerySelector | HTMLElement;
-    protected constructor(container: QuerySelector | HTMLElement);
+    protected container?: string | HTMLElement | undefined;
+    protected constructor(container?: string | HTMLElement | undefined);
     abstract line(x1: number, y1: number, x2: number, y2: number, strokeWidth: number, color: string, classes?: string | string[]): void;
     abstract size(width: number, height: number): void;
     abstract clear(): void;
     abstract remove(): void;
+    /**
+     * Serialize the current state of the diagram to an SVG string. The returned string is a
+     * standalone `<svg>` document (including the `xmlns` attribute) and can be written to a file
+     * or used without ever attaching it to the DOM.
+     */
+    abstract toSvgString(): string;
     abstract background(color: string): void;
     abstract title(title: string): void;
     abstract text(text: string, x: number, y: number, fontSize: number, color: string, fontFamily: string, alignment: Alignment, classes?: string | string[], plain?: boolean): GraphcisElement;

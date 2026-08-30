@@ -26,7 +26,11 @@ var SvgJsRenderer = /** @class */ (function (_super) {
         // initialize the SVG
         var width = constants_1.constants.width;
         var height = 0;
-        _this.svg = (0, svg_js_1.SVG)().addTo(container);
+        // When no container is given the SVG is kept detached from the DOM. It can still be rendered
+        // and then exported via `toSvgString()`. This is the "headless" use case (e.g. generating SVG
+        // files in a Node.js script). Text measurement still works because svg.js uses its own
+        // internal helper element for that.
+        _this.svg = container ? (0, svg_js_1.SVG)().addTo(container) : (0, svg_js_1.SVG)();
         _this.svg.attr('preserveAspectRatio', 'xMidYMid meet').viewbox(0, 0, width, height);
         return _this;
     }
@@ -44,6 +48,16 @@ var SvgJsRenderer = /** @class */ (function (_super) {
     };
     SvgJsRenderer.prototype.remove = function () {
         this.svg.remove();
+    };
+    SvgJsRenderer.prototype.toSvgString = function () {
+        var svg = this.svg.svg();
+        // svg.js only adds the `xmlns` attribute automatically when the SVG is attached to a real
+        // document. For the detached / headless case we add it here so the result is a valid
+        // standalone SVG document.
+        if (svg.includes('xmlns=')) {
+            return svg;
+        }
+        return svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
     };
     SvgJsRenderer.prototype.background = function (color) {
         this.svg.rect().size('100%', '100%').fill(color);

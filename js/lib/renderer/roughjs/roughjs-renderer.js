@@ -62,6 +62,10 @@ var RoughJsRenderer = /** @class */ (function (_super) {
     __extends(RoughJsRenderer, _super);
     function RoughJsRenderer(container) {
         var _this = _super.call(this, container) || this;
+        if (!container) {
+            throw new Error('The handdrawn chord diagram style requires a container element and is not supported ' +
+                'in headless mode yet. Use the default style to render without a DOM.');
+        }
         // initialize the container
         if (container instanceof HTMLElement) {
             _this.containerNode = container;
@@ -155,6 +159,13 @@ var RoughJsRenderer = /** @class */ (function (_super) {
     };
     RoughJsRenderer.prototype.remove = function () {
         this.svgNode.remove();
+    };
+    RoughJsRenderer.prototype.toSvgString = function () {
+        var svg = this.svgNode.outerHTML;
+        if (svg.includes('xmlns=')) {
+            return svg;
+        }
+        return svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
     };
     RoughJsRenderer.prototype.line = function (x1, y1, x2, y2, strokeWidth, color, classes) {
         var _a;
