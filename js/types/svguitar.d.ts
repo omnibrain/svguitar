@@ -1,6 +1,7 @@
 import { AnyFunction, ApiExtension, Constructor, ReturnTypeOf, SVGuitarPlugin, UnionToIntersection } from './plugin';
 import { Alignment, GraphcisElement, Renderer, RoughJsRenderer, SvgJsRenderer } from './renderer';
-export type { Constructor, ReturnTypeOf, SVGuitarPlugin, Renderer, Alignment, GraphcisElement, RoughJsRenderer, SvgJsRenderer, ApiExtension, AnyFunction, UnionToIntersection, };
+import { ArcDirection } from './renderer/renderer';
+export type { Constructor, ReturnTypeOf, SVGuitarPlugin, Renderer, Alignment, GraphcisElement, RoughJsRenderer, SvgJsRenderer, ApiExtension, AnyFunction, UnionToIntersection, ArcDirection, };
 export declare type SilentString = 'x';
 export declare type OpenString = 0;
 export declare type Finger = [number, number | OpenString | SilentString, (string | FingerOptions)?];

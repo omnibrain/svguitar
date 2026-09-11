@@ -94,9 +94,7 @@ var SvgJsRenderer = /** @class */ (function (_super) {
                 anchor: alignment === renderer_1.Alignment.RIGHT ? 'end' : alignment,
             })
                 .ax(String(x));
-            element.y(y)
-                .fill(color)
-                .addClass(renderer_1.Renderer.toClassName(classes));
+            element.y(y).fill(color).addClass(renderer_1.Renderer.toClassName(classes));
         }
         return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element));
     };

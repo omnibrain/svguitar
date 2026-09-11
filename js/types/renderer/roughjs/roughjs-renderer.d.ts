@@ -3,6 +3,7 @@ import { Alignment, ArcDirection, GraphcisElement, Renderer } from '../renderer'
 export declare class RoughJsRenderer extends Renderer {
     private rc;
     private containerNode;
+    private doc;
     private svgNode;
     constructor(container?: QuerySelector | HTMLElement);
     /**
@@ -26,5 +27,10 @@ export declare class RoughJsRenderer extends Renderer {
     private static boxToElement;
     private static roundedRectData;
     private static toClassArray;
+    /**
+     * Adds classes to an SVG element via the "class" attribute rather than the classList API, since
+     * classList isn't implemented by svgdom (used to render server-side / in tests).
+     */
+    private static addClasses;
 }
 export default RoughJsRenderer;

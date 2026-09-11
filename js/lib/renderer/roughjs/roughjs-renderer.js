@@ -1,10 +1,5 @@
 "use strict";
 /* istanbul ignore file */
-/*
-Unfortunately this roughjs implementation can't be tested with jsdom at the moment. The problem is
-that there is no SVG implementation for JSDOM. If that changes at some point this class can be
-tested just like the svg.js implementation
- */
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -20,36 +15,14 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __read = (this && this.__read) || function (o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
-        }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-};
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RoughJsRenderer = void 0;
 var svg_js_1 = require("@svgdotjs/svg.js");
-var roughjs_1 = require("roughjs");
-var defs_1 = require("./defs");
+var roughjs_1 = __importDefault(require("roughjs"));
+var defs_1 = __importDefault(require("./defs"));
 var renderer_1 = require("../renderer");
 /**
  * Currently the font is hard-coded to 'Patrick Hand' when using the handdrawn chord diagram style.
@@ -67,19 +40,22 @@ var RoughJsRenderer = /** @class */ (function (_super) {
                 'in headless mode yet. Use the default style to render without a DOM.');
         }
         // initialize the container
-        if (container instanceof HTMLElement) {
-            _this.containerNode = container;
-        }
-        else {
-            _this.containerNode = container;
+        if (typeof container === 'string') {
             var node = document.querySelector(container);
             if (!node) {
                 throw new Error("No element found with selector \"".concat(container, "\""));
             }
             _this.containerNode = node;
         }
+        else {
+            _this.containerNode = container;
+        }
+        // Use the container's own document instead of the global `document` so this renderer also
+        // works in environments (e.g. server-side rendering with svgdom) where there is no global
+        // `document`, only the one associated with the container node.
+        _this.doc = _this.containerNode.ownerDocument;
         // create an empty SVG element
-        _this.svgNode = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        _this.svgNode = _this.doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
         _this.svgNode.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
         _this.svgNode.setAttribute('version', '1.1');
         _this.svgNode.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
@@ -96,44 +72,35 @@ var RoughJsRenderer = /** @class */ (function (_super) {
      * encoded font into the SVG so that the font always looks correct.
      */
     RoughJsRenderer.prototype.embedDefs = function () {
-        var _this = this;
-        /*
-        Embed the base64 encoded font. This is done in a timeout because roughjs also creates defs which will simply overwrite existing defs.
-        By putting this in a timeout we make sure that the style tag is added after roughjs finished rendering.
-        ATTENTION: This will only work as long as we're synchronously rendering the diagram! If we ever switch to asynchronous rendering a different
-        solution must be found.
-        */
-        setTimeout(function () {
-            var _a, _b, _c;
-            // check if defs were already added
-            if (_this.svgNode.querySelector('defs [data-svguitar-def]')) {
-                return;
-            }
-            var currentDefs = _this.svgNode.querySelector('defs');
-            if (!currentDefs) {
-                currentDefs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-                _this.svgNode.prepend(currentDefs);
-            }
-            // create dom nodes from HTML string
-            var template = document.createElement('template');
-            template.innerHTML = defs_1.default.trim();
-            // typescript is complaining when I access content.firstChild.children, therefore this ugly workaround.
-            var defsToAdd = (_c = (_b = (_a = template.content.firstChild) === null || _a === void 0 ? void 0 : _a.firstChild) === null || _b === void 0 ? void 0 : _b.parentElement) === null || _c === void 0 ? void 0 : _c.children;
-            if (defsToAdd) {
-                svg_js_1.Array.from(defsToAdd).forEach(function (def) {
-                    def.setAttribute('data-svguitar-def', 'true');
-                    currentDefs === null || currentDefs === void 0 ? void 0 : currentDefs.appendChild(def);
-                });
-            }
-        });
+        var _a;
+        // check if defs were already added
+        if (this.svgNode.querySelector('defs [data-svguitar-def]')) {
+            return;
+        }
+        var currentDefs = this.svgNode.querySelector('defs');
+        if (!currentDefs) {
+            currentDefs = this.doc.createElementNS('http://www.w3.org/2000/svg', 'defs');
+            this.svgNode.prepend(currentDefs);
+        }
+        // create dom nodes from HTML string. A plain container element (rather than a <template>) is
+        // used here since svgdom, which renders diagrams server-side (e.g. in tests), doesn't implement
+        // HTMLTemplateElement's `.content`.
+        var container = this.doc.createElement('div');
+        container.innerHTML = defs_1.default.trim();
+        var defsToAdd = (_a = container.querySelector('defs')) === null || _a === void 0 ? void 0 : _a.children;
+        if (defsToAdd) {
+            svg_js_1.Array.from(defsToAdd).forEach(function (def) {
+                def.setAttribute('data-svguitar-def', 'true');
+                currentDefs === null || currentDefs === void 0 ? void 0 : currentDefs.appendChild(def);
+            });
+        }
     };
     RoughJsRenderer.prototype.title = function (title) {
-        var titleEl = document.createElement('title');
+        var titleEl = this.doc.createElement('title');
         titleEl.textContent = title;
         this.svgNode.appendChild(titleEl);
     };
     RoughJsRenderer.prototype.circle = function (x, y, diameter, strokeWidth, strokeColor, fill, classes) {
-        var _a;
         var options = {
             fill: fill || 'none',
             fillWeight: 2.5,
@@ -144,7 +111,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             options.strokeWidth = strokeWidth;
         }
         var circle = this.rc.circle(x + diameter / 2, y + diameter / 2, diameter, options);
-        (_a = circle.classList).add.apply(_a, __spreadArray([], __read(RoughJsRenderer.toClassArray(classes)), false));
+        RoughJsRenderer.addClasses(circle, classes);
         this.svgNode.appendChild(circle);
         return RoughJsRenderer.boxToElement(circle.getBBox(), function () {
             return circle ? circle.remove() : undefined;
@@ -168,7 +135,6 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         return svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
     };
     RoughJsRenderer.prototype.line = function (x1, y1, x2, y2, strokeWidth, color, classes) {
-        var _a;
         if (strokeWidth > 5 && (x1 - x2 === 0 || y1 - y2 === 0)) {
             if (Math.abs(x1 - x2) > Math.abs(y1 - y2)) {
                 this.rect(x1, y1, x2 - x1, strokeWidth, 0, color, color);
@@ -182,12 +148,11 @@ var RoughJsRenderer = /** @class */ (function (_super) {
                 strokeWidth: strokeWidth,
                 stroke: color,
             });
-            (_a = line.classList).add.apply(_a, __spreadArray([], __read(RoughJsRenderer.toClassArray(classes)), false));
+            RoughJsRenderer.addClasses(line, classes);
             this.svgNode.appendChild(line);
         }
     };
     RoughJsRenderer.prototype.rect = function (x, y, width, height, strokeWidth, strokeColor, classes, fill, radius) {
-        var _a, _b;
         var rect2 = this.rc.rectangle(x, y, width, height, {
             // fill: fill || 'none',
             fill: 'none',
@@ -208,14 +173,13 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             roughness: 1.5,
         });
         rect.setAttribute('transform', "translate(".concat(x, ", ").concat(y, ")"));
-        (_a = rect.classList).add.apply(_a, __spreadArray([], __read(RoughJsRenderer.toClassArray(classes)), false));
-        (_b = rect2.classList).add.apply(_b, __spreadArray([], __read(RoughJsRenderer.toClassArray(classes)), false));
+        RoughJsRenderer.addClasses(rect, classes);
+        RoughJsRenderer.addClasses(rect2, classes);
         this.svgNode.appendChild(rect);
         this.svgNode.appendChild(rect2);
         return RoughJsRenderer.boxToElement(rect.getBBox(), function () { return rect.remove(); });
     };
     RoughJsRenderer.prototype.arc = function (x, y, width, height, direction, strokeWidth, strokeColor, classes, fill) {
-        var _a;
         var path = renderer_1.Renderer.arcBarrePath(x, y, width, height, direction);
         var arc = this.rc.path(path, {
             fill: fill || 'none',
@@ -223,12 +187,11 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             stroke: strokeColor || fill || 'none',
             roughness: 1.5,
         });
-        (_a = arc.classList).add.apply(_a, __spreadArray([], __read(RoughJsRenderer.toClassArray(classes)), false));
+        RoughJsRenderer.addClasses(arc, classes);
         this.svgNode.appendChild(arc);
         return RoughJsRenderer.boxToElement(arc.getBBox(), function () { return arc.remove(); });
     };
     RoughJsRenderer.prototype.triangle = function (x, y, size, strokeWidth, strokeColor, classes, fill) {
-        var _a;
         var triangle = this.rc.path(renderer_1.Renderer.trianglePath(0, 0, size), {
             fill: fill || 'none',
             fillWeight: 2.5,
@@ -236,12 +199,11 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             roughness: 1.5,
         });
         triangle.setAttribute('transform', "translate(".concat(x, ", ").concat(y, ")"));
-        (_a = triangle.classList).add.apply(_a, __spreadArray([], __read(RoughJsRenderer.toClassArray(classes)), false));
+        RoughJsRenderer.addClasses(triangle, classes);
         this.svgNode.appendChild(triangle);
         return RoughJsRenderer.boxToElement(triangle.getBBox(), function () { return triangle.remove(); });
     };
     RoughJsRenderer.prototype.pentagon = function (x, y, size, strokeWidth, strokeColor, fill, classes, spikes) {
-        var _a;
         if (spikes === void 0) { spikes = 5; }
         var pentagon = this.rc.path(renderer_1.Renderer.ngonPath(0, 0, size, spikes), {
             fill: fill || 'none',
@@ -250,7 +212,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             roughness: 1.5,
         });
         pentagon.setAttribute('transform', "translate(".concat(x, ", ").concat(y, ")"));
-        (_a = pentagon.classList).add.apply(_a, __spreadArray([], __read(RoughJsRenderer.toClassArray(classes)), false));
+        RoughJsRenderer.addClasses(pentagon, classes);
         this.svgNode.appendChild(pentagon);
         return RoughJsRenderer.boxToElement(pentagon.getBBox(), function () { return pentagon.remove(); });
     };
@@ -258,16 +220,15 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         this.svgNode.setAttribute('viewBox', "0 0 ".concat(Math.ceil(width), " ").concat(Math.ceil(height)));
     };
     RoughJsRenderer.prototype.background = function (color) {
-        var bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        var bg = this.doc.createElementNS('http://www.w3.org/2000/svg', 'rect');
         bg.setAttributeNS(null, 'width', '100%');
         bg.setAttributeNS(null, 'height', '100%');
         bg.setAttributeNS(null, 'fill', color);
         this.svgNode.insertBefore(bg, this.svgNode.firstChild);
     };
     RoughJsRenderer.prototype.text = function (text, x, y, fontSize, color, fontFamily, alignment, classes, plain) {
-        var _a;
         // Place the SVG namespace in a variable to easily reference it.
-        var txtElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        var txtElem = this.doc.createElementNS('http://www.w3.org/2000/svg', 'text');
         txtElem.setAttributeNS(null, 'x', String(x));
         txtElem.setAttributeNS(null, 'y', String(y));
         txtElem.setAttributeNS(null, 'font-size', String(fontSize));
@@ -277,7 +238,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         if (plain) {
             txtElem.setAttributeNS(null, 'dominant-baseline', 'central');
         }
-        txtElem.appendChild(document.createTextNode(text));
+        txtElem.appendChild(this.doc.createTextNode(text));
         this.svgNode.appendChild(txtElem);
         var bbox = txtElem.getBBox();
         var xOffset;
@@ -294,7 +255,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             default:
                 throw new Error("Invalid alignment ".concat(alignment));
         }
-        (_a = txtElem.classList).add.apply(_a, __spreadArray([], __read(RoughJsRenderer.toClassArray(classes)), false));
+        RoughJsRenderer.addClasses(txtElem, classes);
         txtElem.setAttributeNS(null, 'x', String(x + xOffset));
         txtElem.setAttributeNS(null, 'y', String(y + (plain ? 0 : bbox.height / 2)));
         return RoughJsRenderer.boxToElement(txtElem.getBBox(), txtElem.remove.bind(txtElem));
@@ -319,6 +280,21 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             return [];
         }
         return renderer_1.Renderer.toClassName(classes).split(' ');
+    };
+    /**
+     * Adds classes to an SVG element via the "class" attribute rather than the classList API, since
+     * classList isn't implemented by svgdom (used to render server-side / in tests).
+     */
+    RoughJsRenderer.addClasses = function (element, classes) {
+        var classArray = RoughJsRenderer.toClassArray(classes);
+        if (classArray.length === 0) {
+            return;
+        }
+        var existingClasses = element.getAttribute('class');
+        var mergedClasses = existingClasses
+            ? "".concat(existingClasses, " ").concat(classArray.join(' '))
+            : classArray.join(' ');
+        element.setAttribute('class', mergedClasses);
     };
     return RoughJsRenderer;
 }(renderer_1.Renderer));
