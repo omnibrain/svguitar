@@ -1196,7 +1196,7 @@ export class SVGuitarChord {
             barreChordStrokeWidth,
             barreChordStrokeColor,
             classNames,
-            'black' ?? color ?? fingerColor,
+            color ?? fingerColor,
             fingerSize * barreChordRadius,
           )
         } else if (barreChordStyle == BarreChordStyle.ARC) {

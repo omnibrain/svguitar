@@ -301,6 +301,36 @@ describe('SVGuitarChord', () => {
     saveSvg('arc and box barre chords', container.outerHTML)
   })
 
+  it('Should render both barre chord styles in their own color', () => {
+    svguitar
+      .chord({
+        fingers: [],
+        barres: [
+          {
+            fret: 1,
+            fromString: 5,
+            toString: 1,
+            color: 'red',
+          },
+          {
+            fret: 3,
+            fromString: 4,
+            toString: 1,
+            color: 'blue',
+            style: BarreChordStyle.ARC,
+          },
+        ],
+      })
+      .configure({
+        strings: 5,
+        frets: 6,
+        title: 'Colored Barre Chord Styles',
+      })
+      .draw()
+
+    saveSvg('colored barre chord styles', container.outerHTML)
+  })
+
   it('Should render text on the fingers', () => {
     svguitar
       .chord({
