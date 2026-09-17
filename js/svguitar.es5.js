@@ -8850,7 +8850,7 @@ var SVGuitarChord = /** @class */ (function () {
         });
         // draw barre chords
         this.chordInternal.barres.forEach(function (_a) {
-            var _b, _c, _d, _e, _f, _g;
+            var _b, _c, _d, _e, _f;
             var fret = _a.fret, fromString = _a.fromString, toString = _a.toString, style = _a.style, text = _a.text, color = _a.color, textColor = _a.textColor, strokeColor = _a.strokeColor, className = _a.className, individualBarreChordStrokeWidth = _a.strokeWidth;
             var barreCenterY = fretYPositions[fret - 1] - strokeWidth / 4 - fretSpacing / 2;
             var fromStringX = stringXPositions[_this.toArrayIndex(fromString)];
@@ -8865,15 +8865,15 @@ var SVGuitarChord = /** @class */ (function () {
             ], __read((className ? [className] : [])), false);
             if (barreChordStyle == BarreChordStyle.RECTANGLE) {
                 var barreWidth = distance + stringSpacing / 2;
-                var _h = _this.rectCoordinates(fromStringX - stringSpacing / 4, barreCenterY - fingerSize / 2, barreWidth, fingerSize), rectX = _h.x, rectY = _h.y, rectHeight = _h.height, rectWidth = _h.width;
-                _this.renderer.rect(rectX, rectY, rectWidth, rectHeight, barreChordStrokeWidth, barreChordStrokeColor, classNames, (_g = 'black' ) !== null && _g !== void 0 ? _g : fingerColor, fingerSize * barreChordRadius);
+                var _g = _this.rectCoordinates(fromStringX - stringSpacing / 4, barreCenterY - fingerSize / 2, barreWidth, fingerSize), rectX = _g.x, rectY = _g.y, rectHeight = _g.height, rectWidth = _g.width;
+                _this.renderer.rect(rectX, rectY, rectWidth, rectHeight, barreChordStrokeWidth, barreChordStrokeColor, classNames, color !== null && color !== void 0 ? color : fingerColor, fingerSize * barreChordRadius);
             }
             else if (barreChordStyle == BarreChordStyle.ARC) {
                 var barreWidth = distance;
                 var barreHeight = _this.arcBarHeight();
                 var fretStroke = fret === 1 ? _this.topFretSize() : 0;
                 var barreYStart = barreCenterY - fretSpacing / 2 - barreHeight - fretStroke;
-                var _j = _this.rectCoordinates(fromStringX, barreYStart, barreWidth, barreHeight), rectX = _j.x, rectY = _j.y, rectHeight = _j.height, rectWidth = _j.width;
+                var _h = _this.rectCoordinates(fromStringX, barreYStart, barreWidth, barreHeight), rectX = _h.x, rectY = _h.y, rectHeight = _h.height, rectWidth = _h.width;
                 _this.renderer.arc(rectX, rectY, rectWidth, rectHeight, _this.orientation == Orientation.horizontal ? ArcDirection.LEFT : ArcDirection.UP, barreChordStrokeWidth, barreChordStrokeColor, classNames, color !== null && color !== void 0 ? color : fingerColor);
             }
             else {
@@ -8882,7 +8882,7 @@ var SVGuitarChord = /** @class */ (function () {
             // draw text on the barre chord
             if (text) {
                 var textClassNames = [ElementType.BARRE_TEXT, "".concat(ElementType.BARRE_TEXT, "-").concat(fret)];
-                var _k = _this.coordinates(fromStringX + distance / 2, barreCenterY), textX = _k.x, textY = _k.y;
+                var _j = _this.coordinates(fromStringX + distance / 2, barreCenterY), textX = _j.x, textY = _j.y;
                 _this.renderer.text(text, textX, textY, fingerTextSize, textColor !== null && textColor !== void 0 ? textColor : fingerTextColor, fontFamily, Alignment.MIDDLE, textClassNames, true);
             }
         });
