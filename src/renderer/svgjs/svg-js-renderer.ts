@@ -1,9 +1,11 @@
-import { Box, Container, QuerySelector, SVG } from '@svgdotjs/svg.js'
+import { Box, Container, QuerySelector, Rect, SVG } from '@svgdotjs/svg.js'
 import { Alignment, ArcDirection, GraphcisElement, Renderer } from '../renderer'
 import { constants } from '../../constants'
 
 export class SvgJsRenderer extends Renderer {
   private svg: Container
+
+  private backgroundElement?: Rect
 
   constructor(container?: QuerySelector | HTMLElement) {
     super(container)
@@ -36,12 +38,14 @@ export class SvgJsRenderer extends Renderer {
     this.svg.line(fromX, fromY, toX, toY).stroke({ color, width: strokeWidth })
   }
 
-  size(width: number, height: number): void {
-    this.svg.viewbox(0, 0, width, height)
+  size(width: number, height: number, x = 0, y = 0): void {
+    this.svg.viewbox(x, y, width, height)
+    this.backgroundElement?.move(x, y)
   }
 
   clear(): void {
     this.svg.children().forEach((child) => child.remove())
+    delete this.backgroundElement
   }
 
   remove(): void {
@@ -62,7 +66,7 @@ export class SvgJsRenderer extends Renderer {
   }
 
   background(color: string): void {
-    this.svg.rect().size('100%', '100%').fill(color)
+    this.backgroundElement = this.svg.rect().size('100%', '100%').fill(color)
   }
 
   text(
