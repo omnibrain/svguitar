@@ -164,6 +164,69 @@ describe('SVGuitarChord', () => {
     saveSvg('horizontal bottom fret position', container.outerHTML)
   })
 
+  it('Should make room for a large fret label', () => {
+    const { width } = svguitar
+      .chord({
+        fingers: [
+          [1, 2],
+          [3, 3],
+        ],
+        barres: [],
+      })
+      .configure({
+        strings: 6,
+        frets: 5,
+        position: 12,
+        fretLabelFontSize: 120,
+        title: 'Large fret label',
+      })
+      .draw()
+
+    const label = container.querySelector('.fret-position')!
+    expect(label.getAttribute('font-size')).toBe('120')
+    expect(width).toBeGreaterThan(400)
+
+    saveSvg('large fret label', container.outerHTML)
+  })
+
+  it('Should make room for a large fret label on the left', () => {
+    svguitar
+      .chord({
+        fingers: [],
+        barres: [],
+      })
+      .configure({
+        strings: 6,
+        frets: 5,
+        position: 12,
+        fretLabelPosition: FretLabelPosition.LEFT,
+        fretLabelFontSize: 120,
+        title: 'Large fret label left',
+      })
+      .draw()
+
+    saveSvg('large fret label left', container.outerHTML)
+  })
+
+  it('Should make room for a large fret label in a horizontal chart', () => {
+    svguitar
+      .chord({
+        fingers: [],
+        barres: [],
+      })
+      .configure({
+        orientation: Orientation.horizontal,
+        strings: 6,
+        frets: 5,
+        position: 12,
+        fretLabelFontSize: 120,
+        title: 'Large fret label horizontal',
+      })
+      .draw()
+
+    saveSvg('large fret label horizontal', container.outerHTML)
+  })
+
   it('Should render fingers over barre chords', () => {
     svguitar
       .chord({

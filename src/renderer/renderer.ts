@@ -32,7 +32,11 @@ export abstract class Renderer {
     classes?: string | string[],
   ): void
 
-  abstract size(width: number, height: number): void
+  /**
+   * Set the visible area of the diagram. `x` and `y` are the top left corner, which is negative
+   * when something (such as a large fret label) is drawn outside of the chord diagram itself.
+   */
+  abstract size(width: number, height: number, x?: number, y?: number): void
 
   abstract clear(): void
 

@@ -24,6 +24,8 @@ export class RoughJsRenderer extends Renderer {
 
   private svgNode: SVGSVGElement
 
+  private backgroundElement?: SVGRectElement
+
   constructor(container?: QuerySelector | HTMLElement) {
     super(container)
 
@@ -143,6 +145,7 @@ export class RoughJsRenderer extends Renderer {
       this.svgNode.removeChild(this.svgNode.firstChild)
     }
 
+    delete this.backgroundElement
     this.rc = rough.svg(this.svgNode)
     this.embedDefs()
   }
@@ -305,8 +308,13 @@ export class RoughJsRenderer extends Renderer {
     return RoughJsRenderer.boxToElement(pentagon.getBBox(), () => pentagon.remove())
   }
 
-  size(width: number, height: number): void {
-    this.svgNode.setAttribute('viewBox', `0 0 ${Math.ceil(width)} ${Math.ceil(height)}`)
+  size(width: number, height: number, x = 0, y = 0): void {
+    this.svgNode.setAttribute(
+      'viewBox',
+      `${Math.floor(x)} ${Math.floor(y)} ${Math.ceil(width)} ${Math.ceil(height)}`,
+    )
+    this.backgroundElement?.setAttributeNS(null, 'x', String(Math.floor(x)))
+    this.backgroundElement?.setAttributeNS(null, 'y', String(Math.floor(y)))
   }
 
   background(color: string): void {
@@ -316,6 +324,7 @@ export class RoughJsRenderer extends Renderer {
     bg.setAttributeNS(null, 'height', '100%')
     bg.setAttributeNS(null, 'fill', color)
 
+    this.backgroundElement = bg
     this.svgNode.insertBefore(bg, this.svgNode.firstChild)
   }
 
