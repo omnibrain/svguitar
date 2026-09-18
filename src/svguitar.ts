@@ -627,7 +627,7 @@ export class SVGuitarChord {
     y = this.drawTitle(this.settings.titleFontSize ?? defaultSettings.titleFontSize)
     y = this.drawEmptyStringIndicators(y)
     y = this.drawTopFret(y)
-    this.drawPosition(y)
+    const fretLabel = this.drawPosition(y)
     y = this.drawGrid(y)
     y = this.drawTunings(y)
     y = this.drawWatermark(y)
@@ -638,13 +638,22 @@ export class SVGuitarChord {
     const width = this.width(constants.width, y)
     const height = this.height(y, constants.width)
 
-    this.renderer.size(width, height)
+    // A large fret label reaches past the chord diagram. Grow the visible area by the same
+    // amount on both sides so that the label is not cut off and the diagram stays centered.
+    const overflowX = fretLabel
+      ? Math.max(0, -fretLabel.x, fretLabel.x + fretLabel.width - width)
+      : 0
+    const overflowY = fretLabel
+      ? Math.max(0, -fretLabel.y, fretLabel.y + fretLabel.height - height)
+      : 0
 
-    this.drawTopEdges(y)
+    this.renderer.size(width + 2 * overflowX, height + 2 * overflowY, -overflowX, -overflowY)
+
+    this.drawTopEdges(y, overflowX, overflowY)
 
     return {
-      width: constants.width,
-      height: y,
+      width: width + 2 * overflowX,
+      height: height + 2 * overflowY,
     }
   }
 
@@ -768,13 +777,17 @@ export class SVGuitarChord {
     return y + height * 2
   }
 
-  private drawPosition(y: number): void {
+  /**
+   * Draws the fret label (eg. "5fr") and returns the space it takes up, which can reach past the
+   * chord diagram when the label is large.
+   */
+  private drawPosition(y: number): GraphcisElement | undefined {
     const position =
       this.chordInternal.position ?? this.settings.position ?? defaultSettings.position
     const noPosition = this.settings.noPosition ?? defaultSettings.noPosition
 
     if (position <= 1 || noPosition) {
-      return
+      return undefined
     }
 
     const stringXPositions = this.stringXPos()
@@ -794,54 +807,27 @@ export class SVGuitarChord {
     const className = ElementType.FRET_POSITION
 
     if (this.orientation === Orientation.vertical) {
-      const drawText = (sizeMultiplier = 1) => {
-        if (sizeMultiplier < 0.01) {
-          // text does not fit: don't render it at all.
-          // eslint-disable-next-line no-console
-          console.warn('Not enough space to draw the starting fret')
-          return
-        }
-
-        if (fretLabelPosition === FretLabelPosition.RIGHT) {
-          const svgText = this.renderer.text(
+      return fretLabelPosition === FretLabelPosition.RIGHT
+        ? this.renderer.text(
             text,
             endX + padding,
             y,
-            size * sizeMultiplier,
+            size,
             color,
             fontFamily,
             Alignment.LEFT,
             className,
           )
-
-          const { width, x } = svgText
-          if (x + width > constants.width) {
-            svgText.remove()
-            drawText(sizeMultiplier * 0.9)
-          }
-        } else {
-          const svgText = this.renderer.text(
+        : this.renderer.text(
             text,
             startX - padding,
             y,
-            size * sizeMultiplier,
+            size,
             color,
             fontFamily,
             Alignment.RIGHT,
             className,
           )
-
-          const { x } = svgText
-          if (x < 0) {
-            svgText.remove()
-            drawText(sizeMultiplier * 0.8)
-          }
-        }
-      }
-
-      drawText()
-
-      return
     }
 
     // Horizontal orientation
@@ -849,7 +835,7 @@ export class SVGuitarChord {
       fretLabelPosition === FretLabelPosition.RIGHT
         ? this.coordinates(endX + padding, y)
         : this.coordinates(startX - padding, y)
-    this.renderer.text(
+    return this.renderer.text(
       text,
       textX,
       textY,
@@ -866,13 +852,21 @@ export class SVGuitarChord {
    * Hack to prevent the empty space of the svg from being cut off without having to define a
    * fixed width
    */
-  private drawTopEdges(y: number) {
+  private drawTopEdges(y: number, overflowX = 0, overflowY = 0) {
     const orientation = this.settings.orientation ?? defaultSettings.orientation
 
     const xTopRight = orientation === Orientation.vertical ? constants.width : y
 
-    this.renderer.circle(0, 0, 0, 0, 'transparent', 'none', 'top-left')
-    this.renderer.circle(xTopRight, 0, 0, 0, 'transparent', 'none', 'top-right')
+    this.renderer.circle(-overflowX, -overflowY, 0, 0, 'transparent', 'none', 'top-left')
+    this.renderer.circle(
+      xTopRight + overflowX,
+      -overflowY,
+      0,
+      0,
+      'transparent',
+      'none',
+      'top-right',
+    )
   }
 
   private drawBackground() {
