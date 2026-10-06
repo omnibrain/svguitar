@@ -862,11 +862,26 @@ export class SVGuitarChord {
           )
     }
 
-    // Horizontal orientation
+    // Horizontal orientation: the label is centered on its position, so keep it at least half its
+    // height away from the strings to prevent a large label from reaching into the fretboard.
+    const measuredText = this.renderer.text(
+      text,
+      0,
+      0,
+      size,
+      color,
+      fontFamily,
+      Alignment.MIDDLE,
+      className,
+      true,
+    )
+    const distance = Math.max(padding, measuredText.height / 2)
+    measuredText.remove()
+
     const { x: textX, y: textY } =
       fretLabelPosition === FretLabelPosition.RIGHT
-        ? this.coordinates(endX + padding, y)
-        : this.coordinates(startX - padding, y)
+        ? this.coordinates(endX + distance, y)
+        : this.coordinates(startX - distance, y)
     return this.renderer.text(
       text,
       textX,
