@@ -189,6 +189,13 @@ export interface ChordSettings {
   orientation?: Orientation
 
   /**
+   * Draws the chord diagram for left-handed players by mirroring it horizontally. In vertical
+   * orientation the string order is reversed, in horizontal orientation the nut is on the right.
+   * Text stays readable and the fret label switches sides. Defaults to false.
+   */
+  leftHanded?: boolean
+
+  /**
    * Style of the chord diagram. Currently you can chose between "normal" and "handdrawn".
    */
   style?: ChordStyle
@@ -489,6 +496,7 @@ interface RequiredChordSettings {
   fontFamily: string
   shape: Shape
   orientation: Orientation
+  leftHanded: boolean
   watermarkFontSize: number
   noPosition: boolean
   showFretMarkers: boolean
@@ -525,6 +533,7 @@ const defaultSettings: RequiredChordSettings = {
   fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
   shape: Shape.CIRCLE,
   orientation: Orientation.vertical,
+  leftHanded: false,
   watermarkFontSize: 12,
   noPosition: false,
   fretMarkerColor: 'rgba(0, 0, 0, 0.2)',
@@ -557,6 +566,12 @@ export class SVGuitarChord {
   private settings: ChordSettings = {}
 
   private chordInternal: Chord = { fingers: [], barres: [] }
+
+  /**
+   * Width of the area across which the diagram is mirrored in left-handed mode. Undefined if the
+   * diagram is not mirrored.
+   */
+  private mirrorWidth?: number
 
   /**
    * @param container The element into which the chord diagram is rendered. This can either be a
@@ -615,6 +630,19 @@ export class SVGuitarChord {
   }
 
   draw(): { width: number; height: number } {
+    this.mirrorWidth = undefined
+
+    if (this.settings.leftHanded ?? defaultSettings.leftHanded) {
+      // A horizontal diagram is mirrored across its total width, which is only known after drawing
+      // it. So we draw it once without mirroring to get the width and then draw it again.
+      this.mirrorWidth =
+        this.orientation === Orientation.vertical ? constants.width : this.drawDiagram().height
+    }
+
+    return this.drawDiagram()
+  }
+
+  private drawDiagram(): { width: number; height: number } {
     this.clear()
     this.drawBackground()
 
@@ -756,7 +784,7 @@ export class SVGuitarChord {
 
     const { height } = this.renderer.text(
       this.settings.watermark,
-      textX,
+      this.mirrorX(textX),
       textY,
       fontSize,
       color,
@@ -786,7 +814,7 @@ export class SVGuitarChord {
     const fingerSize =
       this.stringSpacing() * (this.settings.fingerSize ?? defaultSettings.fingerSize)
     const fontFamily = this.settings.fontFamily ?? defaultSettings.fontFamily
-    const fretLabelPosition = this.settings.fretLabelPosition ?? defaultSettings.fretLabelPosition
+    const fretLabelPosition = this.effectiveFretLabelPosition()
 
     // add some padding relative to the string spacing. Also make sure the padding is at least
     // 1/2 fingerSize plus some padding to prevent the finger overlapping the position label.
@@ -1218,7 +1246,7 @@ export class SVGuitarChord {
             rectY,
             rectWidth,
             rectHeight,
-            this.orientation == Orientation.horizontal ? ArcDirection.LEFT : ArcDirection.UP,
+            this.arcDirection(),
             barreChordStrokeWidth,
             barreChordStrokeColor,
             classNames,
@@ -1547,7 +1575,7 @@ export class SVGuitarChord {
       size,
       color,
       fontFamily,
-      Alignment.LEFT,
+      this.mirrorWidth === undefined ? Alignment.LEFT : Alignment.RIGHT,
       ElementType.TITLE,
       true,
     )
@@ -1612,7 +1640,17 @@ export class SVGuitarChord {
    * @returns
    */
   private x(x: number, y: number): number {
-    return this.orientation === Orientation.vertical ? x : y
+    return this.mirrorX(this.orientation === Orientation.vertical ? x : y)
+  }
+
+  /**
+   * mirrors an x value of the final diagram if it's drawn for left-handed players
+   *
+   * @param x x in the final diagram
+   * @returns
+   */
+  private mirrorX(x: number): number {
+    return this.mirrorWidth === undefined ? x : this.mirrorWidth - x
   }
 
   /**
@@ -1655,21 +1693,45 @@ export class SVGuitarChord {
     width: number,
     height: number,
   ): { x: number; y: number; width: number; height: number } {
+    const rect =
+      this.orientation === Orientation.vertical
+        ? { x, y, width, height }
+        : {
+            x: y,
+            y: this.y(x, y) - width,
+            width: this.width(width, height),
+            height: this.height(height, width),
+          }
+
+    // the left edge of the rectangle becomes the right edge when it's mirrored
+    return { ...rect, x: this.mirrorX(rect.x + (this.mirrorWidth === undefined ? 0 : rect.width)) }
+  }
+
+  /**
+   * The direction in which arc barre chords bulge: always towards the nut
+   */
+  private arcDirection(): ArcDirection {
     if (this.orientation === Orientation.vertical) {
-      return {
-        x,
-        y,
-        width,
-        height,
-      }
+      return ArcDirection.UP
     }
 
-    return {
-      x: this.x(x, y),
-      y: this.y(x, y) - width,
-      width: this.width(width, height),
-      height: this.height(height, width),
+    return this.mirrorWidth === undefined ? ArcDirection.LEFT : ArcDirection.RIGHT
+  }
+
+  /**
+   * The fret label position in the final diagram. A vertical left-handed diagram is mirrored, so
+   * the fret label is on the opposite side.
+   */
+  private effectiveFretLabelPosition(): FretLabelPosition {
+    const fretLabelPosition = this.settings.fretLabelPosition ?? defaultSettings.fretLabelPosition
+
+    if (this.orientation === Orientation.horizontal || this.mirrorWidth === undefined) {
+      return fretLabelPosition
     }
+
+    return fretLabelPosition === FretLabelPosition.RIGHT
+      ? FretLabelPosition.LEFT
+      : FretLabelPosition.RIGHT
   }
 
   /**

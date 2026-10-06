@@ -1,6 +1,7 @@
 import {
   BarreChordStyle,
   ChordStyle,
+  Finger,
   FretLabelPosition,
   Orientation,
   Shape,
@@ -126,6 +127,102 @@ describe('SVGuitarChord', () => {
       .draw()
 
     saveSvg('horizontal chord', container.outerHTML)
+  })
+
+  describe('left-handed', () => {
+    const leftHandedChord = {
+      fingers: [
+        [2, 2, '1'],
+        [3, 3, '3'],
+        [4, 3, '4'],
+        [6, 'x'],
+        [5, 0, 'A'],
+      ] as Finger[],
+      barres: [{ fromString: 5, toString: 1, fret: 1, text: '1' }],
+      title: 'Bm/A',
+      position: 2,
+    }
+
+    const leftHandedSettings = {
+      leftHanded: true,
+      tuning: ['E', 'A', 'D', 'G', 'B', 'E'],
+      watermark: 'left-handed',
+    }
+
+    it('Should render a left-handed vertical chord', () => {
+      svguitar
+        .chord(leftHandedChord)
+        .configure({ ...leftHandedSettings, orientation: Orientation.vertical })
+        .draw()
+
+      saveSvg('left handed vertical', container.outerHTML)
+    })
+
+    it('Should render a left-handed horizontal chord', () => {
+      svguitar
+        .chord(leftHandedChord)
+        .configure({ ...leftHandedSettings, orientation: Orientation.horizontal })
+        .draw()
+
+      saveSvg('left handed horizontal', container.outerHTML)
+    })
+
+    it('Should render left-handed vertical arc barre chords', () => {
+      svguitar
+        .chord(leftHandedChord)
+        .configure({
+          ...leftHandedSettings,
+          orientation: Orientation.vertical,
+          barreChordStyle: BarreChordStyle.ARC,
+        })
+        .draw()
+
+      saveSvg('left handed vertical arc barre', container.outerHTML)
+    })
+
+    it('Should render left-handed horizontal arc barre chords', () => {
+      svguitar
+        .chord(leftHandedChord)
+        .configure({
+          ...leftHandedSettings,
+          orientation: Orientation.horizontal,
+          barreChordStyle: BarreChordStyle.ARC,
+        })
+        .draw()
+
+      saveSvg('left handed horizontal arc barre', container.outerHTML)
+    })
+
+    it('Should render a left-handed vertical chord with the fret label left', () => {
+      svguitar
+        .chord(leftHandedChord)
+        .configure({ ...leftHandedSettings, fretLabelPosition: FretLabelPosition.LEFT })
+        .draw()
+
+      saveSvg('left handed vertical fret label left', container.outerHTML)
+    })
+
+    it('Should render a left-handed handdrawn chord in both orientations', () => {
+      svguitar
+        .chord(leftHandedChord)
+        .configure({ ...leftHandedSettings, style: ChordStyle.handdrawn })
+        .draw()
+
+      saveSvg('left handed handdrawn vertical', container.outerHTML)
+
+      svguitar.configure({ orientation: Orientation.horizontal }).draw()
+
+      saveSvg('left handed handdrawn horizontal', container.outerHTML)
+    })
+
+    it('Should put the lowest string on the right in vertical orientation', () => {
+      svguitar.configure(leftHandedSettings).draw()
+
+      const lowE = container.querySelector('.tuning-0')
+      const highE = container.querySelector('.tuning-5')
+
+      expect(Number(lowE?.getAttribute('x'))).toBeGreaterThan(Number(highE?.getAttribute('x')))
+    })
   })
 
   it('Should render an svg of a horizontal chart', () => {
