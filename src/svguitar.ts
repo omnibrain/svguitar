@@ -636,13 +636,21 @@ export class SVGuitarChord {
       // A horizontal diagram is mirrored across its total width, which is only known after drawing
       // it. So we draw it once without mirroring to get the width and then draw it again.
       this.mirrorWidth =
-        this.orientation === Orientation.vertical ? constants.width : this.drawDiagram().height
+        this.orientation === Orientation.vertical
+          ? constants.width
+          : this.drawDiagram().diagramWidth
     }
 
-    return this.drawDiagram()
+    const { width, height } = this.drawDiagram()
+
+    return { width, height }
   }
 
-  private drawDiagram(): { width: number; height: number } {
+  /**
+   * Draws the chord diagram. Besides the size of the SVG, this returns the width of the diagram
+   * without the extra space a large fret label may need.
+   */
+  private drawDiagram(): { width: number; height: number; diagramWidth: number } {
     this.clear()
     this.drawBackground()
 
@@ -682,6 +690,7 @@ export class SVGuitarChord {
     return {
       width: width + 2 * overflowX,
       height: height + 2 * overflowY,
+      diagramWidth: width,
     }
   }
 
