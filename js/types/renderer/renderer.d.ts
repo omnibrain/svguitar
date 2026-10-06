@@ -5,7 +5,8 @@ export declare enum Alignment {
 }
 export declare enum ArcDirection {
     UP = "up",
-    LEFT = "left"
+    LEFT = "left",
+    RIGHT = "right"
 }
 export interface GraphcisElement {
     width: number;

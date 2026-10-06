@@ -141,6 +141,12 @@ export interface ChordSettings {
      */
     orientation?: Orientation;
     /**
+     * Draws the chord diagram for left-handed players by mirroring it horizontally. In vertical
+     * orientation the string order is reversed, in horizontal orientation the nut is on the right.
+     * Text stays readable and the fret label switches sides. Defaults to false.
+     */
+    leftHanded?: boolean;
+    /**
      * Style of the chord diagram. Currently you can chose between "normal" and "handdrawn".
      */
     style?: ChordStyle;
@@ -375,6 +381,11 @@ export declare class SVGuitarChord {
     private settings;
     private chordInternal;
     /**
+     * Width of the area across which the diagram is mirrored in left-handed mode. Undefined if the
+     * diagram is not mirrored.
+     */
+    private mirrorWidth?;
+    /**
      * @param container The element into which the chord diagram is rendered. This can either be a
      * CSS selector or a DOM element. If omitted, the diagram is rendered detached from the DOM and
      * can be exported as a string with {@link toSvg}. This is useful for generating SVG files in a
@@ -389,6 +400,7 @@ export declare class SVGuitarChord {
         width: number;
         height: number;
     };
+    private drawDiagram;
     static sanityCheckSettings(settings: Partial<ChordSettings>): void;
     private drawTunings;
     private drawWatermark;
@@ -447,6 +459,10 @@ export declare class SVGuitarChord {
      */
     private x;
     /**
+     * whether the diagram is mirrored because it's drawn for left-handed players
+     */
+    private get isMirrored();
+    /**
      * rotates y value if orientation is horizontal
      *
      * @param x x in vertical orientation
@@ -472,6 +488,15 @@ export declare class SVGuitarChord {
      * @returns
      */
     private rectCoordinates;
+    /**
+     * The direction in which arc barre chords bulge: always towards the nut
+     */
+    private arcDirection;
+    /**
+     * The fret label position in the final diagram. A vertical left-handed diagram is mirrored, so
+     * the fret label is on the opposite side.
+     */
+    private effectiveFretLabelPosition;
     /**
      * rotates height if orientation is horizontal
      *

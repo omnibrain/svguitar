@@ -27,6 +27,7 @@ var ArcDirection;
 (function (ArcDirection) {
     ArcDirection["UP"] = "up";
     ArcDirection["LEFT"] = "left";
+    ArcDirection["RIGHT"] = "right";
 })(ArcDirection = exports.ArcDirection || (exports.ArcDirection = {}));
 var Renderer = /** @class */ (function () {
     function Renderer(container) {
@@ -83,6 +84,17 @@ var Renderer = /** @class */ (function () {
                 cxOuter = x - width;
                 cyOuter = y + height / 2;
                 cxInner = xStart - width * 2 * t;
+                cyInner = cyOuter;
+                break;
+            }
+            case ArcDirection.RIGHT: {
+                xStart = x;
+                yStart = y;
+                xEnd = x;
+                yEnd = y + height;
+                cxOuter = x + width * 2;
+                cyOuter = y + height / 2;
+                cxInner = xStart + width * 2 * t;
                 cyInner = cyOuter;
                 break;
             }

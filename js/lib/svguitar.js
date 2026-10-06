@@ -137,6 +137,7 @@ var defaultSettings = {
     fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
     shape: Shape.CIRCLE,
     orientation: Orientation.vertical,
+    leftHanded: false,
     watermarkFontSize: 12,
     noPosition: false,
     fretMarkerColor: 'rgba(0, 0, 0, 0.2)',
@@ -217,6 +218,17 @@ var SVGuitarChord = /** @class */ (function () {
         return this;
     };
     SVGuitarChord.prototype.draw = function () {
+        var _a;
+        this.mirrorWidth = undefined;
+        if ((_a = this.settings.leftHanded) !== null && _a !== void 0 ? _a : defaultSettings.leftHanded) {
+            // A horizontal diagram is mirrored across its total width, which is only known after drawing
+            // it. So we draw it once without mirroring to get the width and then draw it again.
+            this.mirrorWidth =
+                this.orientation === Orientation.vertical ? constants_1.constants.width : this.drawDiagram().height;
+        }
+        return this.drawDiagram();
+    };
+    SVGuitarChord.prototype.drawDiagram = function () {
         var _a;
         this.clear();
         this.drawBackground();
@@ -307,24 +319,17 @@ var SVGuitarChord = /** @class */ (function () {
         var color = (_c = (_b = this.settings.watermarkColor) !== null && _b !== void 0 ? _b : this.settings.color) !== null && _c !== void 0 ? _c : defaultSettings.color;
         var fontSize = (_d = this.settings.watermarkFontSize) !== null && _d !== void 0 ? _d : defaultSettings.watermarkFontSize;
         var fontFamily = (_f = (_e = this.settings.watermarkFontFamily) !== null && _e !== void 0 ? _e : this.settings.fontFamily) !== null && _f !== void 0 ? _f : defaultSettings.fontFamily;
-        var textX;
-        var textY;
-        if (orientation === Orientation.vertical) {
-            textX = startX + (endX - startX) / 2;
-            textY = y + padding;
-        }
-        else {
-            var lastFret = y;
-            var firstFret = y - this.numFrets() * this.fretSpacing();
-            textX = firstFret + (lastFret - firstFret) / 2;
-            textY = this.y(startX, 0) + padding;
-        }
+        var lastFret = y;
+        var firstFret = y - this.numFrets() * this.fretSpacing();
+        var _g = orientation === Orientation.vertical
+            ? this.coordinates(startX + (endX - startX) / 2, y + padding)
+            : this.coordinates(startX - padding, firstFret + (lastFret - firstFret) / 2), textX = _g.x, textY = _g.y;
         var height = this.renderer.text(this.settings.watermark, textX, textY, fontSize, color, fontFamily, renderer_1.Alignment.MIDDLE, ElementType.WATERMARK).height;
         return y + height * 2;
     };
     SVGuitarChord.prototype.drawPosition = function (y) {
         var _this = this;
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
         var position = (_b = (_a = this.chordInternal.position) !== null && _a !== void 0 ? _a : this.settings.position) !== null && _b !== void 0 ? _b : defaultSettings.position;
         var noPosition = (_c = this.settings.noPosition) !== null && _c !== void 0 ? _c : defaultSettings.noPosition;
         if (position <= 1 || noPosition) {
@@ -338,7 +343,7 @@ var SVGuitarChord = /** @class */ (function () {
         var color = (_f = (_e = this.settings.fretLabelColor) !== null && _e !== void 0 ? _e : this.settings.color) !== null && _f !== void 0 ? _f : defaultSettings.color;
         var fingerSize = this.stringSpacing() * ((_g = this.settings.fingerSize) !== null && _g !== void 0 ? _g : defaultSettings.fingerSize);
         var fontFamily = (_h = this.settings.fontFamily) !== null && _h !== void 0 ? _h : defaultSettings.fontFamily;
-        var fretLabelPosition = (_j = this.settings.fretLabelPosition) !== null && _j !== void 0 ? _j : defaultSettings.fretLabelPosition;
+        var fretLabelPosition = this.effectiveFretLabelPosition();
         // add some padding relative to the string spacing. Also make sure the padding is at least
         // 1/2 fingerSize plus some padding to prevent the finger overlapping the position label.
         var padding = Math.max(this.stringSpacing() / 5, fingerSize / 2 + 5);
@@ -373,9 +378,9 @@ var SVGuitarChord = /** @class */ (function () {
             return;
         }
         // Horizontal orientation
-        var _k = fretLabelPosition === FretLabelPosition.RIGHT
+        var _j = fretLabelPosition === FretLabelPosition.RIGHT
             ? this.coordinates(endX + padding, y)
-            : this.coordinates(startX - padding, y), textX = _k.x, textY = _k.y;
+            : this.coordinates(startX - padding, y), textX = _j.x, textY = _j.y;
         this.renderer.text(text, textX, textY, size, color, fontFamily, renderer_1.Alignment.MIDDLE, className, true);
     };
     /**
@@ -603,7 +608,7 @@ var SVGuitarChord = /** @class */ (function () {
                 var fretStroke = fret === 1 ? _this.topFretSize() : 0;
                 var barreYStart = barreCenterY - fretSpacing / 2 - barreHeight - fretStroke;
                 var _h = _this.rectCoordinates(fromStringX, barreYStart, barreWidth, barreHeight), rectX = _h.x, rectY = _h.y, rectHeight = _h.height, rectWidth = _h.width;
-                _this.renderer.arc(rectX, rectY, rectWidth, rectHeight, _this.orientation == Orientation.horizontal ? renderer_2.ArcDirection.LEFT : renderer_2.ArcDirection.UP, barreChordStrokeWidth, barreChordStrokeColor, classNames, color !== null && color !== void 0 ? color : fingerColor);
+                _this.renderer.arc(rectX, rectY, rectWidth, rectHeight, _this.arcDirection(), barreChordStrokeWidth, barreChordStrokeColor, classNames, color !== null && color !== void 0 ? color : fingerColor);
             }
             else {
                 throw new Error("Invalid barre chord style ".concat(_this.settings.barreChordStyle));
@@ -757,7 +762,7 @@ var SVGuitarChord = /** @class */ (function () {
         var _g = this.renderer.text(title, 0, 0, size, color, fontFamily, renderer_1.Alignment.LEFT, ElementType.TITLE), removeTempText = _g.remove, width = _g.width;
         removeTempText();
         var _h = this.rectCoordinates(constants_1.constants.width / 2, 5, 0, 0), textX = _h.x, textY = _h.y;
-        var remove = this.renderer.text(title, textX, textY, size, color, fontFamily, renderer_1.Alignment.LEFT, ElementType.TITLE, true).remove;
+        var remove = this.renderer.text(title, textX, textY, size, color, fontFamily, this.isMirrored ? renderer_1.Alignment.RIGHT : renderer_1.Alignment.LEFT, ElementType.TITLE, true).remove;
         if (!this.settings.title && this.settings.fixedDiagramPosition) {
             remove();
         }
@@ -808,8 +813,19 @@ var SVGuitarChord = /** @class */ (function () {
      * @returns
      */
     SVGuitarChord.prototype.x = function (x, y) {
-        return this.orientation === Orientation.vertical ? x : y;
+        var rotatedX = this.orientation === Orientation.vertical ? x : y;
+        return this.mirrorWidth === undefined ? rotatedX : this.mirrorWidth - rotatedX;
     };
+    Object.defineProperty(SVGuitarChord.prototype, "isMirrored", {
+        /**
+         * whether the diagram is mirrored because it's drawn for left-handed players
+         */
+        get: function () {
+            return this.mirrorWidth !== undefined;
+        },
+        enumerable: false,
+        configurable: true
+    });
     /**
      * rotates y value if orientation is horizontal
      *
@@ -843,20 +859,36 @@ var SVGuitarChord = /** @class */ (function () {
      * @returns
      */
     SVGuitarChord.prototype.rectCoordinates = function (x, y, width, height) {
-        if (this.orientation === Orientation.vertical) {
-            return {
-                x: x,
-                y: y,
-                width: width,
-                height: height,
-            };
-        }
+        var rotatedWidth = this.width(width, height);
         return {
-            x: this.x(x, y),
-            y: this.y(x, y) - width,
-            width: this.width(width, height),
+            x: this.x(x, y) - (this.isMirrored ? rotatedWidth : 0),
+            y: this.orientation === Orientation.vertical ? y : this.y(x, y) - width,
+            width: rotatedWidth,
             height: this.height(height, width),
         };
+    };
+    /**
+     * The direction in which arc barre chords bulge: always towards the nut
+     */
+    SVGuitarChord.prototype.arcDirection = function () {
+        if (this.orientation === Orientation.vertical) {
+            return renderer_2.ArcDirection.UP;
+        }
+        return this.isMirrored ? renderer_2.ArcDirection.RIGHT : renderer_2.ArcDirection.LEFT;
+    };
+    /**
+     * The fret label position in the final diagram. A vertical left-handed diagram is mirrored, so
+     * the fret label is on the opposite side.
+     */
+    SVGuitarChord.prototype.effectiveFretLabelPosition = function () {
+        var _a;
+        var fretLabelPosition = (_a = this.settings.fretLabelPosition) !== null && _a !== void 0 ? _a : defaultSettings.fretLabelPosition;
+        if (this.orientation === Orientation.horizontal || !this.isMirrored) {
+            return fretLabelPosition;
+        }
+        return fretLabelPosition === FretLabelPosition.RIGHT
+            ? FretLabelPosition.LEFT
+            : FretLabelPosition.RIGHT;
     };
     /**
      * rotates height if orientation is horizontal
