@@ -1690,7 +1690,6 @@ export class SVGuitarChord {
     const rotatedWidth = this.width(width, height)
 
     return {
-      // when mirrored, x() returns the right edge of the rectangle
       x: this.x(x, y) - (this.isMirrored ? rotatedWidth : 0),
       y: this.orientation === Orientation.vertical ? y : this.y(x, y) - width,
       width: rotatedWidth,
