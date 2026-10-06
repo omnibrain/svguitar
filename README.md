@@ -196,6 +196,12 @@ new SVGuitarChord('#some-selector')
     orientation: 'vertical',
 
     /**
+     * Mirror the chord diagram for left-handed players. In vertical orientation the string order
+     * is reversed, in horizontal orientation the nut is on the right. Text stays readable.
+     */
+    leftHanded: false,
+
+    /**
      * Select between 'normal' and 'handdrawn'
      */
     style: 'normal',

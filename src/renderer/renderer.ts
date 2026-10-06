@@ -9,6 +9,7 @@ export enum Alignment {
 export enum ArcDirection {
   UP = 'up',
   LEFT = 'left',
+  RIGHT = 'right',
 }
 
 export interface GraphcisElement {
@@ -184,6 +185,20 @@ export abstract class Renderer {
         cyOuter = y + height / 2
 
         cxInner = xStart - width * 2 * t
+        cyInner = cyOuter
+        break
+      }
+
+      case ArcDirection.RIGHT: {
+        xStart = x
+        yStart = y
+        xEnd = x
+        yEnd = y + height
+
+        cxOuter = x + width * 2
+        cyOuter = y + height / 2
+
+        cxInner = xStart + width * 2 * t
         cyInner = cyOuter
         break
       }
