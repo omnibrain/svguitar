@@ -769,22 +769,17 @@ export class SVGuitarChord {
     const fontFamily =
       this.settings.watermarkFontFamily ?? this.settings.fontFamily ?? defaultSettings.fontFamily
 
-    let textX
-    let textY
+    const lastFret = y
+    const firstFret = y - this.numFrets() * this.fretSpacing()
 
-    if (orientation === Orientation.vertical) {
-      textX = startX + (endX - startX) / 2
-      textY = y + padding
-    } else {
-      const lastFret = y
-      const firstFret = y - this.numFrets() * this.fretSpacing()
-      textX = firstFret + (lastFret - firstFret) / 2
-      textY = this.y(startX, 0) + padding
-    }
+    const { x: textX, y: textY } =
+      orientation === Orientation.vertical
+        ? this.coordinates(startX + (endX - startX) / 2, y + padding)
+        : this.coordinates(startX - padding, firstFret + (lastFret - firstFret) / 2)
 
     const { height } = this.renderer.text(
       this.settings.watermark,
-      this.mirrorX(textX),
+      textX,
       textY,
       fontSize,
       color,
@@ -1575,7 +1570,7 @@ export class SVGuitarChord {
       size,
       color,
       fontFamily,
-      this.mirrorWidth === undefined ? Alignment.LEFT : Alignment.RIGHT,
+      this.isMirrored ? Alignment.RIGHT : Alignment.LEFT,
       ElementType.TITLE,
       true,
     )
@@ -1640,17 +1635,16 @@ export class SVGuitarChord {
    * @returns
    */
   private x(x: number, y: number): number {
-    return this.mirrorX(this.orientation === Orientation.vertical ? x : y)
+    const rotatedX = this.orientation === Orientation.vertical ? x : y
+
+    return this.mirrorWidth === undefined ? rotatedX : this.mirrorWidth - rotatedX
   }
 
   /**
-   * mirrors an x value of the final diagram if it's drawn for left-handed players
-   *
-   * @param x x in the final diagram
-   * @returns
+   * whether the diagram is mirrored because it's drawn for left-handed players
    */
-  private mirrorX(x: number): number {
-    return this.mirrorWidth === undefined ? x : this.mirrorWidth - x
+  private get isMirrored(): boolean {
+    return this.mirrorWidth !== undefined
   }
 
   /**
@@ -1693,18 +1687,15 @@ export class SVGuitarChord {
     width: number,
     height: number,
   ): { x: number; y: number; width: number; height: number } {
-    const rect =
-      this.orientation === Orientation.vertical
-        ? { x, y, width, height }
-        : {
-            x: y,
-            y: this.y(x, y) - width,
-            width: this.width(width, height),
-            height: this.height(height, width),
-          }
+    const rotatedWidth = this.width(width, height)
 
-    // the left edge of the rectangle becomes the right edge when it's mirrored
-    return { ...rect, x: this.mirrorX(rect.x + (this.mirrorWidth === undefined ? 0 : rect.width)) }
+    return {
+      // when mirrored, x() returns the right edge of the rectangle
+      x: this.x(x, y) - (this.isMirrored ? rotatedWidth : 0),
+      y: this.orientation === Orientation.vertical ? y : this.y(x, y) - width,
+      width: rotatedWidth,
+      height: this.height(height, width),
+    }
   }
 
   /**
@@ -1715,7 +1706,7 @@ export class SVGuitarChord {
       return ArcDirection.UP
     }
 
-    return this.mirrorWidth === undefined ? ArcDirection.LEFT : ArcDirection.RIGHT
+    return this.isMirrored ? ArcDirection.RIGHT : ArcDirection.LEFT
   }
 
   /**
@@ -1725,7 +1716,7 @@ export class SVGuitarChord {
   private effectiveFretLabelPosition(): FretLabelPosition {
     const fretLabelPosition = this.settings.fretLabelPosition ?? defaultSettings.fretLabelPosition
 
-    if (this.orientation === Orientation.horizontal || this.mirrorWidth === undefined) {
+    if (this.orientation === Orientation.horizontal || !this.isMirrored) {
       return fretLabelPosition
     }
 
