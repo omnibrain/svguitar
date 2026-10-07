@@ -239,6 +239,12 @@ new SVGuitarChord('#some-selector')
     fretLabelFontSize: 38,
 
     /**
+     * The format of the fret label: 'fr' (5fr), 'number' (5), 'roman' (V), 'ordinal' (5th)
+     * or 'ordinal-with-fr' (5th Fr). Can also be a function that returns the label for a position.
+     */
+    fretLabelFormat: 'fr',
+
+    /**
      * The font size of the string labels
      */
     tuningsFontSize: 28,

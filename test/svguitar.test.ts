@@ -2,6 +2,7 @@ import {
   BarreChordStyle,
   ChordStyle,
   Finger,
+  FretLabelFormat,
   FretLabelPosition,
   Orientation,
   Shape,
@@ -322,6 +323,69 @@ describe('SVGuitarChord', () => {
       .draw()
 
     saveSvg('large fret label horizontal', container.outerHTML)
+  })
+
+  describe('fret label format', () => {
+    const chord = {
+      fingers: [
+        [1, 2],
+        [3, 3],
+      ] as Finger[],
+      barres: [],
+      title: 'A',
+      position: 5,
+    }
+
+    describe.each([Orientation.vertical, Orientation.horizontal])('%s', (orientation) => {
+      it.each([
+        [FretLabelFormat.FR, '5fr'],
+        [FretLabelFormat.NUMBER, '5'],
+        [FretLabelFormat.ROMAN, 'V'],
+        [FretLabelFormat.ORDINAL, '5th'],
+        [FretLabelFormat.ORDINAL_WITH_FR, '5th Fr'],
+      ])('Should render the fret label in the %s format', (fretLabelFormat, expected) => {
+        svguitar.chord(chord).configure({ orientation, fretLabelFormat }).draw()
+
+        expect(container.querySelector('.fret-position')!.textContent).toBe(expected)
+
+        saveSvg(`fret label format ${fretLabelFormat} ${orientation}`, container.outerHTML)
+      })
+    })
+
+    it('Should render the ordinal suffix as superscript', () => {
+      svguitar.chord(chord).configure({ fretLabelFormat: FretLabelFormat.ORDINAL }).draw()
+
+      const spans = container.querySelectorAll('.fret-position tspan')
+      expect(spans[1].textContent).toBe('th')
+      expect(Number(spans[1].getAttribute('font-size'))).toBeLessThan(
+        Number(spans[0].getAttribute('font-size')),
+      )
+    })
+
+    it('Should render the fret label with a custom format function', () => {
+      svguitar
+        .chord(chord)
+        .configure({ fretLabelFormat: (position) => `${position}. Bund` })
+        .draw()
+
+      expect(container.querySelector('.fret-position')!.textContent).toBe('5. Bund')
+    })
+
+    it.each([Orientation.vertical, Orientation.horizontal])(
+      'Should render an ordinal fret label in handdrawn style %s',
+      (orientation) => {
+        svguitar
+          .chord(chord)
+          .configure({
+            orientation,
+            style: ChordStyle.handdrawn,
+            fretLabelFormat: FretLabelFormat.ORDINAL_WITH_FR,
+          })
+          .draw()
+
+        saveSvg(`fret label format ordinal handdrawn ${orientation}`, container.outerHTML)
+      },
+    )
   })
 
   it('Should render fingers over barre chords', () => {

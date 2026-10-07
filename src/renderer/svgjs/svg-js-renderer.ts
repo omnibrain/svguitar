@@ -1,5 +1,5 @@
-import { Box, Container, QuerySelector, Rect, SVG } from '@svgdotjs/svg.js'
-import { Alignment, ArcDirection, GraphcisElement, Renderer } from '../renderer'
+import { Box, Container, QuerySelector, Rect, SVG, Text } from '@svgdotjs/svg.js'
+import { Alignment, ArcDirection, GraphcisElement, Renderer, TextSegment } from '../renderer'
 import { constants } from '../../constants'
 
 export class SvgJsRenderer extends Renderer {
@@ -70,7 +70,7 @@ export class SvgJsRenderer extends Renderer {
   }
 
   text(
-    text: string,
+    text: string | TextSegment[],
     x: number,
     y: number,
     fontSize: number,
@@ -84,8 +84,7 @@ export class SvgJsRenderer extends Renderer {
 
     if (plain) {
       // create a text element centered at x,y. No SVG.js magic.
-      element = this.svg
-        .plain(text)
+      element = (typeof text === 'string' ? this.svg.plain(text) : this.segmentText(text, fontSize))
         .attr({
           x,
           y,
@@ -103,8 +102,7 @@ export class SvgJsRenderer extends Renderer {
       // derived from the text's bounding box, which changes with the font settings.
       // x is set as a raw attribute so that text-anchor aligns the text around it,
       // while y() places the top of the bounding box at the given position.
-      element = this.svg
-        .text(text)
+      element = (typeof text === 'string' ? this.svg.text(text) : this.segmentText(text, fontSize))
         .font({
           family: fontFamily,
           size: fontSize,
@@ -115,6 +113,17 @@ export class SvgJsRenderer extends Renderer {
     }
 
     return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element))
+  }
+
+  private segmentText(segments: TextSegment[], fontSize: number): Text {
+    return this.svg.text((add) => {
+      Renderer.textSpans(segments, fontSize).forEach((span) => {
+        add
+          .tspan(span.text)
+          .font({ size: span.fontSize })
+          .attr('dy', span.dy || null)
+      })
+    })
   }
 
   circle(
