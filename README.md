@@ -60,6 +60,8 @@ yarn add svguitar
 pnpm add svguitar
 ```
 
+The same package is also published under the scoped name `@svguitar/core`.
+
 And then import it in your project:
 
 ```javascript

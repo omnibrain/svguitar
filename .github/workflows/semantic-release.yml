@@ -13,7 +13,19 @@ jobs:
       - run: yarn install
       - run: yarn build
       - name: Semantic Release
+        id: release
         uses: cycjimmy/semantic-release-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Publish the same build under the scoped name @svguitar/core
+      - name: Publish @svguitar/core
+        if: steps.release.outputs.new_release_published == 'true'
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          VERSION: ${{ steps.release.outputs.new_release_version }}
+          CHANNEL: ${{ steps.release.outputs.new_release_channel }}
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > "$RUNNER_TEMP/.npmrc"
+          npm pkg set name=@svguitar/core version="$VERSION"
+          npm publish --access public --ignore-scripts --tag "${CHANNEL:-latest}" --userconfig "$RUNNER_TEMP/.npmrc"
