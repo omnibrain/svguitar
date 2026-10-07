@@ -646,10 +646,6 @@ export class SVGuitarChord {
     return { width, height }
   }
 
-  /**
-   * Draws the chord diagram. Besides the size of the SVG, this returns the width of the diagram
-   * without the extra space a large fret label may need.
-   */
   private drawDiagram(): { width: number; height: number; diagramWidth: number } {
     this.clear()
     this.drawBackground()
@@ -674,8 +670,6 @@ export class SVGuitarChord {
     const width = this.width(constants.width, y)
     const height = this.height(y, constants.width)
 
-    // A large fret label reaches past the chord diagram. Grow the visible area by the same
-    // amount on both sides so that the label is not cut off and the diagram stays centered.
     const overflowX = fretLabel
       ? Math.max(0, -fretLabel.x, fretLabel.x + fretLabel.width - width)
       : 0
@@ -809,10 +803,6 @@ export class SVGuitarChord {
     return y + height * 2
   }
 
-  /**
-   * Draws the fret label (eg. "5fr") and returns the space it takes up, which can reach past the
-   * chord diagram when the label is large.
-   */
   private drawPosition(y: number): GraphcisElement | undefined {
     const position =
       this.chordInternal.position ?? this.settings.position ?? defaultSettings.position
@@ -862,8 +852,7 @@ export class SVGuitarChord {
           )
     }
 
-    // Horizontal orientation: the label is centered on its position, so keep it at least half its
-    // height away from the strings to prevent a large label from reaching into the fretboard.
+    // Horizontal orientation
     const measuredText = this.renderer.text(
       text,
       0,
