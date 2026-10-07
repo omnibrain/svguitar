@@ -71,8 +71,7 @@ var SvgJsRenderer = /** @class */ (function (_super) {
         var element;
         if (plain) {
             // create a text element centered at x,y. No SVG.js magic.
-            element = this.svg
-                .plain(text)
+            element = (typeof text === 'string' ? this.svg.plain(text) : this.segmentText(text, fontSize))
                 .attr({
                 x: x,
                 y: y,
@@ -91,8 +90,7 @@ var SvgJsRenderer = /** @class */ (function (_super) {
             // derived from the text's bounding box, which changes with the font settings.
             // x is set as a raw attribute so that text-anchor aligns the text around it,
             // while y() places the top of the bounding box at the given position.
-            element = this.svg
-                .text(text)
+            element = (typeof text === 'string' ? this.svg.text(text) : this.segmentText(text, fontSize))
                 .font({
                 family: fontFamily,
                 size: fontSize,
@@ -102,6 +100,16 @@ var SvgJsRenderer = /** @class */ (function (_super) {
             element.y(y).fill(color).addClass(renderer_1.Renderer.toClassName(classes));
         }
         return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element));
+    };
+    SvgJsRenderer.prototype.segmentText = function (segments, fontSize) {
+        return this.svg.text(function (add) {
+            renderer_1.Renderer.textSpans(segments, fontSize).forEach(function (span) {
+                add
+                    .tspan(span.text)
+                    .font({ size: span.fontSize })
+                    .attr('dy', span.dy || null);
+            });
+        });
     };
     SvgJsRenderer.prototype.circle = function (x, y, diameter, strokeWidth, strokeColor, fill, classes) {
         var element = this.svg

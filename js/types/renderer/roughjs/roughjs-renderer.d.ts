@@ -1,5 +1,5 @@
 import { QuerySelector } from '@svgdotjs/svg.js';
-import { Alignment, ArcDirection, GraphcisElement, Renderer } from '../renderer';
+import { Alignment, ArcDirection, GraphcisElement, Renderer, TextSegment } from '../renderer';
 export declare class RoughJsRenderer extends Renderer {
     private rc;
     private containerNode;
@@ -24,7 +24,7 @@ export declare class RoughJsRenderer extends Renderer {
     pentagon(x: number, y: number, size: number, strokeWidth: number, strokeColor: string, fill?: string, classes?: string | string[], spikes?: number): GraphcisElement;
     size(width: number, height: number, x?: number, y?: number): void;
     background(color: string): void;
-    text(text: string, x: number, y: number, fontSize: number, color: string, fontFamily: string, alignment: Alignment, classes?: string | string[], plain?: boolean): GraphcisElement;
+    text(text: string | TextSegment[], x: number, y: number, fontSize: number, color: string, fontFamily: string, alignment: Alignment, classes?: string | string[], plain?: boolean): GraphcisElement;
     private static boxToElement;
     private static roundedRectData;
     private static toClassArray;

@@ -7890,6 +7890,17 @@ var Renderer = /** @class */ (function () {
             "Z",
         ].join(' ');
     };
+    // dy instead of baseline-shift, which Firefox doesn't support
+    Renderer.textSpans = function (segments, fontSize) {
+        var shift = fontSize * 0.4;
+        var raised = false;
+        return segments.map(function (_a) {
+            var text = _a.text, _b = _a.superscript, superscript = _b === void 0 ? false : _b;
+            var dy = (Number(raised) - Number(superscript)) * shift;
+            raised = superscript;
+            return { text: text, fontSize: superscript ? fontSize * 0.6 : fontSize, dy: dy };
+        });
+    };
     Renderer.toClassName = function (classes) {
         if (!classes) {
             return '';
@@ -8110,6 +8121,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         this.svgNode.insertBefore(bg, this.svgNode.firstChild);
     };
     RoughJsRenderer.prototype.text = function (text, x, y, fontSize, color, fontFamily, alignment, classes, plain) {
+        var _this = this;
         // Place the SVG namespace in a variable to easily reference it.
         var txtElem = this.doc.createElementNS('http://www.w3.org/2000/svg', 'text');
         txtElem.setAttributeNS(null, 'x', String(x));
@@ -8121,7 +8133,20 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         if (plain) {
             txtElem.setAttributeNS(null, 'dominant-baseline', 'central');
         }
-        txtElem.appendChild(this.doc.createTextNode(text));
+        if (typeof text === 'string') {
+            txtElem.appendChild(this.doc.createTextNode(text));
+        }
+        else {
+            Renderer.textSpans(text, fontSize).forEach(function (span) {
+                var tspan = _this.doc.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                tspan.setAttributeNS(null, 'font-size', String(span.fontSize));
+                if (span.dy) {
+                    tspan.setAttributeNS(null, 'dy', String(span.dy));
+                }
+                tspan.appendChild(_this.doc.createTextNode(span.text));
+                txtElem.appendChild(tspan);
+            });
+        }
         this.svgNode.appendChild(txtElem);
         var bbox = txtElem.getBBox();
         var xOffset;
@@ -8234,8 +8259,7 @@ var SvgJsRenderer = /** @class */ (function (_super) {
         var element;
         if (plain) {
             // create a text element centered at x,y. No SVG.js magic.
-            element = this.svg
-                .plain(text)
+            element = (typeof text === 'string' ? this.svg.plain(text) : this.segmentText(text, fontSize))
                 .attr({
                 x: x,
                 y: y,
@@ -8254,8 +8278,7 @@ var SvgJsRenderer = /** @class */ (function (_super) {
             // derived from the text's bounding box, which changes with the font settings.
             // x is set as a raw attribute so that text-anchor aligns the text around it,
             // while y() places the top of the bounding box at the given position.
-            element = this.svg
-                .text(text)
+            element = (typeof text === 'string' ? this.svg.text(text) : this.segmentText(text, fontSize))
                 .font({
                 family: fontFamily,
                 size: fontSize,
@@ -8265,6 +8288,16 @@ var SvgJsRenderer = /** @class */ (function (_super) {
             element.y(y).fill(color).addClass(Renderer.toClassName(classes));
         }
         return SvgJsRenderer.boxToElement(element.bbox(), element.remove.bind(element));
+    };
+    SvgJsRenderer.prototype.segmentText = function (segments, fontSize) {
+        return this.svg.text(function (add) {
+            Renderer.textSpans(segments, fontSize).forEach(function (span) {
+                add
+                    .tspan(span.text)
+                    .font({ size: span.fontSize })
+                    .attr('dy', span.dy || null);
+            });
+        });
     };
     SvgJsRenderer.prototype.circle = function (x, y, diameter, strokeWidth, strokeColor, fill, classes) {
         var element = this.svg
@@ -8351,6 +8384,39 @@ function range(length, from) {
     return Array.from({ length: length }, function (_, i) { return i + from; });
 }
 
+var romanNumerals = [
+    [1000, 'M'],
+    [900, 'CM'],
+    [500, 'D'],
+    [400, 'CD'],
+    [100, 'C'],
+    [90, 'XC'],
+    [50, 'L'],
+    [40, 'XL'],
+    [10, 'X'],
+    [9, 'IX'],
+    [5, 'V'],
+    [4, 'IV'],
+    [1, 'I'],
+];
+function toRoman(value) {
+    var rest = value;
+    return romanNumerals.reduce(function (roman, _a) {
+        var _b = __read(_a, 2), arabic = _b[0], numeral = _b[1];
+        var count = Math.floor(rest / arabic);
+        rest -= count * arabic;
+        return roman + numeral.repeat(count);
+    }, '');
+}
+function ordinalSuffix(value) {
+    var _a;
+    var lastTwo = value % 100;
+    if (lastTwo >= 11 && lastTwo <= 13) {
+        return 'th';
+    }
+    return (_a = { 1: 'st', 2: 'nd', 3: 'rd' }[value % 10]) !== null && _a !== void 0 ? _a : 'th';
+}
+
 var BarreChordStyle;
 (function (BarreChordStyle) {
     BarreChordStyle["RECTANGLE"] = "rectangle";
@@ -8372,6 +8438,22 @@ var FretLabelPosition;
     FretLabelPosition["LEFT"] = "left";
     FretLabelPosition["RIGHT"] = "right";
 })(FretLabelPosition || (FretLabelPosition = {}));
+/**
+ * Formats of the fret label for position 5.
+ */
+var FretLabelFormat;
+(function (FretLabelFormat) {
+    /** 5fr */
+    FretLabelFormat["FR"] = "fr";
+    /** 5 */
+    FretLabelFormat["NUMBER"] = "number";
+    /** V */
+    FretLabelFormat["ROMAN"] = "roman";
+    /** 5th, with a superscript "th" */
+    FretLabelFormat["ORDINAL"] = "ordinal";
+    /** 5th Fr, with a superscript "th" */
+    FretLabelFormat["ORDINAL_WITH_FR"] = "ordinal-with-fr";
+})(FretLabelFormat || (FretLabelFormat = {}));
 var Shape;
 (function (Shape) {
     Shape["CIRCLE"] = "circle";
@@ -8642,7 +8724,7 @@ var SVGuitarChord = /** @class */ (function () {
         var stringXPositions = this.stringXPos();
         var endX = stringXPositions[stringXPositions.length - 1];
         var startX = stringXPositions[0];
-        var text = "".concat(position, "fr");
+        var text = this.fretLabel(position);
         var size = (_d = this.settings.fretLabelFontSize) !== null && _d !== void 0 ? _d : defaultSettings.fretLabelFontSize;
         var color = (_f = (_e = this.settings.fretLabelColor) !== null && _e !== void 0 ? _e : this.settings.color) !== null && _f !== void 0 ? _f : defaultSettings.color;
         var fingerSize = this.stringSpacing() * ((_g = this.settings.fingerSize) !== null && _g !== void 0 ? _g : defaultSettings.fingerSize);
@@ -8665,6 +8747,29 @@ var SVGuitarChord = /** @class */ (function () {
             ? this.coordinates(endX + distance, y)
             : this.coordinates(startX - distance, y), textX = _j.x, textY = _j.y;
         return this.renderer.text(text, textX, textY, size, color, fontFamily, Alignment.MIDDLE, className, true);
+    };
+    SVGuitarChord.prototype.fretLabel = function (position) {
+        var _a;
+        var format = (_a = this.settings.fretLabelFormat) !== null && _a !== void 0 ? _a : FretLabelFormat.FR;
+        if (typeof format === 'function') {
+            return format(position);
+        }
+        switch (format) {
+            case FretLabelFormat.NUMBER:
+                return String(position);
+            case FretLabelFormat.ROMAN:
+                return toRoman(position);
+            case FretLabelFormat.ORDINAL:
+                return [{ text: String(position) }, { text: ordinalSuffix(position), superscript: true }];
+            case FretLabelFormat.ORDINAL_WITH_FR:
+                return [
+                    { text: String(position) },
+                    { text: ordinalSuffix(position), superscript: true },
+                    { text: ' Fr' },
+                ];
+            default:
+                return "".concat(position, "fr");
+        }
     };
     /**
      * Hack to prevent the empty space of the svg from being cut off without having to define a
@@ -9207,5 +9312,5 @@ var SVGuitarChord = /** @class */ (function () {
     return SVGuitarChord;
 }());
 
-export { BarreChordStyle, ChordStyle, ElementType, FretLabelPosition, OPEN, Orientation, SILENT, SVGuitarChord, Shape };
+export { BarreChordStyle, ChordStyle, ElementType, FretLabelFormat, FretLabelPosition, OPEN, Orientation, SILENT, SVGuitarChord, Shape };
 //# sourceMappingURL=svguitar.es5.js.map

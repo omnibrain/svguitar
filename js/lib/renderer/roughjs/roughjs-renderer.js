@@ -234,6 +234,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         this.svgNode.insertBefore(bg, this.svgNode.firstChild);
     };
     RoughJsRenderer.prototype.text = function (text, x, y, fontSize, color, fontFamily, alignment, classes, plain) {
+        var _this = this;
         // Place the SVG namespace in a variable to easily reference it.
         var txtElem = this.doc.createElementNS('http://www.w3.org/2000/svg', 'text');
         txtElem.setAttributeNS(null, 'x', String(x));
@@ -245,7 +246,20 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         if (plain) {
             txtElem.setAttributeNS(null, 'dominant-baseline', 'central');
         }
-        txtElem.appendChild(this.doc.createTextNode(text));
+        if (typeof text === 'string') {
+            txtElem.appendChild(this.doc.createTextNode(text));
+        }
+        else {
+            renderer_1.Renderer.textSpans(text, fontSize).forEach(function (span) {
+                var tspan = _this.doc.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                tspan.setAttributeNS(null, 'font-size', String(span.fontSize));
+                if (span.dy) {
+                    tspan.setAttributeNS(null, 'dy', String(span.dy));
+                }
+                tspan.appendChild(_this.doc.createTextNode(span.text));
+                txtElem.appendChild(tspan);
+            });
+        }
         this.svgNode.appendChild(txtElem);
         var bbox = txtElem.getBBox();
         var xOffset;

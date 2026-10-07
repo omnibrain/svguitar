@@ -1,5 +1,5 @@
 import { QuerySelector } from '@svgdotjs/svg.js';
-import { Alignment, ArcDirection, GraphcisElement, Renderer } from '../renderer';
+import { Alignment, ArcDirection, GraphcisElement, Renderer, TextSegment } from '../renderer';
 export declare class SvgJsRenderer extends Renderer {
     private svg;
     private backgroundElement?;
@@ -11,7 +11,8 @@ export declare class SvgJsRenderer extends Renderer {
     remove(): void;
     toSvgString(): string;
     background(color: string): void;
-    text(text: string, x: number, y: number, fontSize: number, color: string, fontFamily: string, alignment: Alignment, classes?: string | string[], plain?: boolean): GraphcisElement;
+    text(text: string | TextSegment[], x: number, y: number, fontSize: number, color: string, fontFamily: string, alignment: Alignment, classes?: string | string[], plain?: boolean): GraphcisElement;
+    private segmentText;
     circle(x: number, y: number, diameter: number, strokeWidth: number, strokeColor: string, fill?: string, classes?: string | string[]): GraphcisElement;
     rect(x: number, y: number, width: number, height: number, strokeWidth: number, strokeColor: string, classes?: string | string[], fill?: string, radius?: number): GraphcisElement;
     triangle(x: number, y: number, size: number, strokeWidth: number, strokeColor: string, classes?: string | string[], fill?: string | undefined): GraphcisElement;

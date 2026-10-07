@@ -63,6 +63,21 @@ export declare enum FretLabelPosition {
     LEFT = "left",
     RIGHT = "right"
 }
+/**
+ * Formats of the fret label for position 5.
+ */
+export declare enum FretLabelFormat {
+    /** 5fr */
+    FR = "fr",
+    /** 5 */
+    NUMBER = "number",
+    /** V */
+    ROMAN = "roman",
+    /** 5th, with a superscript "th" */
+    ORDINAL = "ordinal",
+    /** 5th Fr, with a superscript "th" */
+    ORDINAL_WITH_FR = "ordinal-with-fr"
+}
 export declare type FretMarker = DoubleFretMarker | SingleFretMarker | number;
 export interface SingleFretMarker {
     /**
@@ -212,6 +227,10 @@ export interface ChordSettings {
      * The font size of the fret label
      */
     fretLabelFontSize?: number;
+    /**
+     * The format of the fret label (eg. "5fr", "5", "V"), or a function that returns the label for a position
+     */
+    fretLabelFormat?: FretLabelFormat | ((position: number) => string);
     /**
      * The font size of the string labels
      */
@@ -405,6 +424,7 @@ export declare class SVGuitarChord {
     private drawTunings;
     private drawWatermark;
     private drawPosition;
+    private fretLabel;
     /**
      * Hack to prevent the empty space of the svg from being cut off without having to define a
      * fixed width

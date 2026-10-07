@@ -8,6 +8,10 @@ export declare enum ArcDirection {
     LEFT = "left",
     RIGHT = "right"
 }
+export interface TextSegment {
+    text: string;
+    superscript?: boolean;
+}
 export interface GraphcisElement {
     width: number;
     height: number;
@@ -30,7 +34,7 @@ export declare abstract class Renderer {
     abstract toSvgString(): string;
     abstract background(color: string): void;
     abstract title(title: string): void;
-    abstract text(text: string, x: number, y: number, fontSize: number, color: string, fontFamily: string, alignment: Alignment, classes?: string | string[], plain?: boolean): GraphcisElement;
+    abstract text(text: string | TextSegment[], x: number, y: number, fontSize: number, color: string, fontFamily: string, alignment: Alignment, classes?: string | string[], plain?: boolean): GraphcisElement;
     abstract circle(x: number, y: number, diameter: number, strokeWidth: number, strokeColor: string, fill?: string, classes?: string | string[]): GraphcisElement;
     abstract rect(x: number, y: number, width: number, height: number, strokeWidth: number, strokeColor: string, classes?: string | string[], fill?: string, radius?: number): GraphcisElement;
     abstract arc(x: number, y: number, width: number, height: number, direction: ArcDirection, strokeWidth: number, strokeColor: string, classes?: string | string[], fill?: string): GraphcisElement;
@@ -39,5 +43,10 @@ export declare abstract class Renderer {
     protected static trianglePath(x: number, y: number, size: number): string;
     protected static ngonPath(x: number, y: number, size: number, edges: number): string;
     protected static arcBarrePath(x: number, y: number, width: number, height: number, direction: ArcDirection): string;
+    protected static textSpans(segments: TextSegment[], fontSize: number): {
+        text: string;
+        fontSize: number;
+        dy: number;
+    }[];
     protected static toClassName(classes?: string | string[]): string;
 }

@@ -51,10 +51,11 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SVGuitarChord = exports.ElementType = exports.Orientation = exports.ChordStyle = exports.Shape = exports.FretLabelPosition = exports.SILENT = exports.OPEN = exports.BarreChordStyle = void 0;
+exports.SVGuitarChord = exports.ElementType = exports.Orientation = exports.ChordStyle = exports.Shape = exports.FretLabelFormat = exports.FretLabelPosition = exports.SILENT = exports.OPEN = exports.BarreChordStyle = void 0;
 var constants_1 = require("./constants");
 var renderer_1 = require("./renderer");
 var range_1 = require("./utils/range");
+var numbers_1 = require("./utils/numbers");
 var renderer_2 = require("./renderer/renderer");
 var BarreChordStyle;
 (function (BarreChordStyle) {
@@ -77,6 +78,22 @@ var FretLabelPosition;
     FretLabelPosition["LEFT"] = "left";
     FretLabelPosition["RIGHT"] = "right";
 })(FretLabelPosition = exports.FretLabelPosition || (exports.FretLabelPosition = {}));
+/**
+ * Formats of the fret label for position 5.
+ */
+var FretLabelFormat;
+(function (FretLabelFormat) {
+    /** 5fr */
+    FretLabelFormat["FR"] = "fr";
+    /** 5 */
+    FretLabelFormat["NUMBER"] = "number";
+    /** V */
+    FretLabelFormat["ROMAN"] = "roman";
+    /** 5th, with a superscript "th" */
+    FretLabelFormat["ORDINAL"] = "ordinal";
+    /** 5th Fr, with a superscript "th" */
+    FretLabelFormat["ORDINAL_WITH_FR"] = "ordinal-with-fr";
+})(FretLabelFormat = exports.FretLabelFormat || (exports.FretLabelFormat = {}));
 var Shape;
 (function (Shape) {
     Shape["CIRCLE"] = "circle";
@@ -347,7 +364,7 @@ var SVGuitarChord = /** @class */ (function () {
         var stringXPositions = this.stringXPos();
         var endX = stringXPositions[stringXPositions.length - 1];
         var startX = stringXPositions[0];
-        var text = "".concat(position, "fr");
+        var text = this.fretLabel(position);
         var size = (_d = this.settings.fretLabelFontSize) !== null && _d !== void 0 ? _d : defaultSettings.fretLabelFontSize;
         var color = (_f = (_e = this.settings.fretLabelColor) !== null && _e !== void 0 ? _e : this.settings.color) !== null && _f !== void 0 ? _f : defaultSettings.color;
         var fingerSize = this.stringSpacing() * ((_g = this.settings.fingerSize) !== null && _g !== void 0 ? _g : defaultSettings.fingerSize);
@@ -370,6 +387,29 @@ var SVGuitarChord = /** @class */ (function () {
             ? this.coordinates(endX + distance, y)
             : this.coordinates(startX - distance, y), textX = _j.x, textY = _j.y;
         return this.renderer.text(text, textX, textY, size, color, fontFamily, renderer_1.Alignment.MIDDLE, className, true);
+    };
+    SVGuitarChord.prototype.fretLabel = function (position) {
+        var _a;
+        var format = (_a = this.settings.fretLabelFormat) !== null && _a !== void 0 ? _a : FretLabelFormat.FR;
+        if (typeof format === 'function') {
+            return format(position);
+        }
+        switch (format) {
+            case FretLabelFormat.NUMBER:
+                return String(position);
+            case FretLabelFormat.ROMAN:
+                return (0, numbers_1.toRoman)(position);
+            case FretLabelFormat.ORDINAL:
+                return [{ text: String(position) }, { text: (0, numbers_1.ordinalSuffix)(position), superscript: true }];
+            case FretLabelFormat.ORDINAL_WITH_FR:
+                return [
+                    { text: String(position) },
+                    { text: (0, numbers_1.ordinalSuffix)(position), superscript: true },
+                    { text: ' Fr' },
+                ];
+            default:
+                return "".concat(position, "fr");
+        }
     };
     /**
      * Hack to prevent the empty space of the svg from being cut off without having to define a

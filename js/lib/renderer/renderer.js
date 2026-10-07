@@ -106,6 +106,17 @@ var Renderer = /** @class */ (function () {
             "Z",
         ].join(' ');
     };
+    // dy instead of baseline-shift, which Firefox doesn't support
+    Renderer.textSpans = function (segments, fontSize) {
+        var shift = fontSize * 0.4;
+        var raised = false;
+        return segments.map(function (_a) {
+            var text = _a.text, _b = _a.superscript, superscript = _b === void 0 ? false : _b;
+            var dy = (Number(raised) - Number(superscript)) * shift;
+            raised = superscript;
+            return { text: text, fontSize: superscript ? fontSize * 0.6 : fontSize, dy: dy };
+        });
+    };
     Renderer.toClassName = function (classes) {
         if (!classes) {
             return '';
