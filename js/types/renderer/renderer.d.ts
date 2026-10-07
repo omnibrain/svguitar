@@ -19,7 +19,7 @@ export declare abstract class Renderer {
     protected container?: string | HTMLElement | undefined;
     protected constructor(container?: string | HTMLElement | undefined);
     abstract line(x1: number, y1: number, x2: number, y2: number, strokeWidth: number, color: string, classes?: string | string[]): void;
-    abstract size(width: number, height: number): void;
+    abstract size(width: number, height: number, x?: number, y?: number): void;
     abstract clear(): void;
     abstract remove(): void;
     /**

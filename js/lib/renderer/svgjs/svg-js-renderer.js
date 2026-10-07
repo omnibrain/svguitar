@@ -40,11 +40,16 @@ var SvgJsRenderer = /** @class */ (function (_super) {
     SvgJsRenderer.prototype.line = function (fromX, fromY, toX, toY, strokeWidth, color) {
         this.svg.line(fromX, fromY, toX, toY).stroke({ color: color, width: strokeWidth });
     };
-    SvgJsRenderer.prototype.size = function (width, height) {
-        this.svg.viewbox(0, 0, width, height);
+    SvgJsRenderer.prototype.size = function (width, height, x, y) {
+        var _a;
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
+        this.svg.viewbox(x, y, width, height);
+        (_a = this.backgroundElement) === null || _a === void 0 ? void 0 : _a.move(x, y);
     };
     SvgJsRenderer.prototype.clear = function () {
         this.svg.children().forEach(function (child) { return child.remove(); });
+        delete this.backgroundElement;
     };
     SvgJsRenderer.prototype.remove = function () {
         this.svg.remove();
@@ -60,7 +65,7 @@ var SvgJsRenderer = /** @class */ (function (_super) {
         return svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
     };
     SvgJsRenderer.prototype.background = function (color) {
-        this.svg.rect().size('100%', '100%').fill(color);
+        this.backgroundElement = this.svg.rect().size('100%', '100%').fill(color);
     };
     SvgJsRenderer.prototype.text = function (text, x, y, fontSize, color, fontFamily, alignment, classes, plain) {
         var element;

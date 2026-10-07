@@ -7997,6 +7997,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         while (this.svgNode.firstChild) {
             this.svgNode.removeChild(this.svgNode.firstChild);
         }
+        delete this.backgroundElement;
         this.rc = at.svg(this.svgNode);
         this.embedDefs();
     };
@@ -8092,14 +8093,20 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         this.svgNode.appendChild(pentagon);
         return RoughJsRenderer.boxToElement(pentagon.getBBox(), function () { return pentagon.remove(); });
     };
-    RoughJsRenderer.prototype.size = function (width, height) {
-        this.svgNode.setAttribute('viewBox', "0 0 ".concat(Math.ceil(width), " ").concat(Math.ceil(height)));
+    RoughJsRenderer.prototype.size = function (width, height, x, y) {
+        var _a, _b;
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
+        this.svgNode.setAttribute('viewBox', "".concat(Math.floor(x), " ").concat(Math.floor(y), " ").concat(Math.ceil(width), " ").concat(Math.ceil(height)));
+        (_a = this.backgroundElement) === null || _a === void 0 ? void 0 : _a.setAttributeNS(null, 'x', String(Math.floor(x)));
+        (_b = this.backgroundElement) === null || _b === void 0 ? void 0 : _b.setAttributeNS(null, 'y', String(Math.floor(y)));
     };
     RoughJsRenderer.prototype.background = function (color) {
         var bg = this.doc.createElementNS('http://www.w3.org/2000/svg', 'rect');
         bg.setAttributeNS(null, 'width', '100%');
         bg.setAttributeNS(null, 'height', '100%');
         bg.setAttributeNS(null, 'fill', color);
+        this.backgroundElement = bg;
         this.svgNode.insertBefore(bg, this.svgNode.firstChild);
     };
     RoughJsRenderer.prototype.text = function (text, x, y, fontSize, color, fontFamily, alignment, classes, plain) {
@@ -8196,11 +8203,16 @@ var SvgJsRenderer = /** @class */ (function (_super) {
     SvgJsRenderer.prototype.line = function (fromX, fromY, toX, toY, strokeWidth, color) {
         this.svg.line(fromX, fromY, toX, toY).stroke({ color: color, width: strokeWidth });
     };
-    SvgJsRenderer.prototype.size = function (width, height) {
-        this.svg.viewbox(0, 0, width, height);
+    SvgJsRenderer.prototype.size = function (width, height, x, y) {
+        var _a;
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
+        this.svg.viewbox(x, y, width, height);
+        (_a = this.backgroundElement) === null || _a === void 0 ? void 0 : _a.move(x, y);
     };
     SvgJsRenderer.prototype.clear = function () {
         this.svg.children().forEach(function (child) { return child.remove(); });
+        delete this.backgroundElement;
     };
     SvgJsRenderer.prototype.remove = function () {
         this.svg.remove();
@@ -8216,7 +8228,7 @@ var SvgJsRenderer = /** @class */ (function (_super) {
         return svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
     };
     SvgJsRenderer.prototype.background = function (color) {
-        this.svg.rect().size('100%', '100%').fill(color);
+        this.backgroundElement = this.svg.rect().size('100%', '100%').fill(color);
     };
     SvgJsRenderer.prototype.text = function (text, x, y, fontSize, color, fontFamily, alignment, classes, plain) {
         var element;
@@ -8507,9 +8519,12 @@ var SVGuitarChord = /** @class */ (function () {
             // A horizontal diagram is mirrored across its total width, which is only known after drawing
             // it. So we draw it once without mirroring to get the width and then draw it again.
             this.mirrorWidth =
-                this.orientation === Orientation.vertical ? constants.width : this.drawDiagram().height;
+                this.orientation === Orientation.vertical
+                    ? constants.width
+                    : this.drawDiagram().diagramWidth;
         }
-        return this.drawDiagram();
+        var _b = this.drawDiagram(), width = _b.width, height = _b.height;
+        return { width: width, height: height };
     };
     SVGuitarChord.prototype.drawDiagram = function () {
         var _a;
@@ -8522,7 +8537,7 @@ var SVGuitarChord = /** @class */ (function () {
         y = this.drawTitle((_a = this.settings.titleFontSize) !== null && _a !== void 0 ? _a : defaultSettings.titleFontSize);
         y = this.drawEmptyStringIndicators(y);
         y = this.drawTopFret(y);
-        this.drawPosition(y);
+        var fretLabel = this.drawPosition(y);
         y = this.drawGrid(y);
         y = this.drawTunings(y);
         y = this.drawWatermark(y);
@@ -8530,11 +8545,18 @@ var SVGuitarChord = /** @class */ (function () {
         y += this.fretSpacing() / 10;
         var width = this.width(constants.width, y);
         var height = this.height(y, constants.width);
-        this.renderer.size(width, height);
-        this.drawTopEdges(y);
+        var overflowX = fretLabel
+            ? Math.max(0, -fretLabel.x, fretLabel.x + fretLabel.width - width)
+            : 0;
+        var overflowY = fretLabel
+            ? Math.max(0, -fretLabel.y, fretLabel.y + fretLabel.height - height)
+            : 0;
+        this.renderer.size(width + 2 * overflowX, height + 2 * overflowY, -overflowX, -overflowY);
+        this.drawTopEdges(y, overflowX, overflowY);
         return {
-            width: constants.width,
-            height: y,
+            width: width + 2 * overflowX,
+            height: height + 2 * overflowY,
+            diagramWidth: width,
         };
     };
     SVGuitarChord.sanityCheckSettings = function (settings) {
@@ -8611,12 +8633,11 @@ var SVGuitarChord = /** @class */ (function () {
         return y + height * 2;
     };
     SVGuitarChord.prototype.drawPosition = function (y) {
-        var _this = this;
         var _a, _b, _c, _d, _e, _f, _g, _h;
         var position = (_b = (_a = this.chordInternal.position) !== null && _a !== void 0 ? _a : this.settings.position) !== null && _b !== void 0 ? _b : defaultSettings.position;
         var noPosition = (_c = this.settings.noPosition) !== null && _c !== void 0 ? _c : defaultSettings.noPosition;
         if (position <= 1 || noPosition) {
-            return;
+            return undefined;
         }
         var stringXPositions = this.stringXPos();
         var endX = stringXPositions[stringXPositions.length - 1];
@@ -8632,50 +8653,31 @@ var SVGuitarChord = /** @class */ (function () {
         var padding = Math.max(this.stringSpacing() / 5, fingerSize / 2 + 5);
         var className = ElementType.FRET_POSITION;
         if (this.orientation === Orientation.vertical) {
-            var drawText_1 = function (sizeMultiplier) {
-                if (sizeMultiplier === void 0) { sizeMultiplier = 1; }
-                if (sizeMultiplier < 0.01) {
-                    // text does not fit: don't render it at all.
-                    // eslint-disable-next-line no-console
-                    console.warn('Not enough space to draw the starting fret');
-                    return;
-                }
-                if (fretLabelPosition === FretLabelPosition.RIGHT) {
-                    var svgText = _this.renderer.text(text, endX + padding, y, size * sizeMultiplier, color, fontFamily, Alignment.LEFT, className);
-                    var width = svgText.width, x = svgText.x;
-                    if (x + width > constants.width) {
-                        svgText.remove();
-                        drawText_1(sizeMultiplier * 0.9);
-                    }
-                }
-                else {
-                    var svgText = _this.renderer.text(text, startX - padding, y, size * sizeMultiplier, color, fontFamily, Alignment.RIGHT, className);
-                    var x = svgText.x;
-                    if (x < 0) {
-                        svgText.remove();
-                        drawText_1(sizeMultiplier * 0.8);
-                    }
-                }
-            };
-            drawText_1();
-            return;
+            return fretLabelPosition === FretLabelPosition.RIGHT
+                ? this.renderer.text(text, endX + padding, y, size, color, fontFamily, Alignment.LEFT, className)
+                : this.renderer.text(text, startX - padding, y, size, color, fontFamily, Alignment.RIGHT, className);
         }
         // Horizontal orientation
+        var measuredText = this.renderer.text(text, 0, 0, size, color, fontFamily, Alignment.MIDDLE, className, true);
+        var distance = Math.max(padding, measuredText.height / 2);
+        measuredText.remove();
         var _j = fretLabelPosition === FretLabelPosition.RIGHT
-            ? this.coordinates(endX + padding, y)
-            : this.coordinates(startX - padding, y), textX = _j.x, textY = _j.y;
-        this.renderer.text(text, textX, textY, size, color, fontFamily, Alignment.MIDDLE, className, true);
+            ? this.coordinates(endX + distance, y)
+            : this.coordinates(startX - distance, y), textX = _j.x, textY = _j.y;
+        return this.renderer.text(text, textX, textY, size, color, fontFamily, Alignment.MIDDLE, className, true);
     };
     /**
      * Hack to prevent the empty space of the svg from being cut off without having to define a
      * fixed width
      */
-    SVGuitarChord.prototype.drawTopEdges = function (y) {
+    SVGuitarChord.prototype.drawTopEdges = function (y, overflowX, overflowY) {
         var _a;
+        if (overflowX === void 0) { overflowX = 0; }
+        if (overflowY === void 0) { overflowY = 0; }
         var orientation = (_a = this.settings.orientation) !== null && _a !== void 0 ? _a : defaultSettings.orientation;
         var xTopRight = orientation === Orientation.vertical ? constants.width : y;
-        this.renderer.circle(0, 0, 0, 0, 'transparent', 'none', 'top-left');
-        this.renderer.circle(xTopRight, 0, 0, 0, 'transparent', 'none', 'top-right');
+        this.renderer.circle(-overflowX, -overflowY, 0, 0, 'transparent', 'none', 'top-left');
+        this.renderer.circle(xTopRight + overflowX, -overflowY, 0, 0, 'transparent', 'none', 'top-right');
     };
     SVGuitarChord.prototype.drawBackground = function () {
         if (this.settings.backgroundColor) {

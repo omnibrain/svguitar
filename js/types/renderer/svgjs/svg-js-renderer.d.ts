@@ -2,10 +2,11 @@ import { QuerySelector } from '@svgdotjs/svg.js';
 import { Alignment, ArcDirection, GraphcisElement, Renderer } from '../renderer';
 export declare class SvgJsRenderer extends Renderer {
     private svg;
+    private backgroundElement?;
     constructor(container?: QuerySelector | HTMLElement);
     title(title: string): void;
     line(fromX: number, fromY: number, toX: number, toY: number, strokeWidth: number, color: string): void;
-    size(width: number, height: number): void;
+    size(width: number, height: number, x?: number, y?: number): void;
     clear(): void;
     remove(): void;
     toSvgString(): string;

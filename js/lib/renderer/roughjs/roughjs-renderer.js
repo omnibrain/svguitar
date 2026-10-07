@@ -121,6 +121,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         while (this.svgNode.firstChild) {
             this.svgNode.removeChild(this.svgNode.firstChild);
         }
+        delete this.backgroundElement;
         this.rc = roughjs_1.default.svg(this.svgNode);
         this.embedDefs();
     };
@@ -216,14 +217,20 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         this.svgNode.appendChild(pentagon);
         return RoughJsRenderer.boxToElement(pentagon.getBBox(), function () { return pentagon.remove(); });
     };
-    RoughJsRenderer.prototype.size = function (width, height) {
-        this.svgNode.setAttribute('viewBox', "0 0 ".concat(Math.ceil(width), " ").concat(Math.ceil(height)));
+    RoughJsRenderer.prototype.size = function (width, height, x, y) {
+        var _a, _b;
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
+        this.svgNode.setAttribute('viewBox', "".concat(Math.floor(x), " ").concat(Math.floor(y), " ").concat(Math.ceil(width), " ").concat(Math.ceil(height)));
+        (_a = this.backgroundElement) === null || _a === void 0 ? void 0 : _a.setAttributeNS(null, 'x', String(Math.floor(x)));
+        (_b = this.backgroundElement) === null || _b === void 0 ? void 0 : _b.setAttributeNS(null, 'y', String(Math.floor(y)));
     };
     RoughJsRenderer.prototype.background = function (color) {
         var bg = this.doc.createElementNS('http://www.w3.org/2000/svg', 'rect');
         bg.setAttributeNS(null, 'width', '100%');
         bg.setAttributeNS(null, 'height', '100%');
         bg.setAttributeNS(null, 'fill', color);
+        this.backgroundElement = bg;
         this.svgNode.insertBefore(bg, this.svgNode.firstChild);
     };
     RoughJsRenderer.prototype.text = function (text, x, y, fontSize, color, fontFamily, alignment, classes, plain) {
