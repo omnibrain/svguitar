@@ -12,6 +12,11 @@ export enum ArcDirection {
   RIGHT = 'right',
 }
 
+export interface TextSegment {
+  text: string
+  superscript?: boolean
+}
+
 export interface GraphcisElement {
   width: number
   height: number
@@ -51,7 +56,7 @@ export abstract class Renderer {
   abstract title(title: string): void
 
   abstract text(
-    text: string,
+    text: string | TextSegment[],
     x: number,
     y: number,
     fontSize: number,
@@ -210,6 +215,22 @@ export abstract class Renderer {
       `Q ${cxInner} ${cyInner} ${xStart} ${yStart}`,
       `Z`,
     ].join(' ')
+  }
+
+  // dy instead of baseline-shift, which Firefox doesn't support
+  protected static textSpans(
+    segments: TextSegment[],
+    fontSize: number,
+  ): { text: string; fontSize: number; dy: number }[] {
+    const shift = fontSize * 0.4
+    let raised = false
+
+    return segments.map(({ text, superscript = false }) => {
+      const dy = (Number(raised) - Number(superscript)) * shift
+      raised = superscript
+
+      return { text, fontSize: superscript ? fontSize * 0.6 : fontSize, dy }
+    })
   }
 
   protected static toClassName(classes?: string | string[]): string {

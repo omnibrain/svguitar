@@ -9,8 +9,16 @@ import {
   SVGuitarPlugin,
   UnionToIntersection,
 } from './plugin'
-import { Alignment, GraphcisElement, Renderer, RoughJsRenderer, SvgJsRenderer } from './renderer'
+import {
+  Alignment,
+  GraphcisElement,
+  Renderer,
+  RoughJsRenderer,
+  SvgJsRenderer,
+  TextSegment,
+} from './renderer'
 import { range } from './utils/range'
+import { ordinalSuffix, toRoman } from './utils/numbers'
 import { ArcDirection } from './renderer/renderer'
 
 // export types for Typedoc
@@ -96,6 +104,22 @@ export const SILENT: SilentString = 'x'
 export enum FretLabelPosition {
   LEFT = 'left',
   RIGHT = 'right',
+}
+
+/**
+ * Formats of the fret label for position 5.
+ */
+export enum FretLabelFormat {
+  /** 5fr */
+  FR = 'fr',
+  /** 5 */
+  NUMBER = 'number',
+  /** V */
+  ROMAN = 'roman',
+  /** 5th, with a superscript "th" */
+  ORDINAL = 'ordinal',
+  /** 5th Fr, with a superscript "th" */
+  ORDINAL_WITH_FR = 'ordinal-with-fr',
 }
 
 export type FretMarker = DoubleFretMarker | SingleFretMarker | number
@@ -275,6 +299,11 @@ export interface ChordSettings {
    * The font size of the fret label
    */
   fretLabelFontSize?: number
+
+  /**
+   * The format of the fret label (eg. "5fr", "5", "V"), or a function that returns the label for a position
+   */
+  fretLabelFormat?: FretLabelFormat | ((position: number) => string)
 
   /**
    * The font size of the string labels
@@ -815,7 +844,7 @@ export class SVGuitarChord {
     const stringXPositions = this.stringXPos()
     const endX = stringXPositions[stringXPositions.length - 1]
     const startX = stringXPositions[0]
-    const text = `${position}fr`
+    const text = this.fretLabel(position)
     const size = this.settings.fretLabelFontSize ?? defaultSettings.fretLabelFontSize
     const color = this.settings.fretLabelColor ?? this.settings.color ?? defaultSettings.color
     const fingerSize =
@@ -882,6 +911,31 @@ export class SVGuitarChord {
       className,
       true,
     )
+  }
+
+  private fretLabel(position: number): string | TextSegment[] {
+    const format = this.settings.fretLabelFormat ?? FretLabelFormat.FR
+
+    if (typeof format === 'function') {
+      return format(position)
+    }
+
+    switch (format) {
+      case FretLabelFormat.NUMBER:
+        return String(position)
+      case FretLabelFormat.ROMAN:
+        return toRoman(position)
+      case FretLabelFormat.ORDINAL:
+        return [{ text: String(position) }, { text: ordinalSuffix(position), superscript: true }]
+      case FretLabelFormat.ORDINAL_WITH_FR:
+        return [
+          { text: String(position) },
+          { text: ordinalSuffix(position), superscript: true },
+          { text: ' Fr' },
+        ]
+      default:
+        return `${position}fr`
+    }
   }
 
   /**

@@ -5,7 +5,7 @@ import { RoughSVG } from 'roughjs/bin/svg'
 import rough from 'roughjs'
 import { Options } from 'roughjs/bin/core'
 import defs from './defs'
-import { Alignment, ArcDirection, GraphcisElement, Renderer } from '../renderer'
+import { Alignment, ArcDirection, GraphcisElement, Renderer, TextSegment } from '../renderer'
 
 /**
  * Currently the font is hard-coded to 'Patrick Hand' when using the handdrawn chord diagram style.
@@ -329,7 +329,7 @@ export class RoughJsRenderer extends Renderer {
   }
 
   text(
-    text: string,
+    text: string | TextSegment[],
     x: number,
     y: number,
     fontSize: number,
@@ -353,7 +353,19 @@ export class RoughJsRenderer extends Renderer {
       txtElem.setAttributeNS(null, 'dominant-baseline', 'central')
     }
 
-    txtElem.appendChild(this.doc.createTextNode(text))
+    if (typeof text === 'string') {
+      txtElem.appendChild(this.doc.createTextNode(text))
+    } else {
+      Renderer.textSpans(text, fontSize).forEach((span) => {
+        const tspan = this.doc.createElementNS('http://www.w3.org/2000/svg', 'tspan')
+        tspan.setAttributeNS(null, 'font-size', String(span.fontSize))
+        if (span.dy) {
+          tspan.setAttributeNS(null, 'dy', String(span.dy))
+        }
+        tspan.appendChild(this.doc.createTextNode(span.text))
+        txtElem.appendChild(tspan)
+      })
+    }
 
     this.svgNode.appendChild(txtElem)
 
