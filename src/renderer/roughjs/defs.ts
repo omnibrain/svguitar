@@ -1,4 +1,4 @@
-import patrickHandWoff2 from './patrick-hand'
+import patrickHandWoff2 from '../../../fonts/PatrickHand-Regular.woff2'
 
 export default `
 <defs>

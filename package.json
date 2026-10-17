@@ -87,6 +87,7 @@
   },
   "jest": {
     "transform": {
+      "\\.woff2$": "<rootDir>/tools/base64-transform.js",
       ".(ts|tsx)": "ts-jest"
     },
     "testEnvironment": "node",

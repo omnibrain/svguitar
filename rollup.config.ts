@@ -5,6 +5,7 @@ import camelCase from 'lodash.camelcase'
 import typescript from 'rollup-plugin-typescript2'
 import json from 'rollup-plugin-json'
 import html from 'rollup-plugin-html';
+import { readFileSync } from 'fs'
 
 const pkg = require('./package.json')
 
@@ -22,6 +23,17 @@ export default {
     include: 'src/**',
   },
   plugins: [
+    // Inline font files as base64 strings
+    {
+      name: 'base64',
+      load(id) {
+        if (id.endsWith('.woff2')) {
+          return `export default ${JSON.stringify(readFileSync(id).toString('base64'))}`
+        }
+
+        return null
+      },
+    },
     // Allow json resolution
     json(),
     // Allow importing HTML
