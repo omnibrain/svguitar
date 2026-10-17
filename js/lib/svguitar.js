@@ -168,8 +168,7 @@ var SVGuitarChord = /** @class */ (function () {
      * @param container The element into which the chord diagram is rendered. This can either be a
      * CSS selector or a DOM element. If omitted, the diagram is rendered detached from the DOM and
      * can be exported as a string with {@link toSvg}. This is useful for generating SVG files in a
-     * Node.js script without a browser. Note that the detached mode is only supported for the
-     * default (`normal`) chord diagram style.
+     * Node.js script without a browser.
      */
     function SVGuitarChord(container) {
         var _this = this;
@@ -226,6 +225,7 @@ var SVGuitarChord = /** @class */ (function () {
         if (settings.style !== this.settings.style) {
             this.renderer.remove();
             delete this.rendererInternal;
+            delete this.fontsLoading;
         }
         this.settings = __assign(__assign({}, this.settings), settings);
         return this;
@@ -246,7 +246,22 @@ var SVGuitarChord = /** @class */ (function () {
                     : this.drawDiagram().diagramWidth;
         }
         var _b = this.drawDiagram(), width = _b.width, height = _b.height;
+        this.redrawWhenFontsLoad();
         return { width: width, height: height };
+    };
+    /**
+     * A diagram drawn before its fonts have loaded is laid out with a fallback font, so it's drawn
+     * again once they have.
+     */
+    SVGuitarChord.prototype.redrawWhenFontsLoad = function () {
+        var _this = this;
+        var fontsLoading = this.renderer.fontsLoading();
+        this.fontsLoading = fontsLoading;
+        fontsLoading === null || fontsLoading === void 0 ? void 0 : fontsLoading.then(function () {
+            if (_this.fontsLoading === fontsLoading) {
+                _this.draw();
+            }
+        }, function () { return undefined; });
     };
     SVGuitarChord.prototype.drawDiagram = function () {
         var _a;
@@ -815,6 +830,7 @@ var SVGuitarChord = /** @class */ (function () {
      * Completely remove the diagram from the DOM
      */
     SVGuitarChord.prototype.remove = function () {
+        delete this.fontsLoading;
         this.renderer.remove();
     };
     /**

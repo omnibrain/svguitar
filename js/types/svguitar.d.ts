@@ -404,12 +404,12 @@ export declare class SVGuitarChord {
      * diagram is not mirrored.
      */
     private mirrorWidth?;
+    private fontsLoading?;
     /**
      * @param container The element into which the chord diagram is rendered. This can either be a
      * CSS selector or a DOM element. If omitted, the diagram is rendered detached from the DOM and
      * can be exported as a string with {@link toSvg}. This is useful for generating SVG files in a
-     * Node.js script without a browser. Note that the detached mode is only supported for the
-     * default (`normal`) chord diagram style.
+     * Node.js script without a browser.
      */
     constructor(container?: string | HTMLElement | undefined);
     private get renderer();
@@ -419,6 +419,11 @@ export declare class SVGuitarChord {
         width: number;
         height: number;
     };
+    /**
+     * A diagram drawn before its fonts have loaded is laid out with a fallback font, so it's drawn
+     * again once they have.
+     */
+    private redrawWhenFontsLoad;
     private drawDiagram;
     static sanityCheckSettings(settings: Partial<ChordSettings>): void;
     private drawTunings;

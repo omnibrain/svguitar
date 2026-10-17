@@ -2,10 +2,11 @@ import { QuerySelector } from '@svgdotjs/svg.js';
 import { Alignment, ArcDirection, GraphcisElement, Renderer, TextSegment } from '../renderer';
 export declare class RoughJsRenderer extends Renderer {
     private rc;
-    private containerNode;
+    private containerNode?;
     private doc;
     private svgNode;
     private backgroundElement?;
+    private randomState;
     constructor(container?: QuerySelector | HTMLElement);
     /**
      * This will embed all defs defined in the defs.html file. Specifically this is used to embed the base64
@@ -15,6 +16,13 @@ export declare class RoughJsRenderer extends Renderer {
     title(title: string): void;
     circle(x: number, y: number, diameter: number, strokeWidth: number, strokeColor: string, fill?: string, classes?: string | string[]): GraphcisElement;
     clear(): void;
+    fontsLoading(): Promise<unknown> | undefined;
+    /**
+     * rough.js varies a shape based on its seed, so every shape gets its own seed. Otherwise all
+     * shapes of the same size would wobble identically. The seeds are generated with a Lehmer RNG,
+     * which never yields 0 (a seed of 0 makes rough.js fall back to Math.random()).
+     */
+    private nextSeed;
     remove(): void;
     toSvgString(): string;
     line(x1: number, y1: number, x2: number, y2: number, strokeWidth: number, color: string, classes?: string | string[]): void;
@@ -25,6 +33,11 @@ export declare class RoughJsRenderer extends Renderer {
     size(width: number, height: number, x?: number, y?: number): void;
     background(color: string): void;
     text(text: string | TextSegment[], x: number, y: number, fontSize: number, color: string, fontFamily: string, alignment: Alignment, classes?: string | string[], plain?: boolean): GraphcisElement;
+    /**
+     * Browsers return an empty bounding box for elements that are not part of the document, so a
+     * detached (headless) diagram is briefly attached to the document while it's being measured.
+     */
+    private bbox;
     private static boxToElement;
     private static roundedRectData;
     private static toClassArray;

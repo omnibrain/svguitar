@@ -22,7 +22,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">RoughJsRenderer</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L18">renderer/roughjs/roughjs-renderer.ts:18</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L50">renderer/roughjs/roughjs-renderer.ts:50</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -36,8 +36,9 @@
 <h3 class="tsd-index-heading">Properties</h3>
 <div class="tsd-index-list"><a href="RoughJsRenderer.html#backgroundElement" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-1024-path"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)" id="icon-1024-text"></path></svg><span>background<wbr/>Element?</span></a>
 <a href="RoughJsRenderer.html#container" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>container?</span></a>
-<a href="RoughJsRenderer.html#containerNode" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>container<wbr/>Node</span></a>
+<a href="RoughJsRenderer.html#containerNode" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>container<wbr/>Node?</span></a>
 <a href="RoughJsRenderer.html#doc" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>doc</span></a>
+<a href="RoughJsRenderer.html#randomState" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>random<wbr/>State</span></a>
 <a href="RoughJsRenderer.html#rc" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>rc</span></a>
 <a href="RoughJsRenderer.html#svgNode" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>svg<wbr/>Node</span></a>
 </div></section>
@@ -45,10 +46,13 @@
 <h3 class="tsd-index-heading">Methods</h3>
 <div class="tsd-index-list"><a href="RoughJsRenderer.html#arc" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-2048-path"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)" id="icon-2048-text"></path></svg><span>arc</span></a>
 <a href="RoughJsRenderer.html#background" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>background</span></a>
+<a href="RoughJsRenderer.html#bbox" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>bbox</span></a>
 <a href="RoughJsRenderer.html#circle" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>circle</span></a>
 <a href="RoughJsRenderer.html#clear" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>clear</span></a>
 <a href="RoughJsRenderer.html#embedDefs" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>embed<wbr/>Defs</span></a>
+<a href="RoughJsRenderer.html#fontsLoading" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>fonts<wbr/>Loading</span></a>
 <a href="RoughJsRenderer.html#line" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>line</span></a>
+<a href="RoughJsRenderer.html#nextSeed" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>next<wbr/>Seed</span></a>
 <a href="RoughJsRenderer.html#pentagon" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>pentagon</span></a>
 <a href="RoughJsRenderer.html#rect" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>rect</span></a>
 <a href="RoughJsRenderer.html#remove" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>remove</span></a>
@@ -82,40 +86,45 @@
 <h4 class="tsd-returns-title">Returns <a href="RoughJsRenderer.html" class="tsd-signature-type" data-tsd-kind="Class">RoughJsRenderer</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#constructor">constructor</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L29">renderer/roughjs/roughjs-renderer.ts:29</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L63">renderer/roughjs/roughjs-renderer.ts:63</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="backgroundElement" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <code class="tsd-tag ts-flagOptional">Optional</code> <span>background<wbr/>Element</span><a href="#backgroundElement" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">background<wbr/>Element<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">SVGRectElement</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L27">renderer/roughjs/roughjs-renderer.ts:27</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L59">renderer/roughjs/roughjs-renderer.ts:59</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="container" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <code class="tsd-tag ts-flagOptional">Optional</code> <span>container</span><a href="#container" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">container<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span></div><aside class="tsd-sources">
 <p>Inherited from <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#container">container</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/renderer.ts#L29">renderer/renderer.ts:29</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/renderer.ts#L29">renderer/renderer.ts:29</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="containerNode" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>container<wbr/>Node</span><a href="#containerNode" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">container<wbr/>Node<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div><aside class="tsd-sources">
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <code class="tsd-tag ts-flagOptional">Optional</code> <span>container<wbr/>Node</span><a href="#containerNode" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">container<wbr/>Node<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">HTMLElement</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L21">renderer/roughjs/roughjs-renderer.ts:21</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L53">renderer/roughjs/roughjs-renderer.ts:53</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="doc" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>doc</span><a href="#doc" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">doc<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Document</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L23">renderer/roughjs/roughjs-renderer.ts:23</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L55">renderer/roughjs/roughjs-renderer.ts:55</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="randomState" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>random<wbr/>State</span><a href="#randomState" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">random<wbr/>State<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = SEED</span></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L61">renderer/roughjs/roughjs-renderer.ts:61</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="rc" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>rc</span><a href="#rc" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">rc<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RoughSVG</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L19">renderer/roughjs/roughjs-renderer.ts:19</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L51">renderer/roughjs/roughjs-renderer.ts:51</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="svgNode" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>svg<wbr/>Node</span><a href="#svgNode" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">svg<wbr/>Node<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SVGSVGElement</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L25">renderer/roughjs/roughjs-renderer.ts:25</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L57">renderer/roughjs/roughjs-renderer.ts:57</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="arc" class="tsd-anchor"></a>
@@ -147,7 +156,7 @@
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/GraphcisElement.html" class="tsd-signature-type" data-tsd-kind="Interface">GraphcisElement</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#arc">arc</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L240">renderer/roughjs/roughjs-renderer.ts:240</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L298">renderer/roughjs/roughjs-renderer.ts:298</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="background" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>background</span><a href="#background" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -161,7 +170,23 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#background">background</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L320">renderer/roughjs/roughjs-renderer.ts:320</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L381">renderer/roughjs/roughjs-renderer.ts:381</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private"><a id="bbox" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>bbox</span><a href="#bbox" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+<li class="tsd-signature tsd-anchor-link" id="bbox.bbox-1">bbox<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SVGGraphicsElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">DOMRect</span><a href="#bbox.bbox-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Browsers return an empty bounding box for elements that are not part of the document, so a
+detached (headless) diagram is briefly attached to the document while it&#39;s being measured.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>element: <span class="tsd-signature-type">SVGGraphicsElement</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">DOMRect</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L462">renderer/roughjs/roughjs-renderer.ts:462</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="circle" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>circle</span><a href="#circle" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -187,7 +212,7 @@
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/GraphcisElement.html" class="tsd-signature-type" data-tsd-kind="Interface">GraphcisElement</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#circle">circle</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L113">renderer/roughjs/roughjs-renderer.ts:113</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L151">renderer/roughjs/roughjs-renderer.ts:151</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="clear" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>clear</span><a href="#clear" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -196,7 +221,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#clear">clear</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L143">renderer/roughjs/roughjs-renderer.ts:143</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L182">renderer/roughjs/roughjs-renderer.ts:182</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private"><a id="embedDefs" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>embed<wbr/>Defs</span><a href="#embedDefs" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
@@ -207,7 +232,19 @@ encoded font into the SVG so that the font always looks correct.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L78">renderer/roughjs/roughjs-renderer.ts:78</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L116">renderer/roughjs/roughjs-renderer.ts:116</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="fontsLoading" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>fonts<wbr/>Loading</span><a href="#fontsLoading" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="fontsLoading.fontsLoading-1">fonts<wbr/>Loading<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><a href="#fontsLoading.fontsLoading-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>A promise that resolves once the fonts used by this renderer have loaded, or undefined if they
+already have (or can&#39;t be loaded in this environment).</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<p>Overrides <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#fontsLoading">fontsLoading</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L193">renderer/roughjs/roughjs-renderer.ts:193</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="line" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>line</span><a href="#line" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -233,7 +270,19 @@ encoded font into the SVG so that the font always looks correct.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#line">line</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L167">renderer/roughjs/roughjs-renderer.ts:167</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L222">renderer/roughjs/roughjs-renderer.ts:222</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private"><a id="nextSeed" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>next<wbr/>Seed</span><a href="#nextSeed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+<li class="tsd-signature tsd-anchor-link" id="nextSeed.nextSeed-1">next<wbr/>Seed<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#nextSeed.nextSeed-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>rough.js varies a shape based on its seed, so every shape gets its own seed. Otherwise all
+shapes of the same size would wobble identically. The seeds are generated with a Lehmer RNG,
+which never yields 0 (a seed of 0 makes rough.js fall back to Math.random()).</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L202">renderer/roughjs/roughjs-renderer.ts:202</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="pentagon" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>pentagon</span><a href="#pentagon" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -261,7 +310,7 @@ encoded font into the SVG so that the font always looks correct.</p>
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/GraphcisElement.html" class="tsd-signature-type" data-tsd-kind="Interface">GraphcisElement</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#pentagon">pentagon</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L288">renderer/roughjs/roughjs-renderer.ts:288</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L348">renderer/roughjs/roughjs-renderer.ts:348</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="rect" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>rect</span><a href="#rect" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -291,7 +340,7 @@ encoded font into the SVG so that the font always looks correct.</p>
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/GraphcisElement.html" class="tsd-signature-type" data-tsd-kind="Interface">GraphcisElement</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#rect">rect</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L193">renderer/roughjs/roughjs-renderer.ts:193</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L249">renderer/roughjs/roughjs-renderer.ts:249</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="remove" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove</span><a href="#remove" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -300,7 +349,7 @@ encoded font into the SVG so that the font always looks correct.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#remove">remove</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L153">renderer/roughjs/roughjs-renderer.ts:153</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L208">renderer/roughjs/roughjs-renderer.ts:208</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="size" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>size</span><a href="#size" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -320,7 +369,7 @@ encoded font into the SVG so that the font always looks correct.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#size">size</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L311">renderer/roughjs/roughjs-renderer.ts:311</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L372">renderer/roughjs/roughjs-renderer.ts:372</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="text" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>text</span><a href="#text" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -350,7 +399,7 @@ encoded font into the SVG so that the font always looks correct.</p>
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/GraphcisElement.html" class="tsd-signature-type" data-tsd-kind="Interface">GraphcisElement</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#text">text</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L331">renderer/roughjs/roughjs-renderer.ts:331</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L392">renderer/roughjs/roughjs-renderer.ts:392</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="title" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>title</span><a href="#title" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -364,7 +413,7 @@ encoded font into the SVG so that the font always looks correct.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#title">title</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L107">renderer/roughjs/roughjs-renderer.ts:107</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L145">renderer/roughjs/roughjs-renderer.ts:145</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="toSvgString" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Svg<wbr/>String</span><a href="#toSvgString" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -377,7 +426,7 @@ or used without ever attaching it to the DOM.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#toSvgString">toSvgString</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L157">renderer/roughjs/roughjs-renderer.ts:157</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L212">renderer/roughjs/roughjs-renderer.ts:212</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="triangle" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>triangle</span><a href="#triangle" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -403,7 +452,7 @@ or used without ever attaching it to the DOM.</p>
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/GraphcisElement.html" class="tsd-signature-type" data-tsd-kind="Interface">GraphcisElement</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#triangle">triangle</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L266">renderer/roughjs/roughjs-renderer.ts:266</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L325">renderer/roughjs/roughjs-renderer.ts:325</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private"><a id="addClasses" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <code class="tsd-tag ts-flagPrivate">Private</code> <span>add<wbr/>Classes</span><a href="#addClasses" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
@@ -421,7 +470,7 @@ classList isn&#39;t implemented by svgdom (used to render server-side / in tests
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> classes: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L436">renderer/roughjs/roughjs-renderer.ts:436</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L516">renderer/roughjs/roughjs-renderer.ts:516</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="arcBarrePath" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <code class="tsd-tag ts-flagProtected">Protected</code> <span>arc<wbr/>Barre<wbr/>Path</span><a href="#arcBarrePath" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited">
@@ -443,7 +492,7 @@ classList isn&#39;t implemented by svgdom (used to render server-side / in tests
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#arcBarrePath">arcBarrePath</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/renderer.ts#L152">renderer/renderer.ts:152</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/renderer.ts#L161">renderer/renderer.ts:161</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private"><a id="boxToElement" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <code class="tsd-tag ts-flagPrivate">Private</code> <span>box<wbr/>To<wbr/>Element</span><a href="#boxToElement" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
@@ -464,7 +513,7 @@ classList isn&#39;t implemented by svgdom (used to render server-side / in tests
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/GraphcisElement.html" class="tsd-signature-type" data-tsd-kind="Interface">GraphcisElement</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L397">renderer/roughjs/roughjs-renderer.ts:397</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L477">renderer/roughjs/roughjs-renderer.ts:477</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="ngonPath" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <code class="tsd-tag ts-flagProtected">Protected</code> <span>ngon<wbr/>Path</span><a href="#ngonPath" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited">
@@ -484,7 +533,7 @@ classList isn&#39;t implemented by svgdom (used to render server-side / in tests
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#ngonPath">ngonPath</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/renderer.ts#L128">renderer/renderer.ts:128</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/renderer.ts#L137">renderer/renderer.ts:137</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private"><a id="roundedRectData" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <code class="tsd-tag ts-flagPrivate">Private</code> <span>rounded<wbr/>Rect<wbr/>Data</span><a href="#roundedRectData" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
@@ -507,7 +556,7 @@ classList isn&#39;t implemented by svgdom (used to render server-side / in tests
 <h5>blr: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L407">renderer/roughjs/roughjs-renderer.ts:407</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L487">renderer/roughjs/roughjs-renderer.ts:487</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="textSpans" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <code class="tsd-tag ts-flagProtected">Protected</code> <span>text<wbr/>Spans</span><a href="#textSpans" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited">
@@ -523,7 +572,7 @@ classList isn&#39;t implemented by svgdom (used to render server-side / in tests
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span><br/><span>    </span>dy<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>fontSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span><br/><span>    </span>text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#textSpans">textSpans</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/renderer.ts#L221">renderer/renderer.ts:221</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/renderer.ts#L230">renderer/renderer.ts:230</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private"><a id="toClassArray" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <code class="tsd-tag ts-flagPrivate">Private</code> <span>to<wbr/>Class<wbr/>Array</span><a href="#toClassArray" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
@@ -536,7 +585,7 @@ classList isn&#39;t implemented by svgdom (used to render server-side / in tests
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> classes: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/roughjs/roughjs-renderer.ts#L424">renderer/roughjs/roughjs-renderer.ts:424</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/roughjs/roughjs-renderer.ts#L504">renderer/roughjs/roughjs-renderer.ts:504</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="toClassName" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <code class="tsd-tag ts-flagProtected">Protected</code> <span>to<wbr/>Class<wbr/>Name</span><a href="#toClassName" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited">
@@ -550,7 +599,7 @@ classList isn&#39;t implemented by svgdom (used to render server-side / in tests
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#toClassName">toClassName</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/renderer.ts#L236">renderer/renderer.ts:236</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/renderer.ts#L245">renderer/renderer.ts:245</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="trianglePath" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <code class="tsd-tag ts-flagProtected">Protected</code> <span>triangle<wbr/>Path</span><a href="#trianglePath" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited">
@@ -568,7 +617,7 @@ classList isn&#39;t implemented by svgdom (used to render server-side / in tests
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="Renderer.html">Renderer</a>.<a href="Renderer.html#trianglePath">trianglePath</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/f50967c/src/renderer/renderer.ts#L124">renderer/renderer.ts:124</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/omnibrain/svguitar/blob/80abf06/src/renderer/renderer.ts#L133">renderer/renderer.ts:133</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -597,16 +646,20 @@ classList isn&#39;t implemented by svgdom (used to render server-side / in tests
 <li class="tsd-kind-constructor tsd-parent-kind-class"><a href="RoughJsRenderer.html#constructor" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-512-path"></use><use href="#icon-512-text"></use></svg>constructor</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="RoughJsRenderer.html#backgroundElement" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>background<wbr/>Element?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a href="RoughJsRenderer.html#container" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>container?</a></li>
-<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="RoughJsRenderer.html#containerNode" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>container<wbr/>Node</a></li>
+<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="RoughJsRenderer.html#containerNode" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>container<wbr/>Node?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="RoughJsRenderer.html#doc" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>doc</a></li>
+<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="RoughJsRenderer.html#randomState" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>random<wbr/>State</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="RoughJsRenderer.html#rc" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>rc</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="RoughJsRenderer.html#svgNode" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>svg<wbr/>Node</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="RoughJsRenderer.html#arc" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>arc</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="RoughJsRenderer.html#background" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>background</a></li>
+<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="RoughJsRenderer.html#bbox" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>bbox</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="RoughJsRenderer.html#circle" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>circle</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="RoughJsRenderer.html#clear" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>clear</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="RoughJsRenderer.html#embedDefs" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>embed<wbr/>Defs</a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="RoughJsRenderer.html#fontsLoading" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>fonts<wbr/>Loading</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="RoughJsRenderer.html#line" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>line</a></li>
+<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="RoughJsRenderer.html#nextSeed" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>next<wbr/>Seed</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="RoughJsRenderer.html#pentagon" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>pentagon</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="RoughJsRenderer.html#rect" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>rect</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="RoughJsRenderer.html#remove" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>remove</a></li>

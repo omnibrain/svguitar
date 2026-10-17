@@ -23,6 +23,7 @@ exports.RoughJsRenderer = void 0;
 var svg_js_1 = require("@svgdotjs/svg.js");
 var roughjs_1 = __importDefault(require("roughjs"));
 var defs_1 = __importDefault(require("./defs"));
+var PatrickHand_Regular_woff2_1 = __importDefault(require("../../../fonts/PatrickHand-Regular.woff2"));
 var renderer_1 = require("../renderer");
 /**
  * Currently the font is hard-coded to 'Patrick Hand' when using the handdrawn chord diagram style.
@@ -31,15 +32,35 @@ var renderer_1 = require("../renderer");
  * need arises it should be possible.
  */
 var FONT_FAMLILY = 'Patrick Hand';
+/**
+ * Seed for the random variations of the shapes, so the same diagram is always drawn identically.
+ */
+var SEED = 42;
+var fontFaces = new WeakMap();
+/**
+ * Text is measured while drawing, so the font has to be available to the document by then. The
+ * font embedded in the SVG only loads once the SVG is part of the document, and asynchronously, so
+ * it's also added to the document's fonts directly.
+ */
+function loadFont(doc) {
+    if (typeof FontFace === 'undefined' || !doc.fonts) {
+        return undefined;
+    }
+    var face = fontFaces.get(doc);
+    if (!face) {
+        face = new FontFace(FONT_FAMLILY, Uint8Array.from(atob(PatrickHand_Regular_woff2_1.default), function (c) { return c.charCodeAt(0); }));
+        doc.fonts.add(face);
+        fontFaces.set(doc, face);
+    }
+    return face.status === 'loaded' || face.status === 'error' ? undefined : face.load();
+}
 var RoughJsRenderer = /** @class */ (function (_super) {
     __extends(RoughJsRenderer, _super);
     function RoughJsRenderer(container) {
-        var _this = _super.call(this, container) || this;
-        if (!container) {
-            throw new Error('The handdrawn chord diagram style requires a container element and is not supported ' +
-                'in headless mode yet. Use the default style to render without a DOM.');
-        }
-        // initialize the container
+        var _this = this;
+        var _a, _b, _c, _d;
+        _this = _super.call(this, container) || this;
+        _this.randomState = SEED;
         if (typeof container === 'string') {
             var node = document.querySelector(container);
             if (!node) {
@@ -52,8 +73,14 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         }
         // Use the container's own document instead of the global `document` so this renderer also
         // works in environments (e.g. server-side rendering with svgdom) where there is no global
-        // `document`, only the one associated with the container node.
-        _this.doc = _this.containerNode.ownerDocument;
+        // `document`, only the one associated with the container node. Without a container, fall
+        // back to the document registered with svg.js, which is the global one in a browser.
+        var doc = (_b = (_a = _this.containerNode) === null || _a === void 0 ? void 0 : _a.ownerDocument) !== null && _b !== void 0 ? _b : (_c = (0, svg_js_1.getWindow)()) === null || _c === void 0 ? void 0 : _c.document;
+        if (!doc) {
+            throw new Error('No document available. Pass a container or, outside a browser, register a window ' +
+                'with registerWindow() from @svgdotjs/svg.js (e.g. using svgdom).');
+        }
+        _this.doc = doc;
         // create an empty SVG element
         _this.svgNode = _this.doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
         _this.svgNode.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
@@ -63,8 +90,9 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         _this.svgNode.setAttribute('preserveAspectRatio', 'xMidYMid meet');
         _this.svgNode.setAttribute('viewBox', '0 0 400 400');
         _this.embedDefs();
-        _this.containerNode.appendChild(_this.svgNode);
+        (_d = _this.containerNode) === null || _d === void 0 ? void 0 : _d.appendChild(_this.svgNode);
         _this.rc = roughjs_1.default.svg(_this.svgNode);
+        loadFont(_this.doc);
         return _this;
     }
     /**
@@ -102,6 +130,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
     };
     RoughJsRenderer.prototype.circle = function (x, y, diameter, strokeWidth, strokeColor, fill, classes) {
         var options = {
+            seed: this.nextSeed(),
             fill: fill || 'none',
             fillWeight: 2.5,
             stroke: strokeColor || fill || 'none',
@@ -113,7 +142,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         var circle = this.rc.circle(x + diameter / 2, y + diameter / 2, diameter, options);
         RoughJsRenderer.addClasses(circle, classes);
         this.svgNode.appendChild(circle);
-        return RoughJsRenderer.boxToElement(circle.getBBox(), function () {
+        return RoughJsRenderer.boxToElement(this.bbox(circle), function () {
             return circle ? circle.remove() : undefined;
         });
     };
@@ -123,7 +152,20 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         }
         delete this.backgroundElement;
         this.rc = roughjs_1.default.svg(this.svgNode);
+        this.randomState = SEED;
         this.embedDefs();
+    };
+    RoughJsRenderer.prototype.fontsLoading = function () {
+        return loadFont(this.doc);
+    };
+    /**
+     * rough.js varies a shape based on its seed, so every shape gets its own seed. Otherwise all
+     * shapes of the same size would wobble identically. The seeds are generated with a Lehmer RNG,
+     * which never yields 0 (a seed of 0 makes rough.js fall back to Math.random()).
+     */
+    RoughJsRenderer.prototype.nextSeed = function () {
+        this.randomState = (this.randomState * 48271) % 2147483647;
+        return this.randomState;
     };
     RoughJsRenderer.prototype.remove = function () {
         this.svgNode.remove();
@@ -146,6 +188,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         }
         else {
             var line = this.rc.line(x1, y1, x2, y2, {
+                seed: this.nextSeed(),
                 strokeWidth: strokeWidth,
                 stroke: color,
             });
@@ -155,6 +198,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
     };
     RoughJsRenderer.prototype.rect = function (x, y, width, height, strokeWidth, strokeColor, classes, fill, radius) {
         var rect2 = this.rc.rectangle(x, y, width, height, {
+            seed: this.nextSeed(),
             // fill: fill || 'none',
             fill: 'none',
             fillWeight: 2,
@@ -168,6 +212,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         var rectRadius = radius || 0;
         var path = RoughJsRenderer.roundedRectData(width, height, rectRadius, rectRadius, rectRadius, rectRadius);
         var rect = this.rc.path(path, {
+            seed: this.nextSeed(),
             fill: fill || 'none',
             fillWeight: 2.5,
             stroke: strokeColor || fill || 'none',
@@ -178,11 +223,12 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         RoughJsRenderer.addClasses(rect2, classes);
         this.svgNode.appendChild(rect);
         this.svgNode.appendChild(rect2);
-        return RoughJsRenderer.boxToElement(rect.getBBox(), function () { return rect.remove(); });
+        return RoughJsRenderer.boxToElement(this.bbox(rect), function () { return rect.remove(); });
     };
     RoughJsRenderer.prototype.arc = function (x, y, width, height, direction, strokeWidth, strokeColor, classes, fill) {
         var path = renderer_1.Renderer.arcBarrePath(x, y, width, height, direction);
         var arc = this.rc.path(path, {
+            seed: this.nextSeed(),
             fill: fill || 'none',
             fillWeight: 2.5,
             stroke: strokeColor || fill || 'none',
@@ -190,10 +236,11 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         });
         RoughJsRenderer.addClasses(arc, classes);
         this.svgNode.appendChild(arc);
-        return RoughJsRenderer.boxToElement(arc.getBBox(), function () { return arc.remove(); });
+        return RoughJsRenderer.boxToElement(this.bbox(arc), function () { return arc.remove(); });
     };
     RoughJsRenderer.prototype.triangle = function (x, y, size, strokeWidth, strokeColor, classes, fill) {
         var triangle = this.rc.path(renderer_1.Renderer.trianglePath(0, 0, size), {
+            seed: this.nextSeed(),
             fill: fill || 'none',
             fillWeight: 2.5,
             stroke: strokeColor || fill || 'none',
@@ -202,11 +249,12 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         triangle.setAttribute('transform', "translate(".concat(x, ", ").concat(y, ")"));
         RoughJsRenderer.addClasses(triangle, classes);
         this.svgNode.appendChild(triangle);
-        return RoughJsRenderer.boxToElement(triangle.getBBox(), function () { return triangle.remove(); });
+        return RoughJsRenderer.boxToElement(this.bbox(triangle), function () { return triangle.remove(); });
     };
     RoughJsRenderer.prototype.pentagon = function (x, y, size, strokeWidth, strokeColor, fill, classes, spikes) {
         if (spikes === void 0) { spikes = 5; }
         var pentagon = this.rc.path(renderer_1.Renderer.ngonPath(0, 0, size, spikes), {
+            seed: this.nextSeed(),
             fill: fill || 'none',
             fillWeight: 2.5,
             stroke: strokeColor || fill || 'none',
@@ -215,7 +263,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         pentagon.setAttribute('transform', "translate(".concat(x, ", ").concat(y, ")"));
         RoughJsRenderer.addClasses(pentagon, classes);
         this.svgNode.appendChild(pentagon);
-        return RoughJsRenderer.boxToElement(pentagon.getBBox(), function () { return pentagon.remove(); });
+        return RoughJsRenderer.boxToElement(this.bbox(pentagon), function () { return pentagon.remove(); });
     };
     RoughJsRenderer.prototype.size = function (width, height, x, y) {
         var _a, _b;
@@ -261,7 +309,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
             });
         }
         this.svgNode.appendChild(txtElem);
-        var bbox = txtElem.getBBox();
+        var bbox = this.bbox(txtElem);
         var xOffset;
         switch (alignment) {
             case renderer_1.Alignment.MIDDLE:
@@ -279,7 +327,25 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         RoughJsRenderer.addClasses(txtElem, classes);
         txtElem.setAttributeNS(null, 'x', String(x + xOffset));
         txtElem.setAttributeNS(null, 'y', String(y + (plain ? 0 : bbox.height / 2)));
-        return RoughJsRenderer.boxToElement(txtElem.getBBox(), txtElem.remove.bind(txtElem));
+        return RoughJsRenderer.boxToElement(this.bbox(txtElem), txtElem.remove.bind(txtElem));
+    };
+    /**
+     * Browsers return an empty bounding box for elements that are not part of the document, so a
+     * detached (headless) diagram is briefly attached to the document while it's being measured.
+     */
+    RoughJsRenderer.prototype.bbox = function (element) {
+        var _a;
+        if (this.containerNode) {
+            return element.getBBox();
+        }
+        var host = (_a = this.doc.body) !== null && _a !== void 0 ? _a : this.doc.documentElement;
+        host.appendChild(this.svgNode);
+        try {
+            return element.getBBox();
+        }
+        finally {
+            this.svgNode.remove();
+        }
     };
     RoughJsRenderer.boxToElement = function (box, remove) {
         var _a, _b, _c, _d;

@@ -33,6 +33,14 @@ var Renderer = /** @class */ (function () {
     function Renderer(container) {
         this.container = container;
     }
+    /**
+     * A promise that resolves once the fonts used by this renderer have loaded, or undefined if they
+     * already have (or can't be loaded in this environment).
+     */
+    // eslint-disable-next-line class-methods-use-this
+    Renderer.prototype.fontsLoading = function () {
+        return undefined;
+    };
     Renderer.trianglePath = function (x, y, size) {
         return "M".concat(x + size / 2, " ").concat(y, " L").concat(x + size, " ").concat(y + size, " L").concat(x, " ").concat(y + size);
     };

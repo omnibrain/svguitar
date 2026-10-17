@@ -25,6 +25,11 @@ export declare abstract class Renderer {
     abstract line(x1: number, y1: number, x2: number, y2: number, strokeWidth: number, color: string, classes?: string | string[]): void;
     abstract size(width: number, height: number, x?: number, y?: number): void;
     abstract clear(): void;
+    /**
+     * A promise that resolves once the fonts used by this renderer have loaded, or undefined if they
+     * already have (or can't be loaded in this environment).
+     */
+    fontsLoading(): Promise<unknown> | undefined;
     abstract remove(): void;
     /**
      * Serialize the current state of the diagram to an SVG string. The returned string is a
