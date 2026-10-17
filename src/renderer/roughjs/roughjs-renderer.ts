@@ -5,7 +5,7 @@ import { RoughSVG } from 'roughjs/bin/svg'
 import rough from 'roughjs'
 import { Options } from 'roughjs/bin/core'
 import defs from './defs'
-import patrickHandWoff2 from './patrick-hand'
+import patrickHandWoff2 from '../../../fonts/PatrickHand-Regular.woff2'
 import { Alignment, ArcDirection, GraphcisElement, Renderer, TextSegment } from '../renderer'
 
 /**
