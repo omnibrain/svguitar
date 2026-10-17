@@ -1661,6 +1661,25 @@ describe('SVGuitarChord', () => {
     })
   })
 
+  it('Should draw the handdrawn style as well-formed SVG', () => {
+    svguitar
+      .configure({ style: ChordStyle.handdrawn, svgTitle: 'Title' })
+      .chord({ fingers: [[1, 2]], barres: [] })
+      .draw()
+
+    // Serializing to XML (e.g. with newer svgdom versions) rejects elements outside of a namespace
+    // and attribute names with a colon that aren't namespaced.
+    const elements = Array.from(container.querySelectorAll('svg, svg *'))
+
+    expect(elements.length).toBeGreaterThan(1)
+    elements.forEach((element) => {
+      expect(element.namespaceURI).toBe('http://www.w3.org/2000/svg')
+      Array.from(element.attributes).forEach((attribute) => {
+        expect(attribute.namespaceURI === null && attribute.name.includes(':')).toBe(false)
+      })
+    })
+  })
+
   describe('handdrawn variations', () => {
     const render = () => {
       const chart = new SVGuitarChord(setUpSvgDom().documentElement)
