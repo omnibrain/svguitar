@@ -1,10 +1,10 @@
 /* istanbul ignore file */
 
-import { Array, DOMRect, QuerySelector, getWindow } from '@svgdotjs/svg.js'
+import { DOMRect, QuerySelector, getWindow } from '@svgdotjs/svg.js'
 import { RoughSVG } from 'roughjs/bin/svg'
 import rough from 'roughjs'
 import { Options } from 'roughjs/bin/core'
-import defs from './defs'
+import fontFaceCss from './defs'
 import patrickHandWoff2 from '../../../fonts/PatrickHand-Regular.woff2'
 import { Alignment, ArcDirection, GraphcisElement, Renderer, TextSegment } from '../renderer'
 
@@ -15,6 +15,10 @@ import { Alignment, ArcDirection, GraphcisElement, Renderer, TextSegment } from 
  * need arises it should be possible.
  */
 const FONT_FAMLILY = 'Patrick Hand'
+
+const SVG_NS = 'http://www.w3.org/2000/svg'
+
+const XMLNS_NS = 'http://www.w3.org/2000/xmlns/'
 
 /**
  * Seed for the random variations of the shapes, so the same diagram is always drawn identically.
@@ -94,8 +98,9 @@ export class RoughJsRenderer extends Renderer {
     this.svgNode = this.doc.createElementNS('http://www.w3.org/2000/svg', 'svg')
     this.svgNode.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
     this.svgNode.setAttribute('version', '1.1')
-    this.svgNode.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
-    this.svgNode.setAttribute('xmlns:svgjs', 'http://svgjs.com/svgjs')
+    // Namespaced, since serializing to XML (e.g. with svgdom) rejects an attribute name with a colon
+    this.svgNode.setAttributeNS(XMLNS_NS, 'xmlns:xlink', 'http://www.w3.org/1999/xlink')
+    this.svgNode.setAttributeNS(XMLNS_NS, 'xmlns:svgjs', 'http://svgjs.com/svgjs')
 
     this.svgNode.setAttribute('preserveAspectRatio', 'xMidYMid meet')
     this.svgNode.setAttribute('viewBox', '0 0 400 400')
@@ -110,8 +115,7 @@ export class RoughJsRenderer extends Renderer {
   }
 
   /**
-   * This will embed all defs defined in the defs.html file. Specifically this is used to embed the base64
-   * encoded font into the SVG so that the font always looks correct.
+   * Embeds the font into the SVG so that the text always looks correct.
    */
   private embedDefs() {
     // check if defs were already added
@@ -122,28 +126,18 @@ export class RoughJsRenderer extends Renderer {
     let currentDefs = this.svgNode.querySelector('defs')
 
     if (!currentDefs) {
-      currentDefs = this.doc.createElementNS('http://www.w3.org/2000/svg', 'defs')
+      currentDefs = this.doc.createElementNS(SVG_NS, 'defs')
       this.svgNode.prepend(currentDefs)
     }
 
-    // create dom nodes from HTML string. A plain container element (rather than a <template>) is
-    // used here since svgdom, which renders diagrams server-side (e.g. in tests), doesn't implement
-    // HTMLTemplateElement's `.content`.
-    const container = this.doc.createElement('div')
-    container.innerHTML = defs.trim()
-
-    const defsToAdd = container.querySelector('defs')?.children
-
-    if (defsToAdd) {
-      Array.from(defsToAdd).forEach((def) => {
-        def.setAttribute('data-svguitar-def', 'true')
-        currentDefs?.appendChild(def)
-      })
-    }
+    const style = this.doc.createElementNS(SVG_NS, 'style')
+    style.setAttribute('data-svguitar-def', 'true')
+    style.textContent = fontFaceCss
+    currentDefs.appendChild(style)
   }
 
   title(title: string): void {
-    const titleEl = this.doc.createElement('title')
+    const titleEl = this.doc.createElementNS(SVG_NS, 'title')
     titleEl.textContent = title
     this.svgNode.appendChild(titleEl)
   }
