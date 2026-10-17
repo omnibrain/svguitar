@@ -15,7 +15,8 @@
   "files": [
     "dist",
     "fonts/OpenSans-Regular.ttf",
-    "fonts/PatrickHand-Regular.woff2"
+    "fonts/PatrickHand-Regular.woff2",
+    "fonts/OFL.txt"
   ],
   "author": "Raphael Voellmy <r.voellmy@gmail.com>",
   "repository": {
