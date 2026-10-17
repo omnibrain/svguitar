@@ -492,12 +492,6 @@ export interface ChordSettings {
    * The title of the SVG. This is not visible in the SVG, but can be used for accessibility.
    */
   svgTitle?: string
-
-  /**
-   * Seed for the random variations of the handdrawn style. With a seed the same chord is always
-   * drawn identically, without one it looks slightly different on every draw.
-   */
-  seed?: number
 }
 
 /**
@@ -704,7 +698,6 @@ export class SVGuitarChord {
   }
 
   private drawDiagram(): { width: number; height: number; diagramWidth: number } {
-    this.renderer.seed(this.settings.seed)
     this.clear()
     this.drawBackground()
 
