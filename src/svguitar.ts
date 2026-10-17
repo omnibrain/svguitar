@@ -606,8 +606,7 @@ export class SVGuitarChord {
    * @param container The element into which the chord diagram is rendered. This can either be a
    * CSS selector or a DOM element. If omitted, the diagram is rendered detached from the DOM and
    * can be exported as a string with {@link toSvg}. This is useful for generating SVG files in a
-   * Node.js script without a browser. Note that the detached mode is only supported for the
-   * default (`normal`) chord diagram style.
+   * Node.js script without a browser.
    */
   constructor(private container?: QuerySelector | HTMLElement) {
     // apply plugins

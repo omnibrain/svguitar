@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import { Array, DOMRect, QuerySelector } from '@svgdotjs/svg.js'
+import { Array, DOMRect, QuerySelector, getWindow } from '@svgdotjs/svg.js'
 import { RoughSVG } from 'roughjs/bin/svg'
 import rough from 'roughjs'
 import { Options } from 'roughjs/bin/core'
@@ -18,7 +18,7 @@ const FONT_FAMLILY = 'Patrick Hand'
 export class RoughJsRenderer extends Renderer {
   private rc: RoughSVG
 
-  private containerNode: HTMLElement
+  private containerNode?: HTMLElement
 
   private doc: Document
 
@@ -29,14 +29,6 @@ export class RoughJsRenderer extends Renderer {
   constructor(container?: QuerySelector | HTMLElement) {
     super(container)
 
-    if (!container) {
-      throw new Error(
-        'The handdrawn chord diagram style requires a container element and is not supported ' +
-          'in headless mode yet. Use the default style to render without a DOM.',
-      )
-    }
-
-    // initialize the container
     if (typeof container === 'string') {
       const node = document.querySelector<HTMLElement>(container)
 
@@ -51,8 +43,18 @@ export class RoughJsRenderer extends Renderer {
 
     // Use the container's own document instead of the global `document` so this renderer also
     // works in environments (e.g. server-side rendering with svgdom) where there is no global
-    // `document`, only the one associated with the container node.
-    this.doc = this.containerNode.ownerDocument
+    // `document`, only the one associated with the container node. Without a container, fall
+    // back to the document registered with svg.js, which is the global one in a browser.
+    const doc = this.containerNode?.ownerDocument ?? getWindow()?.document
+
+    if (!doc) {
+      throw new Error(
+        'No document available. Pass a container or, outside a browser, register a window ' +
+          'with registerWindow() from @svgdotjs/svg.js (e.g. using svgdom).',
+      )
+    }
+
+    this.doc = doc
 
     // create an empty SVG element
     this.svgNode = this.doc.createElementNS('http://www.w3.org/2000/svg', 'svg')
@@ -66,7 +68,7 @@ export class RoughJsRenderer extends Renderer {
 
     this.embedDefs()
 
-    this.containerNode.appendChild(this.svgNode)
+    this.containerNode?.appendChild(this.svgNode)
 
     this.rc = rough.svg(this.svgNode)
   }
@@ -135,7 +137,7 @@ export class RoughJsRenderer extends Renderer {
 
     this.svgNode.appendChild(circle)
 
-    return RoughJsRenderer.boxToElement(circle.getBBox(), () =>
+    return RoughJsRenderer.boxToElement(this.bbox(circle), () =>
       circle ? circle.remove() : undefined,
     )
   }
@@ -234,7 +236,7 @@ export class RoughJsRenderer extends Renderer {
     this.svgNode.appendChild(rect)
     this.svgNode.appendChild(rect2)
 
-    return RoughJsRenderer.boxToElement(rect.getBBox(), () => rect.remove())
+    return RoughJsRenderer.boxToElement(this.bbox(rect), () => rect.remove())
   }
 
   arc(
@@ -260,7 +262,7 @@ export class RoughJsRenderer extends Renderer {
     RoughJsRenderer.addClasses(arc, classes)
     this.svgNode.appendChild(arc)
 
-    return RoughJsRenderer.boxToElement(arc.getBBox(), () => arc.remove())
+    return RoughJsRenderer.boxToElement(this.bbox(arc), () => arc.remove())
   }
 
   triangle(
@@ -282,7 +284,7 @@ export class RoughJsRenderer extends Renderer {
     RoughJsRenderer.addClasses(triangle, classes)
     this.svgNode.appendChild(triangle)
 
-    return RoughJsRenderer.boxToElement(triangle.getBBox(), () => triangle.remove())
+    return RoughJsRenderer.boxToElement(this.bbox(triangle), () => triangle.remove())
   }
 
   pentagon(
@@ -305,7 +307,7 @@ export class RoughJsRenderer extends Renderer {
     RoughJsRenderer.addClasses(pentagon, classes)
     this.svgNode.appendChild(pentagon)
 
-    return RoughJsRenderer.boxToElement(pentagon.getBBox(), () => pentagon.remove())
+    return RoughJsRenderer.boxToElement(this.bbox(pentagon), () => pentagon.remove())
   }
 
   size(width: number, height: number, x = 0, y = 0): void {
@@ -369,7 +371,7 @@ export class RoughJsRenderer extends Renderer {
 
     this.svgNode.appendChild(txtElem)
 
-    const bbox = txtElem.getBBox()
+    const bbox = this.bbox(txtElem)
 
     let xOffset: number
 
@@ -391,7 +393,26 @@ export class RoughJsRenderer extends Renderer {
     txtElem.setAttributeNS(null, 'x', String(x + xOffset))
     txtElem.setAttributeNS(null, 'y', String(y + (plain ? 0 : bbox.height / 2)))
 
-    return RoughJsRenderer.boxToElement(txtElem.getBBox(), txtElem.remove.bind(txtElem))
+    return RoughJsRenderer.boxToElement(this.bbox(txtElem), txtElem.remove.bind(txtElem))
+  }
+
+  /**
+   * Browsers return an empty bounding box for elements that are not part of the document, so a
+   * detached (headless) diagram is briefly attached to the document while it's being measured.
+   */
+  private bbox(element: SVGGraphicsElement): ReturnType<SVGGraphicsElement['getBBox']> {
+    if (this.containerNode) {
+      return element.getBBox()
+    }
+
+    const host = this.doc.body ?? this.doc.documentElement
+    host.appendChild(this.svgNode)
+
+    try {
+      return element.getBBox()
+    } finally {
+      this.svgNode.remove()
+    }
   }
 
   private static boxToElement(box: DOMRect, remove: () => void): GraphcisElement {
