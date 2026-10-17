@@ -492,6 +492,12 @@ export interface ChordSettings {
    * The title of the SVG. This is not visible in the SVG, but can be used for accessibility.
    */
   svgTitle?: string
+
+  /**
+   * Seed for the random variations of the handdrawn style. With a seed the same chord is always
+   * drawn identically, without one it looks slightly different on every draw.
+   */
+  seed?: number
 }
 
 /**
@@ -602,6 +608,8 @@ export class SVGuitarChord {
    */
   private mirrorWidth?: number
 
+  private fontsLoading?: Promise<unknown>
+
   /**
    * @param container The element into which the chord diagram is rendered. This can either be a
    * CSS selector or a DOM element. If omitted, the diagram is rendered detached from the DOM and
@@ -644,6 +652,7 @@ export class SVGuitarChord {
     if (settings.style !== this.settings.style) {
       this.renderer.remove()
       delete this.rendererInternal
+      delete this.fontsLoading
     }
 
     this.settings = { ...this.settings, ...settings }
@@ -671,10 +680,31 @@ export class SVGuitarChord {
 
     const { width, height } = this.drawDiagram()
 
+    this.redrawWhenFontsLoad()
+
     return { width, height }
   }
 
+  /**
+   * A diagram drawn before its fonts have loaded is laid out with a fallback font, so it's drawn
+   * again once they have.
+   */
+  private redrawWhenFontsLoad(): void {
+    const fontsLoading = this.renderer.fontsLoading()
+    this.fontsLoading = fontsLoading
+
+    fontsLoading?.then(
+      () => {
+        if (this.fontsLoading === fontsLoading) {
+          this.draw()
+        }
+      },
+      () => undefined,
+    )
+  }
+
   private drawDiagram(): { width: number; height: number; diagramWidth: number } {
+    this.renderer.seed(this.settings.seed)
     this.clear()
     this.drawBackground()
 
@@ -1661,6 +1691,7 @@ export class SVGuitarChord {
    * Completely remove the diagram from the DOM
    */
   remove(): void {
+    delete this.fontsLoading
     this.renderer.remove()
   }
 

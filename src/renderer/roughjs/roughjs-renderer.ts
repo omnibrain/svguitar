@@ -5,6 +5,7 @@ import { RoughSVG } from 'roughjs/bin/svg'
 import rough from 'roughjs'
 import { Options } from 'roughjs/bin/core'
 import defs from './defs'
+import patrickHandWoff2 from './patrick-hand'
 import { Alignment, ArcDirection, GraphcisElement, Renderer, TextSegment } from '../renderer'
 
 /**
@@ -14,6 +15,32 @@ import { Alignment, ArcDirection, GraphcisElement, Renderer, TextSegment } from 
  * need arises it should be possible.
  */
 const FONT_FAMLILY = 'Patrick Hand'
+
+const fontFaces = new WeakMap<Document, FontFace>()
+
+/**
+ * Text is measured while drawing, so the font has to be available to the document by then. The
+ * font embedded in the SVG only loads once the SVG is part of the document, and asynchronously, so
+ * it's also added to the document's fonts directly.
+ */
+function loadFont(doc: Document): Promise<unknown> | undefined {
+  if (typeof FontFace === 'undefined' || !doc.fonts) {
+    return undefined
+  }
+
+  let face = fontFaces.get(doc)
+
+  if (!face) {
+    face = new FontFace(
+      FONT_FAMLILY,
+      Uint8Array.from(atob(patrickHandWoff2), (c) => c.charCodeAt(0)),
+    )
+    doc.fonts.add(face)
+    fontFaces.set(doc, face)
+  }
+
+  return face.status === 'loaded' || face.status === 'error' ? undefined : face.load()
+}
 
 export class RoughJsRenderer extends Renderer {
   private rc: RoughSVG
@@ -25,6 +52,10 @@ export class RoughJsRenderer extends Renderer {
   private svgNode: SVGSVGElement
 
   private backgroundElement?: SVGRectElement
+
+  private seedValue?: number
+
+  private randomState?: number
 
   constructor(container?: QuerySelector | HTMLElement) {
     super(container)
@@ -71,6 +102,8 @@ export class RoughJsRenderer extends Renderer {
     this.containerNode?.appendChild(this.svgNode)
 
     this.rc = rough.svg(this.svgNode)
+
+    loadFont(this.doc)
   }
 
   /**
@@ -122,6 +155,7 @@ export class RoughJsRenderer extends Renderer {
     classes?: string | string[],
   ): GraphcisElement {
     const options: Options = {
+      seed: this.nextSeed(),
       fill: fill || 'none',
       fillWeight: 2.5,
       stroke: strokeColor || fill || 'none',
@@ -149,7 +183,34 @@ export class RoughJsRenderer extends Renderer {
 
     delete this.backgroundElement
     this.rc = rough.svg(this.svgNode)
+    this.randomState =
+      this.seedValue === undefined
+        ? undefined
+        : (Math.abs(Math.floor(this.seedValue)) % 2147483646) + 1
     this.embedDefs()
+  }
+
+  seed(seed?: number): void {
+    this.seedValue = seed
+  }
+
+  fontsLoading(): Promise<unknown> | undefined {
+    return loadFont(this.doc)
+  }
+
+  /**
+   * rough.js varies a shape based on its seed, so every shape gets its own seed. Otherwise all
+   * shapes of the same size would wobble identically. The seeds are generated with a Lehmer RNG,
+   * which never yields 0 (a seed of 0 makes rough.js fall back to Math.random()).
+   */
+  private nextSeed(): number | undefined {
+    if (this.randomState === undefined) {
+      return undefined
+    }
+
+    this.randomState = (this.randomState * 48271) % 2147483647
+
+    return this.randomState
   }
 
   remove(): void {
@@ -183,6 +244,7 @@ export class RoughJsRenderer extends Renderer {
       }
     } else {
       const line = this.rc.line(x1, y1, x2, y2, {
+        seed: this.nextSeed(),
         strokeWidth,
         stroke: color,
       })
@@ -204,6 +266,7 @@ export class RoughJsRenderer extends Renderer {
     radius?: number,
   ): GraphcisElement {
     const rect2 = this.rc.rectangle(x, y, width, height, {
+      seed: this.nextSeed(),
       // fill: fill || 'none',
       fill: 'none',
       fillWeight: 2,
@@ -225,6 +288,7 @@ export class RoughJsRenderer extends Renderer {
       rectRadius,
     )
     const rect = this.rc.path(path, {
+      seed: this.nextSeed(),
       fill: fill || 'none',
       fillWeight: 2.5,
       stroke: strokeColor || fill || 'none',
@@ -253,6 +317,7 @@ export class RoughJsRenderer extends Renderer {
     const path = Renderer.arcBarrePath(x, y, width, height, direction)
 
     const arc = this.rc.path(path, {
+      seed: this.nextSeed(),
       fill: fill || 'none',
       fillWeight: 2.5,
       stroke: strokeColor || fill || 'none',
@@ -275,6 +340,7 @@ export class RoughJsRenderer extends Renderer {
     fill?: string | undefined,
   ): GraphcisElement {
     const triangle = this.rc.path(Renderer.trianglePath(0, 0, size), {
+      seed: this.nextSeed(),
       fill: fill || 'none',
       fillWeight: 2.5,
       stroke: strokeColor || fill || 'none',
@@ -298,6 +364,7 @@ export class RoughJsRenderer extends Renderer {
     spikes = 5,
   ): GraphcisElement {
     const pentagon = this.rc.path(Renderer.ngonPath(0, 0, size, spikes), {
+      seed: this.nextSeed(),
       fill: fill || 'none',
       fillWeight: 2.5,
       stroke: strokeColor || fill || 'none',

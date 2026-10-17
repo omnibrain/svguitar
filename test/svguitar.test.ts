@@ -1660,4 +1660,109 @@ describe('SVGuitarChord', () => {
       saveSvg('headless chord handdrawn', svg)
     })
   })
+
+  describe('handdrawn seed', () => {
+    const draw = (seed?: number) =>
+      new SVGuitarChord(setUpSvgDom().documentElement)
+        .configure({ style: ChordStyle.handdrawn, seed })
+        .chord({ fingers: [[1, 2]], barres: [] })
+        .draw()
+
+    const render = (seed?: number) => {
+      const chart = new SVGuitarChord(setUpSvgDom().documentElement)
+        .configure({ style: ChordStyle.handdrawn, seed })
+        .chord({ fingers: [[1, 2]], barres: [] })
+      chart.draw()
+
+      return chart.toSvg()
+    }
+
+    it('Should draw the same chord identically with the same seed', () => {
+      expect(render(42)).toEqual(render(42))
+      expect(draw(42)).toEqual(draw(42))
+    })
+
+    it('Should draw the same chord differently with different or no seeds', () => {
+      expect(render(1)).not.toEqual(render(2))
+      expect(render()).not.toEqual(render())
+    })
+
+    it('Should vary shapes of the same size within a seeded chord', () => {
+      const svg = render(42)
+      const strings = svg.match(/<g[^>]*class="string[^"]*"[^>]*>.*?<\/g>/g) ?? []
+
+      expect(strings.length).toBeGreaterThan(1)
+      expect(new Set(strings.map((s) => s.replace(/class="[^"]*"/, ''))).size).toBe(strings.length)
+    })
+  })
+
+  describe('handdrawn font loading', () => {
+    let resolveFontLoad: () => void
+    let addedFonts: unknown[]
+
+    beforeEach(() => {
+      const fontLoaded = new Promise<void>((resolve) => {
+        resolveFontLoad = resolve
+      })
+
+      class FakeFontFace {
+        status = 'unloaded'
+
+        private loading?: Promise<void>
+
+        load() {
+          if (!this.loading) {
+            this.loading = fontLoaded.then(() => {
+              this.status = 'loaded'
+            })
+          }
+
+          return this.loading
+        }
+      }
+
+      addedFonts = []
+      ;(global as any).FontFace = FakeFontFace
+      ;(container.ownerDocument as any).fonts = { add: (font: unknown) => addedFonts.push(font) }
+    })
+
+    afterEach(() => {
+      delete (global as any).FontFace
+    })
+
+    const flush = () => new Promise((resolve) => setTimeout(resolve))
+
+    it('Should redraw a handdrawn diagram once its font has loaded', async () => {
+      const chart = new SVGuitarChord(container).configure({ style: ChordStyle.handdrawn })
+      const drawSpy = jest.spyOn(chart, 'draw')
+
+      chart.draw()
+      chart.draw()
+
+      expect(addedFonts).toHaveLength(1)
+
+      resolveFontLoad()
+      await flush()
+
+      expect(drawSpy).toHaveBeenCalledTimes(3)
+
+      chart.draw()
+      await flush()
+
+      expect(drawSpy).toHaveBeenCalledTimes(4)
+    })
+
+    it('Should not redraw a removed diagram once its font has loaded', async () => {
+      const chart = new SVGuitarChord(container).configure({ style: ChordStyle.handdrawn })
+      const drawSpy = jest.spyOn(chart, 'draw')
+
+      chart.draw()
+      chart.remove()
+
+      resolveFontLoad()
+      await flush()
+
+      expect(drawSpy).toHaveBeenCalledTimes(1)
+    })
+  })
 })

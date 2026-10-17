@@ -420,6 +420,11 @@ new SVGuitarChord('#some-selector')
      */
     svgTitle: 'Guitar chord diagram of F# minor',
 
+    /**
+     * Seed for the random variations of the handdrawn style. With a seed the same chord is always
+     * drawn identically, without one it looks slightly different on every draw.
+     */
+    seed: 42,
 
     /**
      * The fret markers. See type docs for more options.
