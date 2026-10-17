@@ -9,8 +9,7 @@ export declare class RoughJsRenderer extends Renderer {
     private randomState;
     constructor(container?: QuerySelector | HTMLElement);
     /**
-     * This will embed all defs defined in the defs.html file. Specifically this is used to embed the base64
-     * encoded font into the SVG so that the font always looks correct.
+     * Embeds the font into the SVG so that the text always looks correct.
      */
     private embedDefs;
     title(title: string): void;

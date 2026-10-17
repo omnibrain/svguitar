@@ -32,6 +32,8 @@ var renderer_1 = require("../renderer");
  * need arises it should be possible.
  */
 var FONT_FAMLILY = 'Patrick Hand';
+var SVG_NS = 'http://www.w3.org/2000/svg';
+var XMLNS_NS = 'http://www.w3.org/2000/xmlns/';
 /**
  * Seed for the random variations of the shapes, so the same diagram is always drawn identically.
  */
@@ -85,8 +87,9 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         _this.svgNode = _this.doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
         _this.svgNode.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
         _this.svgNode.setAttribute('version', '1.1');
-        _this.svgNode.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
-        _this.svgNode.setAttribute('xmlns:svgjs', 'http://svgjs.com/svgjs');
+        // Namespaced, since serializing to XML (e.g. with svgdom) rejects an attribute name with a colon
+        _this.svgNode.setAttributeNS(XMLNS_NS, 'xmlns:xlink', 'http://www.w3.org/1999/xlink');
+        _this.svgNode.setAttributeNS(XMLNS_NS, 'xmlns:svgjs', 'http://svgjs.com/svgjs');
         _this.svgNode.setAttribute('preserveAspectRatio', 'xMidYMid meet');
         _this.svgNode.setAttribute('viewBox', '0 0 400 400');
         _this.embedDefs();
@@ -96,35 +99,25 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         return _this;
     }
     /**
-     * This will embed all defs defined in the defs.html file. Specifically this is used to embed the base64
-     * encoded font into the SVG so that the font always looks correct.
+     * Embeds the font into the SVG so that the text always looks correct.
      */
     RoughJsRenderer.prototype.embedDefs = function () {
-        var _a;
         // check if defs were already added
         if (this.svgNode.querySelector('defs [data-svguitar-def]')) {
             return;
         }
         var currentDefs = this.svgNode.querySelector('defs');
         if (!currentDefs) {
-            currentDefs = this.doc.createElementNS('http://www.w3.org/2000/svg', 'defs');
+            currentDefs = this.doc.createElementNS(SVG_NS, 'defs');
             this.svgNode.prepend(currentDefs);
         }
-        // create dom nodes from HTML string. A plain container element (rather than a <template>) is
-        // used here since svgdom, which renders diagrams server-side (e.g. in tests), doesn't implement
-        // HTMLTemplateElement's `.content`.
-        var container = this.doc.createElement('div');
-        container.innerHTML = defs_1.default.trim();
-        var defsToAdd = (_a = container.querySelector('defs')) === null || _a === void 0 ? void 0 : _a.children;
-        if (defsToAdd) {
-            svg_js_1.Array.from(defsToAdd).forEach(function (def) {
-                def.setAttribute('data-svguitar-def', 'true');
-                currentDefs === null || currentDefs === void 0 ? void 0 : currentDefs.appendChild(def);
-            });
-        }
+        var style = this.doc.createElementNS(SVG_NS, 'style');
+        style.setAttribute('data-svguitar-def', 'true');
+        style.textContent = defs_1.default;
+        currentDefs.appendChild(style);
     };
     RoughJsRenderer.prototype.title = function (title) {
-        var titleEl = this.doc.createElement('title');
+        var titleEl = this.doc.createElementNS(SVG_NS, 'title');
         titleEl.textContent = title;
         this.svgNode.appendChild(titleEl);
     };
