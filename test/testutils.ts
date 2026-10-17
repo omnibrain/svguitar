@@ -12,7 +12,7 @@ export function setUpSvgDom(): Document {
     // your font directory
     .setFontDir('./fonts')
     // map the font-family to the file
-    .setFontFamilyMappings({ Arial: './arial.ttf' })
+    .setFontFamilyMappings({ Arial: './arial.ttf', 'Patrick Hand': './PatrickHand-Regular.woff2' })
     // you can preload your fonts to avoid the loading delay
     // when the font is used the first time
     .preloadFonts()

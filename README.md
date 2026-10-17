@@ -90,7 +90,8 @@ Under the hood SVGuitar uses [svg.js](https://svgjs.dev), which needs a global `
 to be registered. In Node this is provided by [`svgdom`](https://github.com/svgdotjs/svgdom)
 (already a dependency of SVGuitar). You need to register it once before rendering. Text layout
 depends on real font metrics, so a font also has to be provided — SVGuitar ships
-`OpenSans-Regular.ttf` for this purpose, but you can use any TTF.
+`OpenSans-Regular.ttf` for this purpose, but you can use any TTF. For the `handdrawn` style it also
+ships `PatrickHand-Regular.woff2`, the same font that is embedded in the rendered SVG.
 
 ```javascript
 const fs = require('fs')
@@ -107,6 +108,7 @@ svgdom
     // map every family your charts use to an available font file
     Arial: 'OpenSans-Regular.ttf',
     'Open Sans': 'OpenSans-Regular.ttf',
+    'Patrick Hand': 'PatrickHand-Regular.woff2',
   })
   .preloadFonts()
 
@@ -139,8 +141,6 @@ Notes:
 - Metrics come from the bundled Open Sans, not the browser default (Arial), so text sizing is
   close but not pixel-identical. Provide your own font mapping for exact results.
 - `toSvg()` also works in the browser, with or without a container.
-- The `handdrawn` style uses the Patrick Hand font. Map it to a TTF of that font for exact text
-  sizing in Node, e.g. `'Patrick Hand': 'PatrickHand-Regular.ttf'`.
 
 ## Usage
 

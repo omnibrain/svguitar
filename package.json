@@ -14,7 +14,8 @@
   "typings": "dist/types/svguitar.d.ts",
   "files": [
     "dist",
-    "fonts/OpenSans-Regular.ttf"
+    "fonts/OpenSans-Regular.ttf",
+    "fonts/PatrickHand-Regular.woff2"
   ],
   "author": "Raphael Voellmy <r.voellmy@gmail.com>",
   "repository": {
