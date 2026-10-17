@@ -4,28 +4,35 @@ on:
     branches:
       - master
       - next
+permissions:
+  contents: write # to publish GitHub releases
+  issues: write # to comment on released issues
+  pull-requests: write # to comment on released pull requests
+  id-token: write # to publish to npm via trusted publishing (OIDC)
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      # npm trusted publishing needs Node >= 22.14 and npm >= 11.5.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install -g npm@^11.5.1
       - run: yarn install
       - run: yarn build
       - name: Semantic Release
         id: release
-        uses: cycjimmy/semantic-release-action@v4
+        uses: cycjimmy/semantic-release-action@v8
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       # Publish the same build under the scoped name @svguitar/core
       - name: Publish @svguitar/core
         if: steps.release.outputs.new_release_published == 'true'
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           VERSION: ${{ steps.release.outputs.new_release_version }}
           CHANNEL: ${{ steps.release.outputs.new_release_channel }}
         run: |
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > "$RUNNER_TEMP/.npmrc"
           npm pkg set name=@svguitar/core version="$VERSION"
-          npm publish --access public --ignore-scripts --tag "${CHANNEL:-latest}" --userconfig "$RUNNER_TEMP/.npmrc"
+          npm publish --access public --ignore-scripts --tag "${CHANNEL:-latest}"
