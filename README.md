@@ -139,7 +139,8 @@ Notes:
 - Metrics come from the bundled Open Sans, not the browser default (Arial), so text sizing is
   close but not pixel-identical. Provide your own font mapping for exact results.
 - `toSvg()` also works in the browser, with or without a container.
-- The `handdrawn` style is **not** supported in headless mode yet (it still requires a DOM).
+- The `handdrawn` style uses the Patrick Hand font. Map it to a TTF of that font for exact text
+  sizing in Node, e.g. `'Patrick Hand': 'PatrickHand-Regular.ttf'`.
 
 ## Usage
 

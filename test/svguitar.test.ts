@@ -1626,10 +1626,38 @@ describe('SVGuitarChord', () => {
       saveSvg('headless chord', svg)
     })
 
-    it('Should not support the handdrawn style without a container', () => {
+    it('Should render and export the handdrawn style without a container', () => {
       const headless = new SVGuitarChord()
 
-      expect(() => headless.configure({ style: ChordStyle.handdrawn }).draw()).toThrow(/headless/i)
+      const dimensions = headless
+        .chord({
+          fingers: [
+            [1, 2, '1'],
+            [2, 1, '2'],
+          ],
+          barres: [{ fromString: 5, toString: 1, fret: 1 }],
+        })
+        .configure({
+          title: 'Headless',
+          tuning: ['E', 'A', 'D', 'G', 'B', 'E'],
+          style: ChordStyle.handdrawn,
+        })
+        .draw()
+
+      expect(dimensions.width).toBeGreaterThan(0)
+      expect(dimensions.height).toBeGreaterThan(0)
+
+      const svg = headless.toSvg()
+
+      expect(svg).toMatch(/^<svg/)
+      expect(svg).toContain('xmlns="http://www.w3.org/2000/svg"')
+      expect(svg).toContain('Patrick Hand')
+      expect(svg).toContain('Headless')
+
+      // the diagram is only attached to the document while measuring
+      expect(container.querySelector('svg')).toBeNull()
+
+      saveSvg('headless chord handdrawn', svg)
     })
   })
 })
