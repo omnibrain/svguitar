@@ -1661,35 +1661,22 @@ describe('SVGuitarChord', () => {
     })
   })
 
-  describe('handdrawn seed', () => {
-    const draw = (seed?: number) =>
-      new SVGuitarChord(setUpSvgDom().documentElement)
-        .configure({ style: ChordStyle.handdrawn, seed })
-        .chord({ fingers: [[1, 2]], barres: [] })
-        .draw()
-
-    const render = (seed?: number) => {
+  describe('handdrawn variations', () => {
+    const render = () => {
       const chart = new SVGuitarChord(setUpSvgDom().documentElement)
-        .configure({ style: ChordStyle.handdrawn, seed })
+        .configure({ style: ChordStyle.handdrawn })
         .chord({ fingers: [[1, 2]], barres: [] })
       chart.draw()
 
       return chart.toSvg()
     }
 
-    it('Should draw the same chord identically with the same seed', () => {
-      expect(render(42)).toEqual(render(42))
-      expect(draw(42)).toEqual(draw(42))
+    it('Should draw the same chord identically every time', () => {
+      expect(render()).toEqual(render())
     })
 
-    it('Should draw the same chord differently with different or no seeds', () => {
-      expect(render(1)).not.toEqual(render(2))
-      expect(render()).not.toEqual(render())
-    })
-
-    it('Should vary shapes of the same size within a seeded chord', () => {
-      const svg = render(42)
-      const strings = svg.match(/<g[^>]*class="string[^"]*"[^>]*>.*?<\/g>/g) ?? []
+    it('Should vary shapes of the same size within a chord', () => {
+      const strings = render().match(/<g[^>]*class="string[^"]*"[^>]*>.*?<\/g>/g) ?? []
 
       expect(strings.length).toBeGreaterThan(1)
       expect(new Set(strings.map((s) => s.replace(/class="[^"]*"/, ''))).size).toBe(strings.length)

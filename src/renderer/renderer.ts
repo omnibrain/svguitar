@@ -43,13 +43,6 @@ export abstract class Renderer {
   abstract clear(): void
 
   /**
-   * Seed for renderers that draw with random variations, so they can draw the same diagram
-   * identically every time. Without a seed the variations are random.
-   */
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
-  seed(seed?: number): void {}
-
-  /**
    * A promise that resolves once the fonts used by this renderer have loaded, or undefined if they
    * already have (or can't be loaded in this environment).
    */

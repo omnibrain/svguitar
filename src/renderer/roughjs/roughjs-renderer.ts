@@ -16,6 +16,11 @@ import { Alignment, ArcDirection, GraphcisElement, Renderer, TextSegment } from 
  */
 const FONT_FAMLILY = 'Patrick Hand'
 
+/**
+ * Seed for the random variations of the shapes, so the same diagram is always drawn identically.
+ */
+const SEED = 42
+
 const fontFaces = new WeakMap<Document, FontFace>()
 
 /**
@@ -53,9 +58,7 @@ export class RoughJsRenderer extends Renderer {
 
   private backgroundElement?: SVGRectElement
 
-  private seedValue?: number
-
-  private randomState?: number
+  private randomState = SEED
 
   constructor(container?: QuerySelector | HTMLElement) {
     super(container)
@@ -183,15 +186,8 @@ export class RoughJsRenderer extends Renderer {
 
     delete this.backgroundElement
     this.rc = rough.svg(this.svgNode)
-    this.randomState =
-      this.seedValue === undefined
-        ? undefined
-        : (Math.abs(Math.floor(this.seedValue)) % 2147483646) + 1
+    this.randomState = SEED
     this.embedDefs()
-  }
-
-  seed(seed?: number): void {
-    this.seedValue = seed
   }
 
   fontsLoading(): Promise<unknown> | undefined {
@@ -203,11 +199,7 @@ export class RoughJsRenderer extends Renderer {
    * shapes of the same size would wobble identically. The seeds are generated with a Lehmer RNG,
    * which never yields 0 (a seed of 0 makes rough.js fall back to Math.random()).
    */
-  private nextSeed(): number | undefined {
-    if (this.randomState === undefined) {
-      return undefined
-    }
-
+  private nextSeed(): number {
     this.randomState = (this.randomState * 48271) % 2147483647
 
     return this.randomState
