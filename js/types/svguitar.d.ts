@@ -1,6 +1,7 @@
 import { AnyFunction, ApiExtension, Constructor, ReturnTypeOf, SVGuitarPlugin, UnionToIntersection } from './plugin';
 import { Alignment, GraphcisElement, Renderer, RoughJsRenderer, SvgJsRenderer } from './renderer';
 import { ArcDirection } from './renderer/renderer';
+export { registerWindow } from '@svgdotjs/svg.js';
 export type { Constructor, ReturnTypeOf, SVGuitarPlugin, Renderer, Alignment, GraphcisElement, RoughJsRenderer, SvgJsRenderer, ApiExtension, AnyFunction, UnionToIntersection, ArcDirection, };
 export declare type SilentString = 'x';
 export declare type OpenString = 0;

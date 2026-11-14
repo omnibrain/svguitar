@@ -251,6 +251,11 @@ const globals = {
   document: typeof document === 'undefined' ? null : document
 };
 
+function registerWindow(win = null, doc = null) {
+  globals.window = win;
+  globals.document = doc;
+}
+
 function getWindow() {
   return globals.window
 }
@@ -7979,7 +7984,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         var doc = (_b = (_a = _this.containerNode) === null || _a === void 0 ? void 0 : _a.ownerDocument) !== null && _b !== void 0 ? _b : (_c = getWindow()) === null || _c === void 0 ? void 0 : _c.document;
         if (!doc) {
             throw new Error('No document available. Pass a container or, outside a browser, register a window ' +
-                'with registerWindow() from @svgdotjs/svg.js (e.g. using svgdom).');
+                'with registerWindow() from svguitar (e.g. using svgdom).');
         }
         _this.doc = doc;
         // create an empty SVG element
@@ -9399,5 +9404,5 @@ var SVGuitarChord = /** @class */ (function () {
     return SVGuitarChord;
 }());
 
-export { BarreChordStyle, ChordStyle, ElementType, FretLabelFormat, FretLabelPosition, OPEN, Orientation, SILENT, SVGuitarChord, Shape };
+export { BarreChordStyle, ChordStyle, ElementType, FretLabelFormat, FretLabelPosition, OPEN, Orientation, SILENT, SVGuitarChord, Shape, registerWindow };
 //# sourceMappingURL=svguitar.es5.js.map

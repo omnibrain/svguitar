@@ -51,12 +51,15 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SVGuitarChord = exports.ElementType = exports.Orientation = exports.ChordStyle = exports.Shape = exports.FretLabelFormat = exports.FretLabelPosition = exports.SILENT = exports.OPEN = exports.BarreChordStyle = void 0;
+exports.SVGuitarChord = exports.ElementType = exports.Orientation = exports.ChordStyle = exports.Shape = exports.FretLabelFormat = exports.FretLabelPosition = exports.SILENT = exports.OPEN = exports.BarreChordStyle = exports.registerWindow = void 0;
 var constants_1 = require("./constants");
 var renderer_1 = require("./renderer");
 var range_1 = require("./utils/range");
 var numbers_1 = require("./utils/numbers");
 var renderer_2 = require("./renderer/renderer");
+// svg.js is bundled, so headless users must register their window on this copy of it
+var svg_js_1 = require("@svgdotjs/svg.js");
+Object.defineProperty(exports, "registerWindow", { enumerable: true, get: function () { return svg_js_1.registerWindow; } });
 var BarreChordStyle;
 (function (BarreChordStyle) {
     BarreChordStyle["RECTANGLE"] = "rectangle";

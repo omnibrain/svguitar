@@ -80,7 +80,7 @@ var RoughJsRenderer = /** @class */ (function (_super) {
         var doc = (_b = (_a = _this.containerNode) === null || _a === void 0 ? void 0 : _a.ownerDocument) !== null && _b !== void 0 ? _b : (_c = (0, svg_js_1.getWindow)()) === null || _c === void 0 ? void 0 : _c.document;
         if (!doc) {
             throw new Error('No document available. Pass a container or, outside a browser, register a window ' +
-                'with registerWindow() from @svgdotjs/svg.js (e.g. using svgdom).');
+                'with registerWindow() from svguitar (e.g. using svgdom).');
         }
         _this.doc = doc;
         // create an empty SVG element
