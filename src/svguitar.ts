@@ -21,6 +21,9 @@ import { range } from './utils/range'
 import { ordinalSuffix, toRoman } from './utils/numbers'
 import { ArcDirection } from './renderer/renderer'
 
+// svg.js is bundled, so headless users must register their window on this copy of it
+export { registerWindow } from '@svgdotjs/svg.js'
+
 // export types for Typedoc
 export type {
   Constructor,

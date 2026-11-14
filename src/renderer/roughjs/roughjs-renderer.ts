@@ -88,7 +88,7 @@ export class RoughJsRenderer extends Renderer {
     if (!doc) {
       throw new Error(
         'No document available. Pass a container or, outside a browser, register a window ' +
-          'with registerWindow() from @svgdotjs/svg.js (e.g. using svgdom).',
+          'with registerWindow() from svguitar (e.g. using svgdom).',
       )
     }
 
