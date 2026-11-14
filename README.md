@@ -428,9 +428,8 @@ ships `PatrickHand-Regular.woff2`, the same font that is embedded in the rendere
 ```javascript
 const fs = require('fs')
 const path = require('path')
-const { registerWindow } = require('@svgdotjs/svg.js')
 const svgdom = require('svgdom')
-const { SVGuitarChord } = require('svguitar')
+const { SVGuitarChord, registerWindow } = require('svguitar')
 
 // point svgdom at a font and register a headless window (do this once)
 const fontDir = path.dirname(require.resolve('svguitar/fonts/OpenSans-Regular.ttf'))
